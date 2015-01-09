@@ -1,0 +1,21 @@
+.cproject
+.project
+.settings
+.wrmakefile
+Debug/*
+build.properties
+build.xml
+
+#compiled object files
+*.slo
+*.lo
+*.o
+
+#Compiled Dynamic libs
+*.so
+*.dylib
+
+#compiled static libraries
+*.lai
+*.la
+*.a
