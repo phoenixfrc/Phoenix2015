@@ -1,0 +1,42 @@
+
+If you have to restart a workspace here are the steps to get
+going again based on a FRC example project.
+
+This deals with a lot of the project configuration so is
+an easy way to get the build settings right then pull down the
+current repo code.
+
+This assumes the Eclipse workspace is at
+c:\users\developer\workspace
+Git Bash is the shell used (mingw based)
+And your system has network connectivity to github.com
+
+From Eclipse luna ,
+
+File->New->Project
+   Choose Example Robot C++ Project
+   Pick an appropriate  project like Mecanum Drive
+   click next
+   Choose projecxt name Phoenix2015
+   click finish
+
+Then exit eclipse
+
+open the git bash shell
+
+Then you can use the github command line and enter the following commands
+to connect the sample project to the git hub repo.
+
+cd /c/users/developer/workspace
+
+#  cd <yourreponame>
+cd Phoenix2015
+
+rm src/Robot.cpp  # since we are going to pull the current from github
+
+git init
+git remote add origin https://github.com/phoenixfrc/Phoenix2015.git
+git fetch
+git checkout -t origin/master
+git status
+
