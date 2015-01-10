@@ -13,23 +13,20 @@ class Robot: public SampleRobot
     const static int frontRightChannel	= 1;
     const static int rearRightChannel	= 2;
 
-    const static int joystickChannel1	= 0;
-    const static int joystickChannel2	= 1;
+    const static int joystickChannel	= 0;
     const static int testEncoderChannelA = 1;
     const static int testEncoderChannelB = 2;
 
 
 	RobotDrive robotDrive;	// robot drive system
-	Joystick stick1;			// only joystick
-	Joystick stick2;
+	Joystick stick;			// only joystick
 	Encoder testEncoder;
 
 public:
 	Robot() :
 			robotDrive(frontLeftChannel, rearLeftChannel,
 					   frontRightChannel, rearRightChannel),	// these must be initialized in the same order
-			stick1(joystickChannel1),
-			stick2(joystickChannel2),
+			stick(joystickChannel),
 			testEncoder(testEncoderChannelA,testEncoderChannelB)
 // as they are declared above.
 	{
@@ -49,7 +46,7 @@ public:
 		{
         	// Use the joystick X axis for lateral movement, Y axis for forward movement, and Z axis for rotation.
         	// This sample does not use field-oriented drive, so the gyro input is set to zero.
-			robotDrive.MecanumDrive_Cartesian(stick1.GetX(), stick1.GetY(), stick2.GetX());
+			robotDrive.MecanumDrive_Cartesian(stick.GetX(), stick.GetY(), stick.GetZ());
 
 			Wait(0.005); // wait 5ms to avoid hogging CPU cycles
 		}
