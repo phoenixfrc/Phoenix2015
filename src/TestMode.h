@@ -5,7 +5,7 @@
 class TestMode
 {
 	public:
-		enum testModes{testElevator, testJoystick, testTalon, testEncoder};
+		enum testModes{testElevator, testJoystick, testTalon, testEncoder, testGyro};
 
 		TestMode();
 		static void PerformTesting(Joystick * gamePad, Encoder * encoder);

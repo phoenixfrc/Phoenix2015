@@ -61,11 +61,22 @@ void TestMode::PerformTesting(Joystick * gamePad, Encoder * encoder){
 
 			if(button1)
 			{
-				c_mode = testElevator;
+				c_mode = testGyro;
 			}
 			if(button2)
 			{
 				c_mode = testTalon;
+			}
+			break;
+		case testGyro:
+
+			if(button1)
+			{
+				c_mode = testElevator;
+			}
+			if(button2)
+			{
+				c_mode = testEncoder;
 			}
 			break;
 
