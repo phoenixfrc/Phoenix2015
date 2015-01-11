@@ -53,9 +53,12 @@ public:
 	}
 	void Test()
 	{
+
+		TestMode tester;
+
 		while (IsTest() && IsEnabled())
 		{
-			TestMode::PerformTesting(&testEncoder);
+			tester.PerformTesting(&stick, &testEncoder);
 
 			Wait(0.005);
 		}
