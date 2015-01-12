@@ -18,6 +18,8 @@ Click finish
 
 Restart eclipse.
 
+...............................
+
 To test:
 
 Open the C/C++ perspective if not already there (Should see projectExplorer on left side and
@@ -29,3 +31,10 @@ Right click on the text Robot.cpp and you should be able to do
   "Compare with" -> "Previous revision"
 which is a common operation.
 
+...............................
+
+Things that we will commonly use
+
+   Rt-Click on project -> Team -> Commit...
+
+   Rt-Click on file -> Team -> various...
