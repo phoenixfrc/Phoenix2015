@@ -1,0 +1,17 @@
+
+Window->open perspective-> other
+
+In popup choose Git
+
+In left panel  git repositories should appear
+   Chose link Add an existing local Git repository
+
+Use Browse to locate the Phoenix2015 project directory 
+(or type it into the directory path)
+It will be something like
+
+c:\users\<yourUserName>\workspace\Phoenix2015
+
+(be sure to select the project directory not the workspace directory)
+
+Click finish
