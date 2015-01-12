@@ -15,3 +15,17 @@ c:\users\<yourUserName>\workspace\Phoenix2015
 (be sure to select the project directory not the workspace directory)
 
 Click finish
+
+Restart eclipse.
+
+To test:
+
+Open the C/C++ perspective if not already there (Should see projectExplorer on left side and
+C/C++ hightlited in top right of blue menu bar)
+
+Expand the subtree till you get to Phoenix2015/src/Robot.cpp
+
+Right click on the text Robot.cpp and you should be able to do 
+  "Compare with" -> "Previous revision"
+which is a common operation.
+
