@@ -1,2 +1,3 @@
 		M	T	W	H	F	S	D
 Henri	Y	Y	X	Y	Y	Y	Y
+Ray             Y       Y       X       Y       Y       Y       L
