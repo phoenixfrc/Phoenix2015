@@ -1,2 +1,4 @@
-		M	T	W	H	F	S	D
-Henri	Y	Y	X	Y	Y	Y	Y
+        M       T       W       H       F       S       D
+Henri   Y       Y       X       Y       Y       Y       Y
+Jon     Y       Y       X       Y       Y       Y       Y
+Pizza   X       X       Y       X       X       X       X
