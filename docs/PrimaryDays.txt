@@ -5,6 +5,13 @@ nathaniel       Y       X       X       Y       X       Y       X
 =======
            M      T      W      H      F      S      D
 Mr Gousios Y      N      X      Y      N      Y      N
+<<<<<<< HEAD
 Henri      Y      Y      X      Y      Y      Y      Y
 Ryan       X      X      X      X      Y      Y      Y
 >>>>>>> 421cdccd16ed1437a338c27ddbcfb42d96052f11
+=======
+Henri      Y      Y      X      Y      Y      Y      Y
+
+Ryan       X      X      X      X      Y      Y      Y
+Tyler	   X	  X      X      X      Y      Y      Y
+>>>>>>> f3b3f6466c61e4fcf468d9d36d5cc495510c7dff
