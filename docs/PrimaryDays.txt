@@ -3,3 +3,4 @@ Mr Gousios Y      N      X      Y      N      Y      N
 Henri      Y      Y      X      Y      Y      Y      Y
 
 Ryan       X      X      X      X      Y      Y      Y
+Tyler	   X	  X      X      X      Y      Y      Y
