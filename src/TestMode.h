@@ -2,13 +2,19 @@
 #define TESTMODE_H
 
 #include "WPILib.h"
-class TestMode {
 
-public:
 
-	TestMode();
-	static void PerformTesting(Encoder * encoder);
+enum testModes{testElevator, testJoystick, testTalon, testEncoder, testGyro};
 
+class TestMode
+{
+	public:
+
+		TestMode();
+		void PerformTesting(Joystick * gamePad, Encoder * encoder);
+
+	private:
+		testModes c_mode; //current mode
 
 };
 
