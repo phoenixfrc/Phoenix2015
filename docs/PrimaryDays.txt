@@ -1,2 +1,3 @@
-		M	T	W	H	F	S	D
-Henri	Y	Y	X	Y	Y	Y	Y
+           M      T      W      H      F      S      D
+Mr Gousios Y      N      X      Y      N      Y      N
+Henri      Y      Y      X      Y      Y      Y      Y
