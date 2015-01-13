@@ -1,6 +1,6 @@
            M      T      W      H      F      S      D
 Mr Gousios Y      N      X      Y      N      Y      N
 Henri      Y      Y      X      Y      Y      Y      Y
-Brin	   Y	  X	     X	    X	   X	  Y	     X
+Brin       Y      X      X      X      X      Y      X
 Ryan       X      X      X      X      Y      Y      Y
-Tyler	   X	  X      X      X      Y      Y      Y
+Tyler      X      X      X      X      Y      Y      Y
