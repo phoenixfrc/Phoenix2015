@@ -1,26 +1,9 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-		M	T	W	H	F	S	D
-Henri	Y	Y	X	Y	Y	Y	Y
-nathaniel       Y       X       X       Y       X       Y       X
-=======
-           M      T      W      H      F      S      D
-Mr Gousios Y      N      X      Y      N      Y      N
-<<<<<<< HEAD
-Henri      Y      Y      X      Y      Y      Y      Y
-Ryan       X      X      X      X      Y      Y      Y
->>>>>>> 421cdccd16ed1437a338c27ddbcfb42d96052f11
-=======
-Henri      Y      Y      X      Y      Y      Y      Y
 
-Ryan       X      X      X      X      Y      Y      Y
-Tyler	   X	  X      X      X      Y      Y      Y
->>>>>>> f3b3f6466c61e4fcf468d9d36d5cc495510c7dff
-=======
            M      T      W      H      F      S      D
 Mr Gousios Y      N      X      Y      N      Y      N
 Henri      Y      Y      X      Y      Y      Y      Y
 Brin       Y      X      X      X      X      Y      X
 Ryan       X      X      X      X      Y      Y      Y
 Tyler      X      X      X      X      Y      Y      Y
->>>>>>> 3adf4eab4017884a80a73c2c9d2518473d6d8b84
+nathaniel  Y      X      X      Y      X      Y      X
+Jon        Y      Y      X      Y      Y      Y      Y
