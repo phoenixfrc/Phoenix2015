@@ -51,7 +51,7 @@ public:
 	        {
 	            robotDrive.MecanumDrive_Cartesian(-1,0,0);
 	        }
-	        wait(xDistance/RobotSpecs::driveSpeed);
+	        Wait(xDistance/RobotSpecs::driveSpeed);
 	    }
 	    if (yDistance != 0)
 	    {
@@ -63,7 +63,7 @@ public:
             {
                 robotDrive.MecanumDrive_Cartesian(0,-1,0);
             }
-	        wait(yDistance/RobotSpecs::driveSpeed);
+	        Wait(yDistance/RobotSpecs::driveSpeed);
 	    }
 	}
 	void Autonomous()
