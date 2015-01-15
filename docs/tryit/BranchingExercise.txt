@@ -1,0 +1,56 @@
+
+I Start a new test project for branch experiments
+
+  1. Be sure to be in the C++ perspective (click on icon in top right if not)
+  2. For this example I am using "Getting started" for the new project, but you can name it something else
+  3. File->New->project
+       example robot c++  (next)
+       Getting Started    (finish) 
+
+II use Eclipse to create a git repo for the new project
+
+  1. Switch to Git perspective
+  2. You should already have the team project Phoenix2015 listed here,
+      It will show you the path to your workspace, so take a note of it
+      (Something like c:\Users\yourUsername\workspace\ )
+  3. In top right of the left panel (Git Repositories) there are a set of icons.
+     There are three with Git in words with a yellow disk.
+     Choose the rightmost of the three git icons (Create a new git repository and add it to this view)
+     
+     3a - using the path from step 2 browse to the project directory from part I
+     3b - highlight the project folder (Getting Started) and click OK
+     3c - click finish
+
+III make an initial commit
+
+  1. Switch to the C++ perspective
+  2. Use your OS to copy the .gitignore file from the Phoenix2015 project into the new 
+     project (Getting started) (You should overwrite the one that might be there already)
+  3. Open the src folder and right click Robot.cpp -> Team -> Add to index
+  4. Show the hidden .gitignore (and oter . files) in the project
+     In the project explorer pane (left side of c++ perspective)
+     Highlight project (Getting Started)
+     Click down arrow icon (menu icon)
+     Choose Customize view
+     On filters tab uncheck the  .*resources choice (OK)
+  5. add the .gitignore file to index (like in step 3)
+  6. Right click the project and choose Team-> Commit
+        Should see .gitignore and src/Robot.cpp
+	enter "First commit" into message area  (COMMIT)
+	(Note, you can't push since there is no upstream repo we just made one for this experiment)
+
+IV make a second commit
+  1. open Robot.cpp
+  2. add a comment like this:
+
+  /*
+   * First change by yourname to test branch
+   */
+  3. save, add and commit the Robot.cpp file.  
+     a> rightclick on robot.cpp, commit...
+     b> keep src/Robot.cpp selected.
+     c> add message.  (First change)  (COMMIT)
+  4. Observe commit history in eclipse via
+     Right click on project (Getting Started) -> Team -> Show in history
+     
+
