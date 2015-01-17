@@ -15,6 +15,11 @@ struct PortAssign
     static const int leftJoystickID  = 1;
     static const int rightJoystickID = 2;
     static const int gamePadID = 3;
+
+    //Dragger Ports:
+    static const int draggerMotorPort = 1;
+    static const int limitSwitchUpPort = 1;
+    static const int limitSwitchDownPort = 2;
 };
 
 
