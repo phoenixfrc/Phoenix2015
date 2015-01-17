@@ -8,45 +8,44 @@
 #include "Dragger.h"
 #include "WPILib.h"
 
+/* Dragger constructor
+ * Call the constructors of the motor and limit switches, using port numbers from the Constants.h file.
+ */
+
 Dragger::Dragger():
 motor(PortAssign::draggerMotorPort),
 limitSwitchUp(PortAssign::limitSwitchUpPort),
 limitSwitchDown(PortAssign::limitSwitchDownPort)
-{
+{}
 
-}
+/* Dragger operateDragger method:
+ * Takes one Joystick parameter, to get a boolean for the button press.
+ * Gets whether the limit switches have been triggered.
+ * Activates the motor appropriately.
+ *
+ * Todo: get the button number from Constants.h
+ */
 
 Dragger::operateDragger(Joystick * button){
-    bool buttonPressed = button->GetRawButton(1); //Gets button state, 1 is placeholder value
+    bool buttonPressed = button->GetRawButton(1); //Gets button state, 1 is a placeholder value
 
     bool isUp = limitSwitchUp.Get(); //Is the up limit switch triggered?
     bool isDown = limitSwitchDown.Get(); //Is the down limit switch triggered?
 
-    float motorSpeed = 0.25;
+    float motorSpeed = 0.25; //Sets the motor speed, 0.25 is a placeholder value
     float motorSpeedUp = motorSpeed;
     float motorSpeedDown = -motorSpeed;
 
 
-
-    //Long version (commented out, in case it's preferred):
-
-    /*if (buttonPressed){ // If the button is pressed:
-        if (isUp){
-            motor.Set(motorSpeedDown); // Set the downward speed.
-        } else if (isDown){
-            motor.Set(motorSpeedUp); // Set the upward speed.
-        }
-    } else {
-        if (isUp||isDown){ // If either limit switch is triggered:
-            motor.Set(0); // Stop the motor.
-        }
-    }*/
-
-
-    //Short version:
+    /* Sets the motor speed to up, down or stopped depending on the button press and limit switches:
+     *    If the upper limit switch is tripped: stop the motor, or, if the button is pressed, move the motor down
+     *    If the lower limit switch is tripped: stop the motor, or, if the button is pressed, move the motor up
+     *    If both limits are somehow tripped (???): stop the motor, to prevent the robot from breaking anything.
+     *    If neither limit is tripped: do nothing, the motor will continue to move in its old direction.
+     */
 
     if (isUp || isDown)
-    	motor.Set(buttonPressed ? (isUp ? motorSpeedDown : motorSpeedUp) : 0);
+    	motor.Set(buttonPressed && (isUp != isDown) ? (isUp ? motorSpeedDown : motorSpeedUp) : 0);
 
 
 }
