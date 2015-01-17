@@ -14,6 +14,7 @@ class Robot: public SampleRobot
     const static int rearRightChannel	= 2;
 
     const static int joystickChannel	= 0;
+    const static int gamePadChannel    = 1;
     const static int testEncoderChannelA = 1;
     const static int testEncoderChannelB = 2;
 
@@ -21,13 +22,16 @@ class Robot: public SampleRobot
 	RobotDrive robotDrive;	// robot drive system
 	Joystick stick;			// only joystick
 	Encoder testEncoder;
+	Joystick gamePad;
 
 public:
-	Robot() :
-			robotDrive(frontLeftChannel, rearLeftChannel,
-					   frontRightChannel, rearRightChannel),	// these must be initialized in the same order
-			stick(joystickChannel),
-			testEncoder(testEncoderChannelA,testEncoderChannelB)
+    Robot() :
+        robotDrive(frontLeftChannel, rearLeftChannel,
+                           frontRightChannel, rearRightChannel),	// these must be initialized in the same order
+        stick(joystickChannel),
+        testEncoder(testEncoderChannelA,testEncoderChannelB),
+        gamePad(gamePadChannel)
+
 // as they are declared above.
 	{
 		robotDrive.SetExpiration(0.1);

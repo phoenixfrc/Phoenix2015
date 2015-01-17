@@ -15,6 +15,8 @@ struct PortAssign
     static const int leftJoystickID  = 1;
     static const int rightJoystickID = 2;
     static const int gamePadID = 3;
+    static const int encoderChannelA = 4;
+    static const int encoderChannelB = 5;
 };
 
 

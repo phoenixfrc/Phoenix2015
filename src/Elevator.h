@@ -14,21 +14,34 @@ class Elevator {
 	DigitalInput home;
 	Talon motor1;
 	Talon motor2;
+	Encoder encoder;
 
 	enum elevatorStates{joystickMode, buttonMode};
-
-	bool isHome = home.Get();
-	bool upperLimitTriped = upperLimit.Get();
-	bool lowerLimitTriped = lowerLimit.Get();
-	float encoder_value=0;
+	enum offSets{none, scoring, step};
 	float motorSpeed = .5;
-	elevatorStates currentMode;
+	int ticks = 200;
+        elevatorStates currentMode;
+
+        offSets offSetState;
+        int offset = 0;
+	double distance = 0; // distance form home (in)
+	int goalStep = 0;   /*
+	                         0 = floor
+	                         1 = 13 in
+                                 2 = 26 in
+                                 3 = 39 in
+                                 4 = 52 in
+                             */
+	bool upperWasPressed = false;
+	bool lowerWasPressed = false;
+	bool switchWasPressed = false;
 
 
 public:
 	Elevator();
 	void find_home();
-	void operateElevator();
+	void operateElevator(Joystick * gamePad);
+	void moveElevator();
 	~Elevator();
 
 };
