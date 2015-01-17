@@ -1,5 +1,7 @@
 #include "WPILib.h"
 #include "TestMode.h"
+// #include "Team2342Joystick.h"
+#include "Dragger.h"
 
 /**
  * This is a demo program showing how to use Mecanum control with the RobotDrive class.
@@ -14,13 +16,14 @@ class Robot: public SampleRobot
     const static int rearRightChannel	= 2;
 
     const static int joystickChannel	= 0;
+    const static int gamepadChannel     = 1;
     const static int testEncoderChannelA = 1;
     const static int testEncoderChannelB = 2;
 
 
 	RobotDrive robotDrive;	// robot drive system
 	Joystick stick;			// only joystick
-	JoyStick gamepad;       // the gamepad
+	Joystick gamepad;       // the gamepad
 	Encoder testEncoder;
 	Dragger dragger;
 
@@ -30,6 +33,7 @@ public:
 			robotDrive(frontLeftChannel, rearLeftChannel,
 					   frontRightChannel, rearRightChannel),	// these must be initialized in the same order
 			stick(joystickChannel),
+			gamepad(gamepadChannel),
 			testEncoder(testEncoderChannelA,testEncoderChannelB),
 			dragger()
 // as they are declared above.

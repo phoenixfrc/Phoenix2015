@@ -26,7 +26,7 @@ limitSwitchDown(PortAssign::limitSwitchDownPort)
  * Todo: get the button number from Constants.h
  */
 
-Dragger::operateDragger(Joystick * button){
+void Dragger::operateDragger(Joystick * button){
     bool buttonPressed = button->GetRawButton(1); //Gets button state, 1 is a placeholder value
 
     bool isUp = limitSwitchUp.Get(); //Is the up limit switch triggered?
@@ -49,4 +49,6 @@ Dragger::operateDragger(Joystick * button){
 
 
 }
+Dragger::~Dragger(){
 
+}
