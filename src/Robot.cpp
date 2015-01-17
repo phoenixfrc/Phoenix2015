@@ -16,18 +16,21 @@ class Robot: public SampleRobot
     const static int joystickChannel	= 0;
     const static int testEncoderChannelA = 1;
     const static int testEncoderChannelB = 2;
+    const static int gyroChannel = 0;
 
 
 	RobotDrive robotDrive;	// robot drive system
 	Joystick stick;			// only joystick
 	Encoder testEncoder;
+	Gyro gyro;
 
 public:
 	Robot() :
 			robotDrive(frontLeftChannel, rearLeftChannel,
 					   frontRightChannel, rearRightChannel),	// these must be initialized in the same order
 			stick(joystickChannel),
-			testEncoder(testEncoderChannelA,testEncoderChannelB)
+			testEncoder(testEncoderChannelA,testEncoderChannelB),
+			gyro(gyroChannel)
 // as they are declared above.
 	{
 		robotDrive.SetExpiration(0.1);
@@ -58,7 +61,7 @@ public:
 
 		while (IsTest() && IsEnabled())
 		{
-			tester.PerformTesting(&stick, &testEncoder);
+			tester.PerformTesting(&stick, &testEncoder, &gyro);
 
 			Wait(0.005);
 		}

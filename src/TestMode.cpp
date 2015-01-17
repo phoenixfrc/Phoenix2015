@@ -9,19 +9,24 @@
 #include "WPILib.h"
 #include <sstream>
 
-
+					//Change limitSwitch Port
 TestMode::TestMode():limitSwitch1(1){
 	c_mode = testTalon;
 }
 
-void TestMode::PerformTesting(Joystick * gamePad, Encoder * encoder){
+void TestMode::PerformTesting(Joystick * gamePad, Encoder * encoder, Gyro *gyro){
 	std::ostringstream builder;
 	std::ostringstream limitBuilder;
+	std::ostringstream gyroBuilder;
 	builder << "The encoder value is: ";
 	builder << encoder->Get();
 	SmartDashboard::PutString("DB/String 0", builder.str());
+	limitBuilder << "The Limit Switch value is: ";
 	limitBuilder << limitSwitch1.Get();
 	SmartDashboard::PutString("DB/String 1", limitBuilder.str());
+	gyroBuilder << "The Gyro angle is: ";
+	gyroBuilder << gyro->GetAngle();
+	SmartDashboard::PutString("DB/String 2", gyroBuilder.str());
 
 	bool button1 = gamePad->GetRawButton(1);
 	bool button2 = gamePad->GetRawButton(2);

@@ -12,7 +12,7 @@ class TestMode
 	public:
 
 		TestMode();
-		void PerformTesting(Joystick * gamePad, Encoder * encoder);
+		void PerformTesting(Joystick * gamePad, Encoder * encoder, Gyro * gyro);
 
 	private:
 		testModes c_mode; //current mode
