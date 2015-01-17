@@ -1,6 +1,6 @@
 #include "WPILib.h"
 #include "TestMode.h"
-// #include "Team2342Joystick.h"
+#include "Team2342Joystick.h"
 #include "Dragger.h"
 
 /**
