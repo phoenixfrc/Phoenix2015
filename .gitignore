@@ -19,3 +19,4 @@ build.xml
 *.lai
 *.la
 *.a
+/Debug/

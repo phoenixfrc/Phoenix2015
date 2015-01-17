@@ -12,8 +12,10 @@ class TestMode
 	public:
 
 		TestMode();
-		void PerformTesting(Joystick * gamePad, Encoder * encoder, Gyro * gyro);
-
+		void PerformTesting(Joystick * gamePad, Encoder * encoder,
+				Encoder * driveEncoder1, Encoder * driveEncoder2,
+				Encoder * driveEncoder3, Encoder * driveEncoder4, Gyro * gyro);
+		~TestMode();
 	private:
 		testModes c_mode; //current mode
 		DigitalInput limitSwitch1;

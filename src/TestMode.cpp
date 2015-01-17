@@ -14,19 +14,12 @@ TestMode::TestMode():limitSwitch1(1){
 	c_mode = testTalon;
 }
 
-void TestMode::PerformTesting(Joystick * gamePad, Encoder * encoder, Gyro *gyro){
+void TestMode::PerformTesting(Joystick * gamePad, Encoder * encoder,
+		Encoder * driveEncoder1, Encoder * driveEncoder2,
+		Encoder * driveEncoder3, Encoder * driveEncoder4, Gyro * gyro){
 	std::ostringstream builder;
 	std::ostringstream limitBuilder;
 	std::ostringstream gyroBuilder;
-	builder << "The encoder value is: ";
-	builder << encoder->Get();
-	SmartDashboard::PutString("DB/String 0", builder.str());
-	limitBuilder << "The Limit Switch value is: ";
-	limitBuilder << limitSwitch1.Get();
-	SmartDashboard::PutString("DB/String 1", limitBuilder.str());
-	gyroBuilder << "The Gyro angle is: ";
-	gyroBuilder << gyro->GetAngle();
-	SmartDashboard::PutString("DB/String 2", gyroBuilder.str());
 
 	bool button1 = gamePad->GetRawButton(1);
 	bool button2 = gamePad->GetRawButton(2);
@@ -67,6 +60,10 @@ void TestMode::PerformTesting(Joystick * gamePad, Encoder * encoder, Gyro *gyro)
 			break;
 		case testEncoder:
 
+			builder << "The encoder value is: ";
+			builder << encoder->Get();
+			SmartDashboard::PutString("DB/String 0", builder.str());
+
 			if(button1)
 			{
 				c_mode = testGyro;
@@ -78,9 +75,14 @@ void TestMode::PerformTesting(Joystick * gamePad, Encoder * encoder, Gyro *gyro)
 			break;
 		case testGyro:
 
+			//Prints out the values for gyro.
+			gyroBuilder << "The Gyro angle is: ";
+			gyroBuilder << gyro->GetAngle();
+			SmartDashboard::PutString("DB/String 2", gyroBuilder.str());
+
 			if(button1)
 			{
-				c_mode = testElevator;
+				c_mode = testLimitSwitch;
 			}
 			if(button2)
 			{
@@ -88,18 +90,24 @@ void TestMode::PerformTesting(Joystick * gamePad, Encoder * encoder, Gyro *gyro)
 			}
 			break;
 		case testLimitSwitch:
+
+			limitBuilder << "The Limit Switch value is: ";
+			limitBuilder << limitSwitch1.Get();
+			//Prints out the values for the limit switch
+			SmartDashboard::PutString("DB/String 1", limitBuilder.str());
+
 			if(button1)
 			{
-				c_mode = testLimitSwitch;
+				c_mode = testElevator;
 			}
-			
-			
 			if(button2)
 			{
-				c_mode = testLimitSwitch;
+				c_mode = testGyro;
 			}
 	}
 }
+TestMode::~TestMode(){
 
+}
 
 

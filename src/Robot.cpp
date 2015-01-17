@@ -14,14 +14,26 @@ class Robot: public SampleRobot
     const static int rearRightChannel	= 2;
 
     const static int joystickChannel	= 0;
-    const static int testEncoderChannelA = 1;
-    const static int testEncoderChannelB = 2;
+    const static int testEncoderChannelA = 0;
+    const static int testEncoderChannelB = 1;
+    const static int driveEncoder1ChannelA = 2;
+    const static int driveEncoder1ChannelB = 3;
+    const static int driveEncoder2ChannelA = 4;
+    const static int driveEncoder2ChannelB = 5;
+    const static int driveEncoder3ChannelA = 6;
+    const static int driveEncoder3ChannelB = 7;
+    const static int driveEncoder4ChannelA = 8;
+    const static int driveEncoder4ChannelB = 9;
     const static int gyroChannel = 0;
 
 
 	RobotDrive robotDrive;	// robot drive system
 	Joystick stick;			// only joystick
 	Encoder testEncoder;
+	Encoder driveEncoder1;
+	Encoder driveEncoder2;
+	Encoder driveEncoder3;
+	Encoder driveEncoder4;
 	Gyro gyro;
 
 public:
@@ -30,6 +42,10 @@ public:
 					   frontRightChannel, rearRightChannel),	// these must be initialized in the same order
 			stick(joystickChannel),
 			testEncoder(testEncoderChannelA,testEncoderChannelB),
+			driveEncoder1(driveEncoder1ChannelA, driveEncoder1ChannelB),
+			driveEncoder2(driveEncoder2ChannelA, driveEncoder2ChannelB),
+			driveEncoder3(driveEncoder3ChannelA, driveEncoder3ChannelB),
+			driveEncoder4(driveEncoder4ChannelA, driveEncoder4ChannelB),
 			gyro(gyroChannel)
 // as they are declared above.
 	{
@@ -61,7 +77,7 @@ public:
 
 		while (IsTest() && IsEnabled())
 		{
-			tester.PerformTesting(&stick, &testEncoder, &gyro);
+			tester.PerformTesting(&stick, &testEncoder, &driveEncoder1, &driveEncoder2, &driveEncoder3, &driveEncoder4, &gyro);
 
 			Wait(0.005);
 		}
