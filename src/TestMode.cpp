@@ -10,15 +10,18 @@
 #include <sstream>
 
 
-TestMode::TestMode(){
+TestMode::TestMode():limitSwitch1(1){
 	c_mode = testTalon;
 }
 
 void TestMode::PerformTesting(Joystick * gamePad, Encoder * encoder){
 	std::ostringstream builder;
+	std::ostringstream limitBuilder;
 	builder << "The encoder value is: ";
 	builder << encoder->Get();
 	SmartDashboard::PutString("DB/String 0", builder.str());
+	limitBuilder << limitSwitch1.Get();
+	SmartDashboard::PutString("DB/String 1", limitBuilder.str());
 
 	bool button1 = gamePad->GetRawButton(1);
 	bool button2 = gamePad->GetRawButton(2);
@@ -39,7 +42,7 @@ void TestMode::PerformTesting(Joystick * gamePad, Encoder * encoder){
 
 			if(button1)
 			{
-				c_mode = testTalon;
+				c_mode = testTalon;				
 			}
 			if(button2)
 			{
@@ -79,7 +82,17 @@ void TestMode::PerformTesting(Joystick * gamePad, Encoder * encoder){
 				c_mode = testEncoder;
 			}
 			break;
-
+		case testLimitSwitch:
+			if(button1)
+			{
+				c_mode = testLimitSwitch;
+			}
+			
+			
+			if(button2)
+			{
+				c_mode = testLimitSwitch;
+			}
 	}
 }
 

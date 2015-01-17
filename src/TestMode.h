@@ -4,10 +4,11 @@
 #include "WPILib.h"
 
 
-enum testModes{testElevator, testJoystick, testTalon, testEncoder, testGyro};
+enum testModes{testElevator, testJoystick, testTalon, testEncoder, testGyro, testLimitSwitch};
 
 class TestMode
 {
+	
 	public:
 
 		TestMode();
@@ -15,6 +16,7 @@ class TestMode
 
 	private:
 		testModes c_mode; //current mode
+		DigitalInput limitSwitch1;
 
 };
 
