@@ -3,6 +3,8 @@
 .settings
 .wrmakefile
 Debug/*
+.metadata
+.metadata/*
 build.properties
 build.xml
 
