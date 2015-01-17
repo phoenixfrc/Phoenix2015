@@ -15,7 +15,8 @@ II use Eclipse to create a git repo for the new project
       (Something like c:\Users\yourUsername\workspace\ )
   3. In top right of the left panel (Git Repositories) there are a set of icons.
      There are three with Git in words with a yellow disk.
-     Choose the rightmost of the three git icons (Create a new git repository and add it to this view)
+     Choose the rightmost of the three git icons (Create a new git repository and add 
+                it to this view)
      
      3a - using the path from step 2 browse to the project directory from part I
      3b - highlight the project folder (Getting Started) and click OK
@@ -37,14 +38,14 @@ III make an initial commit
   6. Right click the project and choose Team-> Commit
         Should see .gitignore and src/Robot.cpp
 	enter "First commit" into message area  (COMMIT)
-	(Note, you can't push since there is no upstream repo we just made one for this experiment)
+	(Note, you can't push since there is no upstream repo;we just made one for this tryit)
 
 IV make a second commit
   1. open Robot.cpp
   2. add a comment like this:
 
   /*
-   * First change by yourname to test branch
+   * First change by yourname to master branch
    */
   3. save, add and commit the Robot.cpp file.  
      a> rightclick on robot.cpp, commit...
@@ -53,4 +54,127 @@ IV make a second commit
   4. Observe commit history in eclipse via
      Right click on project (Getting Started) -> Team -> Show in history
      
+
+V make a third commit like above.
+  1   In robot.cpp add a second line in the comment.
+  2.  use message "second change" when commit history
+  3   see that the history is now longe
+
+VI make some branches.
+  lets say we are going to all do some different parts of the project.
+  We have four features we need to add to the code to meet our robot/customers needs.
+   vision, grabber, sweeper, and teleportation
+   since these are all new features to us and going to be long term, we want separate
+   branches.
+   Additionally we might want an "integration" branch or "test" branch to check on things
+   In the document they give names that are more like a formal business process
+   (hotfix-123, bug-3541, feature-125 etc could be seen in an enterprise repo)
+  
+  So lets start with the test branch.
+
+  1. Right click on project (Getting started) 
+      Team -> Switch to -> New branch
+     Branch name : test
+     keep Checkout new branch checked.
+  2. View the history, and you have a new test annoation in the history that is bold.
+  3. See the Getting starte project line also has test in it to indicate the current branch
+
+  4. Repeat steps 1-3 for branches vision and grabber
+     Did you notice you had more choices than New under Team-> Switch to
+     with our branch names like master, and vision when you made the grabber branch?
+
+VII add some code to branch vision
+  1. switch back to the vision branch.
+  2. Add a new comment BELOW the first change/second change comment from part I through V 
+
+  /*
+   * First change ON VISION branch by yourname to test branch
+   */
+
+  3. Commit this, and see how the vision is now ahead of master, grabber and test.
+  4. Make a similar second line to the comment again for vision and commit.
+
+
+VIII Make a branch for sweeper off of the vision branch since it will really need
+     vision to work properly.
+  1. Team -> swith to -> new branch.
+  2. Below the comments for VISION Add a comment for Sweeper branch and commit.
+
+  /*
+   * First change ON SWEEPER branch by yourname to test branch
+   */
+  
+IX Go back and make a third vision branch change
+  1. Team -> switch to -> vision
+  2. look at history 
+     notice, no longer see the sweeper branch,
+     no longer see the code in Robot.cpp from the vision branch.
+     It's still in the repository though.  (How can you see it again ?)
+  3. Add a third vision change in the comment for vision
+
+X. Since the vision and sweeper projects are well on their way,
+   lets get telportation started, but we don't want to be distracted by the vision code.
+
+  1. Switch back to master branch
+  2. Add the teleporation branch
+  3. Below the first/second change comment , add a comment for teleportation and 
+     commit your change to teleportation branch
+  
+XI. Do same as part X for grabber.
+
+XII. Lets add two more changes to the vision branch
+  1. in separate commits add a new line to the vision branch comment block 
+
+XII - ALERT ! our sweeper coding team needs our new and improved vision changes!
+   they are on their own branch,  so they want to pull their changes to their branch.
+  1. switch to sweeper branch, 
+  2. (See only two vision branch lines.)
+  3. Team -> Merge
+     choose vision branch (fourth vision change)
+  4. Git did the right thing automatically (hopefully here)
+  5. See the graph in the history, 
+
+  6.  Due to the vision changes sweeper needs a new line of code
+     add an extra line to sweeper comment area, and commit
+
+XIII Sweeper is done, and ready to test.
+  1. Switch to test branch.
+  2. Merge sweeper into test
+  
+XIV. Vision has one final change
+  1. switch to vision branch
+
+XV  Test team tests the vision change.
+  1. Switch to test branch
+  2. in history you see they don't have the change yet
+  3. merge the new vision change to the test branch
+
+XVI test team approoves change, so they update master branch
+  1. Switch to master and then merge test into it.
+
+XVII Now we need to test the teleportation code.
+  1. The test team's job is not to write the code, so teleportation
+     team needs the most recently approoved, code. (on master)
+  2. Switch to teleportation, then merge from master
+  3. CONFLICT!!!
+  4.. Since we added the code in the same places, Git couldn't automatically merge.
+  5. We decide what code should be where, (lets put the teleportation code below
+     the Sweeper code..
+    a> Remove the lines =====    <<<<HEAD and >>>> refs/heads/master
+    b> move the code down
+  6. commit 
+      ERROR - but can't.....
+  7.  Add the file Robot.cpp
+     Robot.cpp -> RtClick -> Team -> + add to index
+  8. commit
+  
+XVIII, test team merges code to test branch
+  1. switch to test
+  2. merge from teleportation
+
+XIX .  Test team sees problem., teleportation team fixes on their branch,  and commits
+     teleportation may not need to merge master again unless some other team has tested code,
+     test team merges changes back to test branch from teleportation.
+     After testing is finished, the test team moves the updated code by merging to the
+     master branch.
 
