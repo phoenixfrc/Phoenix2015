@@ -14,9 +14,9 @@ TestMode::TestMode():limitSwitch1(1){
 	c_mode = testTalon;
 }
 
-void TestMode::PerformTesting(Joystick * gamePad, Encoder * encoder,
-		Encoder * driveEncoder1, Encoder * driveEncoder2,
-		Encoder * driveEncoder3, Encoder * driveEncoder4, Gyro * gyro){
+void TestMode::PerformTesting(Joystick * gamePad,Encoder * driveEncoder1,
+		Encoder * driveEncoder2,Encoder * driveEncoder3,
+		Encoder * driveEncoder4, Gyro * gyro){
 	std::ostringstream builder;
 	std::ostringstream limitBuilder;
 	std::ostringstream gyroBuilder;
@@ -61,7 +61,7 @@ void TestMode::PerformTesting(Joystick * gamePad, Encoder * encoder,
 		case testEncoder:
 
 			builder << "The encoder value is: ";
-			builder << encoder->Get();
+			builder << driveEncoder1->Get();
 			SmartDashboard::PutString("DB/String 0", builder.str());
 
 			if(button1)
