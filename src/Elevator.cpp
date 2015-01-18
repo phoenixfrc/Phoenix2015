@@ -8,12 +8,12 @@
 #include "Constants.h"
 
 Elevator::Elevator():
-    lowerLimit(1),
-    upperLimit(2),
-    home(3),
-    motor1(4),
-    motor2(5),
-    encoder(PortAssign::encoderChannelA, PortAssign::encoderChannelB )
+    lowerLimit(PortAssign::ElevatorLowerLimitChannel),
+    upperLimit(PortAssign::ElevatorUpperLimitChannel),
+    home(PortAssign::ElevatorHomeSwitchChannel),
+    motor1(PortAssign::ElevatorMotorPort1),
+    motor2(PortAssign::ElevatorMotorPort2),
+    encoder(PortAssign::ElevatorEncoderChannelA, PortAssign::ElevatorEncoderChannelA)
 {
 
 	currentMode = buttonMode;
