@@ -1,6 +1,6 @@
 #include "WPILib.h"
-#include "TestMode.h"
 #include "Constants.h"
+#include "TestMode.h"
 #include "Team2342Joystick.h"
 #include "Dragger.h"
 
@@ -10,10 +10,6 @@
 class Robot: public SampleRobot
 {
 
-    // Channels for the wheels
-
-
-
 	RobotDrive robotDrive;	// robot drive system
 	Joystick stick;			// only joystick
 	Joystick gamepad;       // the gamepad
@@ -22,7 +18,7 @@ class Robot: public SampleRobot
 	Encoder driveEncoder3;
 	Encoder driveEncoder4;
 	Gyro gyro;
-	Dragger dragger;
+	Dragger dragger;    // the gamepad
 
 public:
 	Robot() :

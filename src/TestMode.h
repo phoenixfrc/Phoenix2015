@@ -12,7 +12,7 @@ class TestMode
 	public:
 
 		TestMode();
-		void PerformTesting(Joystick * gamePad, Encoder * encoder,
+		void PerformTesting(Joystick * gamePad,
 				Encoder * driveEncoder1, Encoder * driveEncoder2,
 				Encoder * driveEncoder3, Encoder * driveEncoder4, Gyro * gyro);
 		~TestMode();
