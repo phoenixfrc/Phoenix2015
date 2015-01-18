@@ -1,4 +1,5 @@
 #include "WPILib.h"
+#include "Constants.h"
 #include "TestMode.h"
 #include "Team2342Joystick.h"
 #include "Dragger.h"
@@ -9,32 +10,27 @@
 class Robot: public SampleRobot
 {
 
-    // Channels for the wheels
-    const static int frontLeftChannel   = 3;
-       const static int rearLeftChannel    = 0;
-       const static int frontRightChannel  = 1;
-       const static int rearRightChannel   = 2;
-
-       const static int joystickChannel    = 0;
-       const static int gamepadChannel     = 1;
-       const static int testEncoderChannelA = 1;
-       const static int testEncoderChannelB = 2;
-
-
 	RobotDrive robotDrive;	// robot drive system
 	Joystick stick;			// only joystick
 	Joystick gamepad;       // the gamepad
-	Encoder testEncoder;
-	Dragger dragger;
-
+	Encoder driveEncoder1;
+	Encoder driveEncoder2;
+	Encoder driveEncoder3;
+	Encoder driveEncoder4;
+	Gyro gyro;
+	Dragger dragger;    // the gamepad
 
 public:
 	Robot() :
-			robotDrive(frontLeftChannel, rearLeftChannel,
-					   frontRightChannel, rearRightChannel),	// these must be initialized in the same order
-			stick(joystickChannel),
-			gamepad(gamepadChannel),
-			testEncoder(testEncoderChannelA,testEncoderChannelB),
+			robotDrive(PortAssign::frontLeftChannel, PortAssign::rearLeftChannel,
+					  PortAssign::frontRightChannel, PortAssign::rearRightChannel),	// these must be initialized in the same order
+			stick(PortAssign::joystickChannel),
+			gamepad(PortAssign::gamepadChannel),
+			driveEncoder1(PortAssign::driveEncoder1ChannelA, PortAssign::driveEncoder1ChannelB),
+			driveEncoder2(PortAssign::driveEncoder2ChannelA, PortAssign::driveEncoder2ChannelB),
+			driveEncoder3(PortAssign::driveEncoder3ChannelA, PortAssign::driveEncoder3ChannelB),
+			driveEncoder4(PortAssign::driveEncoder4ChannelA, PortAssign::driveEncoder4ChannelB),
+			gyro(PortAssign::gyroChannel),
 			dragger()
 // as they are declared above.
 	{
@@ -66,7 +62,7 @@ public:
 
 		while (IsTest() && IsEnabled())
 		{
-			tester.PerformTesting(&stick, &testEncoder);
+			tester.PerformTesting(&stick, &driveEncoder1, &driveEncoder2, &driveEncoder3, &driveEncoder4, &gyro);
 
 			Wait(0.005);
 		}
