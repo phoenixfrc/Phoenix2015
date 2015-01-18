@@ -1,4 +1,3 @@
-
 #include "WPILib.h"
 #include "Constants.h"
 #include "TestMode.h"
@@ -10,9 +9,8 @@
  */
 class Robot: public SampleRobot
 {
-
 	RobotDrive robotDrive;	// robot drive system
-	Joystick stick;			// only joystick
+	Team2342Joystick stick;			// only joystick
 	Joystick gamepad;       // the gamepad
 	Encoder driveEncoder1;
 	Encoder driveEncoder2;
@@ -51,7 +49,7 @@ public:
 		{
         	// Use the joystick X axis for lateral movement, Y axis for forward movement, and Z axis for rotation.
         	// This sample does not use field-oriented drive, so the gyro input is set to zero.
-			robotDrive.MecanumDrive_Cartesian(stick.GetX(), stick.GetY(), stick.GetZ(), gyro.GetAngle());
+			robotDrive.MecanumDrive_Cartesian(stick.GetX(), stick.GetY(), stick.GetZWithDeadZone(0.1),gyro.GetAngle());
 			dragger.operateDragger(&gamepad);
 			Wait(0.005); // wait 5ms to avoid hogging CPU cycles
 		}

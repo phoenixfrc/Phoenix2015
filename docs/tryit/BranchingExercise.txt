@@ -76,7 +76,7 @@ VI make some branches.
       Team -> Switch to -> New branch
      Branch name : test
      keep Checkout new branch checked.
-  2. View the history, and you have a new test annoation in the history that is bold.
+  2. View the history, and you have a new test annotation in the history that is bold.
   3. See the Getting starte project line also has test in it to indicate the current branch
 
   4. Repeat steps 1-3 for branches vision and grabber
