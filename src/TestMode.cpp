@@ -13,6 +13,8 @@
 TestMode::TestMode():limitSwitch1(1){
 	c_mode = testTalon;
 	currentEncoder = 0;
+	oldButton1 = false;
+	oldButton2 = false;
 }
 
 void TestMode::PerformTesting(Joystick * gamePad,Encoder * driveEncoder1,
@@ -35,19 +37,19 @@ void TestMode::PerformTesting(Joystick * gamePad,Encoder * driveEncoder1,
 		currentEncoder %= 4;
 	}
 
-
-
+	bool button1Pressed = (button1&&(!oldButton1));
+	bool button2Pressed = (button2&&(!oldButton2));
 
 	switch (c_mode){
 		case testElevator:
 
 		    mainMessageBuilder << "Elevator";
 
-			if(button1)
+			if(button1Pressed)
 			{
 				c_mode = testJoystick;
 			}
-			if(button2)
+			if(button2Pressed)
 			{
 				c_mode = testTalon;
 			}
@@ -56,11 +58,11 @@ void TestMode::PerformTesting(Joystick * gamePad,Encoder * driveEncoder1,
 
 		    mainMessageBuilder << "Joystick";
 
-			if(button1)
+			if(button1Pressed)
 			{
 				c_mode = testTalon;				
 			}
-			if(button2)
+			if(button2Pressed)
 			{
 				c_mode = testElevator;
 			}
@@ -68,11 +70,11 @@ void TestMode::PerformTesting(Joystick * gamePad,Encoder * driveEncoder1,
 		case testTalon:
 
 		    mainMessageBuilder << "Talon";
-			if(button1)
+			if(button1Pressed)
 			{
 				c_mode = testEncoder;
 			}
-			if(button2)
+			if(button2Pressed)
 			{
 				c_mode = testJoystick;
 			}
@@ -99,13 +101,13 @@ void TestMode::PerformTesting(Joystick * gamePad,Encoder * driveEncoder1,
 			    	break;
 			}
 
-			SmartDashboard::PutString("DB/String 1", builder.str());
+			SmartDashboard::PutString("DB/String 1", mainMessageBuilder.str());
 
-			if(button1)
+			if(button1Pressed)
 			{
 				c_mode = testGyro;
 			}
-			if(button2)
+			if(button2Pressed)
 			{
 				c_mode = testTalon;
 			}
@@ -119,11 +121,11 @@ void TestMode::PerformTesting(Joystick * gamePad,Encoder * driveEncoder1,
 			gyroBuilder << gyro->GetAngle();
 			SmartDashboard::PutString("DB/String 2", gyroBuilder.str());
 
-			if(button1)
+			if(button1Pressed)
 			{
 				c_mode = testLimitSwitch;
 			}
-			if(button2)
+			if(button2Pressed)
 			{
 				c_mode = testEncoder;
 			}
@@ -137,17 +139,20 @@ void TestMode::PerformTesting(Joystick * gamePad,Encoder * driveEncoder1,
 			//Prints out the values for the limit switch
 			SmartDashboard::PutString("DB/String 3", limitBuilder.str());
 
-			if(button1)
+			if(button1Pressed)
 			{
 				c_mode = testElevator;
 			}
-			if(button2)
+			if(button2Pressed)
 			{
 				c_mode = testGyro;
 			}
 	}
 
-	SmartDashboard::PutString("DB/String 0", gyroBuilder.str());
+	SmartDashboard::PutString("DB/String 0", mainMessageBuilder.str());
+
+	oldButton1 = button1;
+	oldButton2 = button2;
 }
 
 TestMode::~TestMode(){

@@ -21,6 +21,9 @@ class TestMode
 		DigitalInput limitSwitch1;
 		int currentEncoder;
 
+		bool oldButton2;
+		bool oldButton1;
+
 };
 
 #endif
