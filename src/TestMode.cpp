@@ -18,9 +18,13 @@ TestMode::TestMode():limitSwitch1(1){
 void TestMode::PerformTesting(Joystick * gamePad,Encoder * driveEncoder1,
 		Encoder * driveEncoder2,Encoder * driveEncoder3,
 		Encoder * driveEncoder4, Gyro * gyro){
-	std::ostringstream builder;
+
+    std::ostringstream mainMessageBuilder;
+	std::ostringstream encoderBuilder;
 	std::ostringstream limitBuilder;
 	std::ostringstream gyroBuilder;
+
+	mainMessageBuilder << "Testing: ";
 
 	bool button1 = gamePad->GetRawButton(1);
 	bool button2 = gamePad->GetRawButton(2);
@@ -32,8 +36,12 @@ void TestMode::PerformTesting(Joystick * gamePad,Encoder * driveEncoder1,
 	}
 
 
+
+
 	switch (c_mode){
 		case testElevator:
+
+		    mainMessageBuilder << "Elevator";
 
 			if(button1)
 			{
@@ -46,6 +54,8 @@ void TestMode::PerformTesting(Joystick * gamePad,Encoder * driveEncoder1,
 			break;
 		case testJoystick:
 
+		    mainMessageBuilder << "Joystick";
+
 			if(button1)
 			{
 				c_mode = testTalon;				
@@ -57,6 +67,7 @@ void TestMode::PerformTesting(Joystick * gamePad,Encoder * driveEncoder1,
 			break;
 		case testTalon:
 
+		    mainMessageBuilder << "Talon";
 			if(button1)
 			{
 				c_mode = testEncoder;
@@ -68,25 +79,27 @@ void TestMode::PerformTesting(Joystick * gamePad,Encoder * driveEncoder1,
 			break;
 		case testEncoder:
 
-			builder << "Encoder: ";
-			builder << currentEncoder;
-			builder << ", Value: ";
+		    mainMessageBuilder << "Encoders";
+
+		    encoderBuilder << "Encoder: ";
+		    encoderBuilder << currentEncoder;
+		    encoderBuilder << ", Value: ";
 			switch (currentEncoder){
 			    case 0:
-			        builder << driveEncoder1->Get();
+			        encoderBuilder << driveEncoder1->Get();
 			        break;
 			    case 1:
-			    	builder << driveEncoder2->Get();
+			        encoderBuilder << driveEncoder2->Get();
 			    	break;
 			    case 2:
-			    	builder << driveEncoder3->Get();
+			        encoderBuilder << driveEncoder3->Get();
 			    	break;
 			    case 3:
-			    	builder << driveEncoder4->Get();
+			        encoderBuilder << driveEncoder4->Get();
 			    	break;
 			}
 
-			SmartDashboard::PutString("DB/String 0", builder.str());
+			SmartDashboard::PutString("DB/String 1", builder.str());
 
 			if(button1)
 			{
@@ -98,6 +111,8 @@ void TestMode::PerformTesting(Joystick * gamePad,Encoder * driveEncoder1,
 			}
 			break;
 		case testGyro:
+
+		    mainMessageBuilder << "Gyro";
 
 			//Prints out the values for gyro.
 			gyroBuilder << "The Gyro angle is: ";
@@ -115,10 +130,12 @@ void TestMode::PerformTesting(Joystick * gamePad,Encoder * driveEncoder1,
 			break;
 		case testLimitSwitch:
 
+		    mainMessageBuilder << "Limit Switch";
+
 			limitBuilder << "The Limit Switch value is: ";
 			limitBuilder << limitSwitch1.Get();
 			//Prints out the values for the limit switch
-			SmartDashboard::PutString("DB/String 1", limitBuilder.str());
+			SmartDashboard::PutString("DB/String 3", limitBuilder.str());
 
 			if(button1)
 			{
@@ -129,7 +146,10 @@ void TestMode::PerformTesting(Joystick * gamePad,Encoder * driveEncoder1,
 				c_mode = testGyro;
 			}
 	}
+
+	SmartDashboard::PutString("DB/String 0", gyroBuilder.str());
 }
+
 TestMode::~TestMode(){
 
 }
