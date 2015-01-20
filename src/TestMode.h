@@ -19,6 +19,7 @@ class TestMode
 	private:
 		testModes c_mode; //current mode
 		DigitalInput limitSwitch1;
+		int currentEncoder;
 
 };
 

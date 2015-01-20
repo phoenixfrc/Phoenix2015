@@ -12,6 +12,7 @@
 					//Change limitSwitch Port
 TestMode::TestMode():limitSwitch1(1){
 	c_mode = testTalon;
+	currentEncoder = 0;
 }
 
 void TestMode::PerformTesting(Joystick * gamePad,Encoder * driveEncoder1,
@@ -23,6 +24,13 @@ void TestMode::PerformTesting(Joystick * gamePad,Encoder * driveEncoder1,
 
 	bool button1 = gamePad->GetRawButton(1);
 	bool button2 = gamePad->GetRawButton(2);
+	bool button3 = gamePad->GetRawButton(3);
+
+	if (button3){
+		currentEncoder++;
+		currentEncoder %= 4;
+	}
+
 
 	switch (c_mode){
 		case testElevator:
@@ -60,8 +68,24 @@ void TestMode::PerformTesting(Joystick * gamePad,Encoder * driveEncoder1,
 			break;
 		case testEncoder:
 
-			builder << "The encoder value is: ";
-			builder << driveEncoder1->Get();
+			builder << "Encoder: ";
+			builder << currentEncoder;
+			builder << ", Value: ";
+			switch (currentEncoder){
+			    case 0:
+			        builder << driveEncoder1->Get();
+			        break;
+			    case 1:
+			    	builder << driveEncoder2->Get();
+			    	break;
+			    case 2:
+			    	builder << driveEncoder3->Get();
+			    	break;
+			    case 3:
+			    	builder << driveEncoder4->Get();
+			    	break;
+			}
+
 			SmartDashboard::PutString("DB/String 0", builder.str());
 
 			if(button1)
