@@ -65,7 +65,7 @@ public:
 
 		while (IsTest() && IsEnabled())
 		{
-			tester.PerformTesting(&stick, &driveEncoder1, &driveEncoder2, &driveEncoder3, &driveEncoder4, &gyro, &elevator1, &elevator2);
+			tester.PerformTesting(&gamepad, &driveEncoder1, &driveEncoder2, &driveEncoder3, &driveEncoder4, &gyro, &elevator1, &elevator2);
 
 			Wait(0.005);
 		}
