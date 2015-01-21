@@ -27,7 +27,7 @@ void Elevator::find_home()
         if (!tripped)
         {
 
-            moveMotors(HomeSpeed);
+            moveMotors(-HomeSpeed);
 
         }
 
@@ -100,7 +100,7 @@ void Elevator::moveElevator()
         encoder.Reset();
     }
 
-    if(m_distance > m_goalDistance - Range && m_distance < m_goalDistance + Range)
+    if(m_distance > (m_goalDistance - Range) && m_distance < (m_goalDistance + Range))
     {
         moveMotors(0.0);
     }
@@ -110,7 +110,7 @@ void Elevator::moveElevator()
         moveMotors(-MotorSpeed);
     }
 
-    if(m_distance > m_goalDistance)
+    if(m_distance < m_goalDistance)
     {
         moveMotors(MotorSpeed);
     }
