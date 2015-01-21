@@ -55,10 +55,4 @@ struct ObjectSizes
     static const int barrelHeight = 4; //This is a filler number
 };
 
-struct RobotSpecs
-{
-    //Speed of the robot in inches per second
-    static const int driveSpeed = 2; //This is a filler number
-};
-
 #endif /* SRC_CONSTANTS_H_ */
