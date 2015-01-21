@@ -1,56 +1,46 @@
-/*
- * Elevator.cpp
- *
- *  Created on: Jan 10, 2015
- *      Author: Developer
- */
 #include "Elevator.h"
 #include "Constants.h"
 
 Elevator::Elevator():
-    lowerLimit(1),
-    upperLimit(2),
-    home(3),
-    motor1(4),
-    motor2(5),
+    lowerLimit(PortAssign::lowerLimitSwitch),
+    upperLimit(PortAssign::upperLimitSwitch),
+    homeSwitch(PortAssign::homeSwitch),
+    motor1(PortAssign::elevatorMotor1),//more discriptive names for motor1 and motor2
+    motor2(PortAssign::elevatorMotor2),
     encoder(PortAssign::encoderChannelA, PortAssign::encoderChannelB )
 {
 
-	currentMode = buttonMode;
-	offSetState = none;
+
 
 }
 
 void Elevator::find_home()
 {
-    bool triped = false;
-    while (!home.Get())
+    bool tripped = false;
+    while (!homeSwitch.Get())
     {
         if(lowerLimit.Get())
         {
-            triped = true;
+            tripped = true;
         }
 
-        if (!triped)
+        if (!tripped)
         {
 
-            motor1.Set(-motorSpeed);		//go down
-            motor2.Set(-motorSpeed);
+            moveMotors(HomeSpeed);
 
         }
 
         else
         {
 
-            motor1.Set(motorSpeed);			//go up
-            motor2.Set(motorSpeed);
+            moveMotors(HomeSpeed);
 
         }
     }
     encoder.Reset();
-    distance = 0;
-    motor1.Set(0);
-    motor2.Set(0);
+    m_distance = 0;
+    moveMotors(0);
 }
 
 
@@ -59,201 +49,99 @@ void Elevator::find_home()
 
 void Elevator::operateElevator(Joystick * gamePad)
 {
-    if (upperLimit.Get())
-    {
+    //buttons
+    bool xPressed = gamePad->GetRawButton(1);
+    bool aPressed = gamePad->GetRawButton(2);
+    bool bPressed = gamePad->GetRawButton(3);
+    bool yPressed = gamePad->GetRawButton(4);
 
-        motor1.Set(0);
-        motor2.Set(0);
-    }
-    else if (lowerLimit.Get())
-    {
-        motor1.Set(0);
-        motor2.Set(0);
-    }
-    if(home.Get())
-    {
-        encoder.Reset();
-    }
+    //joystick
+    double joystick = gamePad->GetY(); // right Joystick
 
-    distance = (encoder.Get() / ticks) * 8.17; // distance in inches from home.
+    // distance from home
+    m_distance = (encoder.Get() * 8.17) / Ticks;
 
-    // switch mode
-    if(gamePad->GetRawButton(3) && !switchWasPressed)
+    // button computing
+    if(xPressed)
     {
-        switch (currentMode)
-        {
-            case(buttonMode):
-                currentMode = joystickMode;
-                // gets the next goal distance,
-                goalStep = int(distance / 13);
-            break;
-
-            case(joystickMode):
-               currentMode = buttonMode;
-            break;
-        }
-        switchWasPressed = true;
+        m_goalDistance = Heights[0];
     }
-    else if (!gamePad->GetRawButton(3) && switchWasPressed)
+    if(aPressed)
     {
-        switchWasPressed = false;
+        m_goalDistance = Heights[1];
+    }
+    if(bPressed)
+    {
+        m_goalDistance = Heights[2];
+    }
+    if(yPressed)
+    {
+        m_goalDistance = Heights[3];
     }
 
-    //move code
-    switch (currentMode)
+    //Joystick computing
+    if(!(joystick > -0.05 && joystick < 0.05))
     {
-
-        case buttonMode:
-            // 1 for up
-            // 2 for down
-
-            if(gamePad->GetRawButton(1) && !upperWasPressed)
-            {
-                if (goalStep < 3)
-                {
-                    goalStep += 1;
-                }
-                upperWasPressed = true;
-            } else if (!gamePad->GetRawButton(1) && upperWasPressed)
-            {
-                upperWasPressed = false;
-            }
-
-            if(gamePad->GetRawButton(2) && lowerWasPressed)
-            {
-                if (goalStep > 0)
-                {
-                    goalStep -= 1;
-                }
-                lowerWasPressed = true;
-            } else if (!gamePad->GetRawButton(2) && lowerWasPressed)
-            {
-                upperWasPressed = false;
-            }
-
-            moveElevator();
-            break;
-
-        case joystickMode:
-            // Y > 0 up
-            // Y < 0 down
-            if((gamePad->GetY() > 0) && upperLimit.Get())
-            {
-                motor1.Set(motorSpeed);
-                motor2.Set(motorSpeed);
-            }
-            else if((gamePad->GetY() < 0) && lowerLimit.Get())
-            {
-                motor1.Set(-motorSpeed);
-                motor2.Set(-motorSpeed);
-            }
-            break;
+        m_goalDistance += (joystick / 20);
     }
+
+    moveElevator();
+
 }
 
 
 void Elevator::moveElevator()
 {
-    /* 0 = 0in
-     * 1 = 13in
-     * 2 = 26in
-     * 3 = 39in
-     * 4 = 52in
-     */
-    switch(goalStep)
+
+    bool home = homeSwitch.Get();
+
+    if(home)
     {
-        case 0:
-            if((distance > -0.5) && (distance < 0.5))
-            {
-                motor1.Set(0);
-                motor2.Set(0);
-            }
-            else if (distance < -0.5)
-            {
-                motor1.Set(motorSpeed);
-                motor2.Set(motorSpeed);
-            }
-            else if (distance > 0.5)
-            {
-                motor1.Set(-motorSpeed);
-                motor2.Set(-motorSpeed);
-            }
-            break;
-
-        case 1:
-            if(distance > 12.5 && distance < 13.5 )
-                {
-                    motor1.Set(0);
-                    motor2.Set(0);
-                }
-                else if (distance < 12.5)
-                {
-                    motor1.Set(motorSpeed);
-                    motor2.Set(motorSpeed);
-                }
-                else if (distance > 13.5)
-                {
-                    motor1.Set(-motorSpeed);
-                    motor2.Set(-motorSpeed);
-                }
-            break;
-
-        case 2:
-            if(distance > 25.5 && distance < 26.5 )
-                {
-                    motor1.Set(0);
-                    motor2.Set(0);
-                }
-                else if (distance < 25.5)
-                {
-                    motor1.Set(motorSpeed);
-                    motor2.Set(motorSpeed);
-                }
-                else if (distance > 26.5)
-                {
-                    motor1.Set(-motorSpeed);
-                    motor2.Set(-motorSpeed);
-                }
-            break;
-
-        case 3:
-            if(distance > 38.5 && distance < 39.5 )
-                {
-                    motor1.Set(0);
-                    motor2.Set(0);
-                }
-                else if (distance < 38.5)
-                {
-                    motor1.Set(motorSpeed);
-                    motor2.Set(motorSpeed);
-                }
-                else if (distance > 39.5)
-                {
-                    motor1.Set(-motorSpeed);
-                    motor2.Set(-motorSpeed);
-                }
-            break;
-
-        case 4:
-            if(distance > 51.5 && distance < 52.5 )
-                {
-                    motor1.Set(0);
-                    motor2.Set(0);
-                }
-                else if (distance < 51.5)
-                {
-                    motor1.Set(motorSpeed);
-                    motor2.Set(motorSpeed);
-                }
-                else if (distance >52.5)
-                {
-                    motor1.Set(-motorSpeed);
-                    motor2.Set(-motorSpeed);
-                }
-            break;
+        encoder.Reset();
     }
+
+    if(m_distance > m_goalDistance - Range && m_distance < m_goalDistance + Range)
+    {
+        moveMotors(0.0);
+    }
+
+    if(m_distance > m_goalDistance)
+    {
+        moveMotors(-MotorSpeed);
+    }
+
+    if(m_distance > m_goalDistance)
+    {
+        moveMotors(MotorSpeed);
+    }
+
+
+
 }
 
+void Elevator::moveMotors(double speed)
+{
+    bool upper = upperLimit.Get();
+    bool lower = lowerLimit.Get();
+
+    if(speed < 0 && !lower)
+    {
+        motor1.Set(speed);
+        motor2.Set(speed);
+    }
+    else if(speed > 0 && !upper)
+    {
+        motor1.Set(speed);
+        motor2.Set(speed);
+    }
+    else if(!speed)
+    {
+        motor1.Set(speed);
+        motor2.Set(speed);
+    }
+
+
+}
 
 
 

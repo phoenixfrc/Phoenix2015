@@ -11,37 +11,26 @@ class Elevator {
 
 	DigitalInput lowerLimit;
 	DigitalInput upperLimit;
-	DigitalInput home;
+	DigitalInput homeSwitch;
 	Talon motor1;
 	Talon motor2;
 	Encoder encoder;
 
-	enum elevatorStates{joystickMode, buttonMode};
-	enum offSets{none, scoring, step};
-	float motorSpeed = .5;
-	int ticks = 200;
-        elevatorStates currentMode;
 
-        offSets offSetState;
-        int offset = 0;
-	double distance = 0; // distance form home (in)
-	int goalStep = 0;   /*
-	                         0 = floor
-	                         1 = 13 in
-                                 2 = 26 in
-                                 3 = 39 in
-                                 4 = 52 in
-                             */
-	bool upperWasPressed = false;
-	bool lowerWasPressed = false;
-	bool switchWasPressed = false;
-
+	float MotorSpeed = 0.5;
+	float HomeSpeed = 0.1;
+	int Ticks = 200;
+	double m_distance = 0; // distance form home (in)
+	int Heights[4] = {0, 13, 26, 39};
+	double m_goalDistance;
+	double Range = 0.25; // range on either side of goalDistance
 
 public:
 	Elevator();
 	void find_home();
 	void operateElevator(Joystick * gamePad);
 	void moveElevator();
+	void moveMotors(double speed);
 	~Elevator();
 
 };

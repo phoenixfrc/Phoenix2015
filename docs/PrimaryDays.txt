@@ -1,9 +1,19 @@
-
            M      T      W      H      F      S      D
+
 Mr Gousios Y      N      X      Y      N      Y      N
+
 Henri      Y      Y      X      Y      Y      Y      Y
+
 Brin       Y      X      X      X      X      Y      X
+
 Ryan       X      X      X      X      Y      Y      Y
 Tyler      X      X      X      X      Y      Y      Y
 nathaniel  Y      X      X      Y      X      Y      X
+
 Jon        Y      Y      X      Y      Y      Y      Y
+Ray        Y      Y      X      Y      M      L      Y
+
+Connor     ?      ?      ?      ?      ?      ?      ?
+Kurtis     ?      ?      ?      ?      ?      ?      ?
+Will       ?      ?      ?      ?      ?      ?      ?
+Collin     ?      ?      ?      ?      ?      ?      ?
