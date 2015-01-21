@@ -11,7 +11,9 @@
 
 struct PortAssign
 {
-
+	//Elevator Ports
+	 const static int ElevatorMotor1 = 4;
+	 const static int ElevatorMotor2 = 5;
     //Dragger Ports:
 	 const static int draggerMotorPort = 1;
 	 const static int limitSwitchUpPort = 1;

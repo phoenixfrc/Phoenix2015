@@ -17,6 +17,8 @@ class Robot: public SampleRobot
 	Encoder driveEncoder3;
 	Encoder driveEncoder4;
 	Gyro gyro;
+	Talon elevator1;
+	Talon elevator2;
 	Dragger dragger;    // the gamepad
 
 public:
@@ -30,6 +32,8 @@ public:
 			driveEncoder3(PortAssign::driveEncoder3ChannelA, PortAssign::driveEncoder3ChannelB),
 			driveEncoder4(PortAssign::driveEncoder4ChannelA, PortAssign::driveEncoder4ChannelB),
 			gyro(PortAssign::gyroChannel),
+			elevator1(PortAssign::ElevatorMotor1),
+			elevator2(PortAssign::ElevatorMotor2),
 			dragger()
 // as they are declared above.
 	{
@@ -61,7 +65,7 @@ public:
 
 		while (IsTest() && IsEnabled())
 		{
-			tester.PerformTesting(&stick, &driveEncoder1, &driveEncoder2, &driveEncoder3, &driveEncoder4, &gyro);
+			tester.PerformTesting(&stick, &driveEncoder1, &driveEncoder2, &driveEncoder3, &driveEncoder4, &gyro, &elevator1, &elevator2);
 
 			Wait(0.005);
 		}

@@ -19,7 +19,7 @@ TestMode::TestMode():limitSwitch1(1){
 
 void TestMode::PerformTesting(Joystick * gamePad,Encoder * driveEncoder1,
 		Encoder * driveEncoder2,Encoder * driveEncoder3,
-		Encoder * driveEncoder4, Gyro * gyro){
+		Encoder * driveEncoder4, Gyro * gyro, Talon * motor1, Talon * motor2){
 
     std::ostringstream mainMessageBuilder;
 	std::ostringstream encoderBuilder;
@@ -31,6 +31,7 @@ void TestMode::PerformTesting(Joystick * gamePad,Encoder * driveEncoder1,
 	bool button1 = gamePad->GetRawButton(1);
 	bool button2 = gamePad->GetRawButton(2);
 	bool button3 = gamePad->GetRawButton(3);
+	float thumbstick = gamePad->GetY();
 
 	if (button3){
 		currentEncoder++;
@@ -44,6 +45,16 @@ void TestMode::PerformTesting(Joystick * gamePad,Encoder * driveEncoder1,
 		case testElevator:
 
 		    mainMessageBuilder << "Elevator";
+		    if(-0.05 < thumbstick && thumbstick < 0.05)
+		    {
+			    motor1->Set(0);
+			    motor2->Set(0);
+		    }
+		    else
+		    {
+		    motor1->Set(thumbstick);
+		    motor2->Set(thumbstick);
+		    }
 
 			if(button1Pressed)
 			{

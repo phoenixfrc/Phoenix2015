@@ -14,7 +14,7 @@ class TestMode
 		TestMode();
 		void PerformTesting(Joystick * gamePad,
 				Encoder * driveEncoder1, Encoder * driveEncoder2,
-				Encoder * driveEncoder3, Encoder * driveEncoder4, Gyro * gyro);
+				Encoder * driveEncoder3, Encoder * driveEncoder4, Gyro * gyro, Talon * motor1, Talon * motor2);
 		~TestMode();
 	private:
 		testModes c_mode; //current mode
