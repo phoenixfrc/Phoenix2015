@@ -11,19 +11,22 @@
 
 struct PortAssign
 {
-    //Joystick Ports
+    //Joystick Ports:
     static const int leftJoystickID  = 1;
     static const int rightJoystickID = 2;
     static const int gamePadID = 3;
-    static const int encoderChannelA = 8;
-    static const int encoderChannelB = 9;
-    static const int lowerLimitSwitch = 10;
-    static const int upperLimitSwitch = 11;
-    static const int homeSwitch = 12;
-    static const int elevatorMotor1 = 4;
-    static const int elevatorMotor2 = 5;
+    //DIO Ports:
+    static const int ElevatorEncoderChannelA = 8;
+    static const int ElevatorEncoderChannelB = 9;
+
+    static const int ElevatorLowerLimitChannel = 10;
+    static const int ElevatorUpperLimitChannel = 11;
+    static const int ElevatorHomeSwitchChannel = 12;
+
+    //Elevator Motor Ports (PWN):
+    static const int ElevatorMotorPort1 = 4;
+    static const int ElevatorMotorPort2 = 5;
+
 };
-
-
 
 #endif /* SRC_CONSTANTS_H_ */

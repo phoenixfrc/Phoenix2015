@@ -2,12 +2,12 @@
 #include "Constants.h"
 
 Elevator::Elevator():
-    lowerLimit(PortAssign::lowerLimitSwitch),
-    upperLimit(PortAssign::upperLimitSwitch),
-    homeSwitch(PortAssign::homeSwitch),
-    motor1(PortAssign::elevatorMotor1),//more discriptive names for motor1 and motor2
-    motor2(PortAssign::elevatorMotor2),
-    encoder(PortAssign::encoderChannelA, PortAssign::encoderChannelB )
+    lowerLimit(PortAssign::ElevatorLowerLimitChannel),
+    upperLimit(PortAssign::ElevatorUpperLimitChannel),
+    homeSwitch(PortAssign::ElevatorHomeSwitchChannel),
+    motor1(PortAssign::ElevatorMotorPort1),
+    motor2(PortAssign::ElevatorMotorPort2),
+    encoder(PortAssign::ElevatorEncoderChannelA, PortAssign::ElevatorEncoderChannelA)
 {
 
 

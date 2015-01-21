@@ -22,7 +22,7 @@ class Elevator {
 	int Ticks = 200;
 	double m_distance = 0; // distance form home (in)
 	int Heights[4] = {0, 13, 26, 39};
-	double m_goalDistance;
+	double m_goalDistance = 0;
 	double Range = 0.25; // range on either side of goalDistance
 
 public:
