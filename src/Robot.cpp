@@ -1,37 +1,37 @@
 #include "WPILib.h"
+#include "Constants.h"
 #include "TestMode.h"
+#include "Team2342Joystick.h"
+#include "Dragger.h"
 
 /**
  * This is a demo program showing how to use Mecanum control with the RobotDrive class.
  */
 class Robot: public SampleRobot
 {
-
-    // Channels for the wheels
-    const static int frontLeftChannel	= 3;
-    const static int rearLeftChannel	= 0;
-    const static int frontRightChannel	= 1;
-    const static int rearRightChannel	= 2;
-
-    const static int joystickChannel	= 0;
-    const static int gamePadChannel    = 1;
-    const static int testEncoderChannelA = 1;
-    const static int testEncoderChannelB = 2;
-
-
 	RobotDrive robotDrive;	// robot drive system
-	Joystick stick;			// only joystick
-	Encoder testEncoder;
-	Joystick gamePad;
+
+	Team2342Joystick stick;			// only joystick
+	Joystick gamepad;       // the gamepad
+	Encoder driveEncoder1;
+	Encoder driveEncoder2;
+	Encoder driveEncoder3;
+	Encoder driveEncoder4;
+	Gyro gyro;
+	Dragger dragger;    // the gamepad
 
 public:
-    Robot() :
-        robotDrive(frontLeftChannel, rearLeftChannel,
-                           frontRightChannel, rearRightChannel),	// these must be initialized in the same order
-        stick(joystickChannel),
-        testEncoder(testEncoderChannelA,testEncoderChannelB),
-        gamePad(gamePadChannel)
-
+	Robot() :
+			robotDrive(PortAssign::frontLeftChannel, PortAssign::rearLeftChannel,
+					  PortAssign::frontRightChannel, PortAssign::rearRightChannel),	// these must be initialized in the same order
+			stick(PortAssign::joystickChannel),
+			gamepad(PortAssign::gamepadChannel),
+			driveEncoder1(PortAssign::driveEncoder1ChannelA, PortAssign::driveEncoder1ChannelB),
+			driveEncoder2(PortAssign::driveEncoder2ChannelA, PortAssign::driveEncoder2ChannelB),
+			driveEncoder3(PortAssign::driveEncoder3ChannelA, PortAssign::driveEncoder3ChannelB),
+			driveEncoder4(PortAssign::driveEncoder4ChannelA, PortAssign::driveEncoder4ChannelB),
+			gyro(PortAssign::gyroChannel),
+			dragger()
 // as they are declared above.
 	{
 		robotDrive.SetExpiration(0.1);
@@ -50,8 +50,8 @@ public:
 		{
         	// Use the joystick X axis for lateral movement, Y axis for forward movement, and Z axis for rotation.
         	// This sample does not use field-oriented drive, so the gyro input is set to zero.
-			robotDrive.MecanumDrive_Cartesian(stick.GetX(), stick.GetY(), stick.GetZ());
-
+			robotDrive.MecanumDrive_Cartesian(stick.GetX(), stick.GetY(), stick.GetZWithDeadZone(0.1)/*gyro.GetAngle()*/);
+			dragger.operateDragger(&gamepad);
 			Wait(0.005); // wait 5ms to avoid hogging CPU cycles
 		}
 	}
@@ -62,7 +62,7 @@ public:
 
 		while (IsTest() && IsEnabled())
 		{
-			tester.PerformTesting(&stick, &testEncoder);
+			tester.PerformTesting(&gamepad, &stick, &driveEncoder1, &driveEncoder2, &driveEncoder3, &driveEncoder4, &gyro, &robotDrive);
 
 			Wait(0.005);
 		}
