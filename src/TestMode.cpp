@@ -11,7 +11,7 @@
 
 					//Change limitSwitch Port
 TestMode::TestMode():limitSwitch1(1){
-	c_mode = testTalon;
+	c_mode = testElevator;
 	currentEncoder = 0;
 	oldButton1 = false;
 	oldButton2 = false;

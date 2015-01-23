@@ -55,6 +55,20 @@ public:
         	// This sample does not use field-oriented drive, so the gyro input is set to zero.
 			robotDrive.MecanumDrive_Cartesian(stick.GetX(), stick.GetY(), stick.GetZWithDeadZone(0.1)/*gyro.GetAngle()*/);
 			dragger.operateDragger(&gamepad);
+
+			float thumbstick = -gamepad.GetY()/4;
+
+			if(-0.0125 < thumbstick && thumbstick < 0.0125)
+			{
+				elevator1.Set(0);
+				elevator2.Set(0);
+			}
+			else
+			{
+			elevator1.Set(thumbstick);
+			elevator2.Set(thumbstick);
+			}
+
 			Wait(0.005); // wait 5ms to avoid hogging CPU cycles
 		}
 	}
