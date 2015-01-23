@@ -7,6 +7,7 @@
 #include "Constants.h"
 #include "TestMode.h"
 #include "WPILib.h"
+#include "Team2342Joystick.h"
 #include <sstream>
 
 					//Change limitSwitch Port
@@ -17,14 +18,16 @@ TestMode::TestMode():limitSwitch1(1){
 	oldButton2 = false;
 }
 
-void TestMode::PerformTesting(Joystick * gamePad,Encoder * driveEncoder1,
+void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick, Encoder * driveEncoder1,
 		Encoder * driveEncoder2,Encoder * driveEncoder3,
-		Encoder * driveEncoder4, Gyro * gyro){
+		Encoder * driveEncoder4, Gyro * gyro,  RobotDrive * driveTrain){
 
     std::ostringstream mainMessageBuilder;
 	std::ostringstream encoderBuilder;
 	std::ostringstream limitBuilder;
 	std::ostringstream gyroBuilder;
+
+	driveTrain->MecanumDrive_Cartesian(stick->GetX(),stick->GetY(),stick->GetZWithDeadZone(0.1));
 
 	mainMessageBuilder << "Testing: ";
 
