@@ -4,6 +4,12 @@
 #include "Team2342Joystick.h"
 #include "Dragger.h"
 
+enum autoModes
+{
+    simple,
+    complex
+};
+
 /**
  * This is a demo program showing how to use Mecanum control with the RobotDrive class.
  */
@@ -18,6 +24,7 @@ class Robot: public SampleRobot
 	Encoder driveEncoder4;
 	Gyro gyro;
 	Dragger dragger;    // the gamepad
+	autoModes autoMode = complex; //Change this to set which auto mode we use
 
 public:
 	Robot() :
@@ -70,12 +77,21 @@ public:
 	}
 	void Autonomous()
 	{
-        //Pick up tote here
-	    MoveDistance(-FieldDistances::autoCrateDiff,0);
-        //Pick up another tote here
-        MoveDistance(-FieldDistances::autoCrateDiff,0);
-        //Pick up yet another tote here
-        MoveDistance(0,FieldDistances::intoAutoDiff);
+	    switch(autoMode)
+	    {
+	    case complex:
+            //Pick up tote here
+            MoveDistance(-FieldDistances::autoCrateDiff,0);
+            //Pick up another tote here
+            MoveDistance(-FieldDistances::autoCrateDiff,0);
+            //Pick up yet another tote here
+            MoveDistance(0,FieldDistances::intoAutoDiff);
+            break;
+	    case simple:
+	        //Pick up tote here
+	        MoveDistance(0, FieldDistances::intoAutoDiff);
+	        //Drop tote here
+	    }
 	}
 	/**
 	 * Runs the motors with Mecanum drive.
