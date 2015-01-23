@@ -9,45 +9,67 @@ Elevator::Elevator():
     motor2(PortAssign::ElevatorMotorPort2),
     encoder(PortAssign::ElevatorEncoderChannelA, PortAssign::ElevatorEncoderChannelA)
 {
-
+    homeState = lookingForLowerLimit;
 
 
 }
+void Elevator::operateElevator(Joystick * gamePad)
+{
+    bool rightTrigger = gamePad->GetRawButton(8);
+
+    if(!rightTrigger && (homeState == homingComplete))
+    {
+        controlElevator(gamePad);
+    }
+    else if(rightTrigger && (homeState == homingComplete))
+    {
+        homeState = lookingForLowerLimit;
+    }
+    else
+    {
+        find_home();
+    }
+
+
+}
+
+
 
 void Elevator::find_home()
 {
-    bool tripped = false;
-    while (!homeSwitch.Get())
-    {
-        if(lowerLimit.Get())
+        double speed = 0.0;
+        switch(homeState)
         {
-            tripped = true;
+            case lookingForLowerLimit:
+                if(lowerLimit.Get())
+                {
+                    homeState = goingUpToHome;
+                }
+                else
+                {
+                    speed = -MotorSpeed;
+                }
+            break;
+            case goingUpToHome:
+                if(homeSwitch.Get())
+                {
+                    homeState = homingComplete;
+                }
+                else
+                {
+                    speed = HomeSpeed;
+                }
+
+            break;
         }
-
-        if (!tripped)
-        {
-
-            moveMotors(-HomeSpeed);
-
-        }
-
-        else
-        {
-
-            moveMotors(HomeSpeed);
-
-        }
-    }
-    encoder.Reset();
-    m_distance = 0;
-    moveMotors(0);
+        moveMotors(speed);
 }
 
 
 
 
 
-void Elevator::operateElevator(Joystick * gamePad)
+void Elevator::controlElevator(Joystick * gamePad)
 {
     //buttons
     bool xPressed = gamePad->GetRawButton(1);
@@ -119,28 +141,25 @@ void Elevator::moveElevator()
 
 }
 
-void Elevator::moveMotors(double speed)
+void Elevator::moveMotors(double desiredSpeed)
 {
-    bool upper = upperLimit.Get();
-    bool lower = lowerLimit.Get();
-
-    if(speed < 0 && !lower)
-    {
-        motor1.Set(speed);
-        motor2.Set(speed);
-    }
-    else if(speed > 0 && !upper)
-    {
-        motor1.Set(speed);
-        motor2.Set(speed);
-    }
-    else if(!speed)
-    {
-        motor1.Set(speed);
-        motor2.Set(speed);
-    }
+    bool atUpperLimit = upperLimit.Get();
+    bool atLowerLimit = lowerLimit.Get();
+    double actualSpeed = desiredSpeed;
 
 
+    if (atUpperLimit && (desiredSpeed > 0.0))
+    {
+        actualSpeed = 0.0; // don't move past upper limit
+    }
+    if (atLowerLimit && (desiredSpeed < 0.0))
+    {
+        actualSpeed = 0.0; // don't move past lower limit
+    }
+
+    // set the motor speed
+    motor1.Set(actualSpeed);
+    motor2.Set(actualSpeed);
 }
 
 
