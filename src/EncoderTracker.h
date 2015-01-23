@@ -15,7 +15,11 @@ public:
     EncoderTracker::EncoderTracker();
 
     void ResetPosition();
-    void TrackPosition(Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight, float wheelRadius);
+    void TrackPosition(Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight);
+    float GetX();
+    float GetY();
+    float GetDeltaX(Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight);
+    float GetDeltaY(Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight);
 
     EncoderTracker::~EncoderTracker();
 

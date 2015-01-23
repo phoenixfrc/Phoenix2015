@@ -18,19 +18,29 @@ void EncoderTracker::ResetPosition () {
     m_yPos = 0;
 }
 
-void EncoderTracker::TrackPosition (Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight, float wheelRad) {
-    //I have no hope for the following system, but at least it's a start...
-    float wheelDiameter = wheelRad*2;
-
-
-    float ticksToRotations = 0.002604167;
-    float PI = 3.14159265;
-
-    float multiplier = ticksToRotations*wheelDiameter*PI/4;
-
-    m_yPos += (frontLeft->GetRate() + frontRight->GetRate() + backLeft->GetRate() + backRight->GetRate())*multiplier;
-    m_xPos += (frontLeft->GetRate() - frontRight->GetRate() - backLeft->GetRate() + backRight->GetRate())*multiplier;
+void EncoderTracker::TrackPosition (Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight) {
+    m_xPos += this->GetDeltaX(frontLeft, frontRight, backLeft, backRight);
+    m_yPos += this->GetDeltaY(frontLeft, frontRight, backLeft, backRight);
 }
+
+float EncoderTracker::GetX () {
+    return m_xPos;
+}
+
+float EncoderTracker::GetY () {
+    return m_yPos;
+}
+
+float EncoderTracker::GetDeltaX (Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight) {
+    //Algorithm for X movement (needs work):
+    return (frontLeft->GetRate() - frontRight->GetRate() - backLeft->GetRate() + backRight->GetRate())/4;
+}
+
+float EncoderTracker::GetDeltaY (Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight) {
+    //Algorithm for Y movement (needs work):
+    return (frontLeft->GetRate() + frontRight->GetRate() + backLeft->GetRate() + backRight->GetRate())/4;
+}
+
 
 EncoderTracker::~EncoderTracker(){
 
