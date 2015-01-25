@@ -13,39 +13,42 @@
 struct PortAssign
 {
 
+    // PWM ports
+    //Drive Train Ports:
+    static const uint32_t RearLeftChannel   = 0;
+    static const uint32_t FrontLeftChannel  = 1;
+    static const uint32_t FrontRightChannel = 2;
+    static const uint32_t RearRightChannel  = 3;
+    //Elevator Motor Ports
+    static const uint32_t ElevatorMotor1 = 4;
+    static const uint32_t ElevatorMotor2 = 5;
+
+    // relay ports
     //Dragger Ports:
-    static const uint32_t draggerMotorPort = 1;
-    static const uint32_t limitSwitchUpPort = 1;
-    static const uint32_t limitSwitchDownPort = 2;
+    static const uint32_t DraggerMotorPort = 0;
+    static const uint32_t BrakeMotorPort = 1;
+
     //DIO ports
-    static const uint32_t driveEncoder1ChannelA = 0;
-    static const uint32_t driveEncoder1ChannelB = 1;
-    static const uint32_t driveEncoder2ChannelA = 2;
-    static const uint32_t driveEncoder2ChannelB = 3;
-    static const uint32_t driveEncoder3ChannelA = 4;
-    static const uint32_t driveEncoder3ChannelB = 5;
-    static const uint32_t driveEncoder4ChannelA = 6;
-    static const uint32_t driveEncoder4ChannelB = 7;
+    static const uint32_t LeftRearDriveEncoderChannelA = 0;
+    static const uint32_t LeftRearDriveEncoderChannelB = 1;
+    static const uint32_t LeftFrontDriveEncoderChannelA = 2;
+    static const uint32_t LeftFrontDriveEncoderChannelB = 3;
+    static const uint32_t RightFrontDriveEncoderChannelA = 4;
+    static const uint32_t RightFrontDriveEncoderChannelB = 5;
+    static const uint32_t RightRearDriveEncoderChannelA = 6;
+    static const uint32_t RightRearDriveEncoderChannelB = 7;
     static const uint32_t ElevatorEncoderChannelA = 8;
     static const uint32_t ElevatorEncoderChannelB = 9;
     static const uint32_t ElevatorLowerLimitChannel = 10;
     static const uint32_t ElevatorUpperLimitChannel = 11;
     static const uint32_t ElevatorHomeSwitchChannel = 12;
 
-    static const int32_t gyroChannel = 0;
-
-    //Drive Train Ports:
-    static const uint32_t rearLeftChannel   = 0;
-    static const uint32_t frontLeftChannel  = 1;
-    static const uint32_t frontRightChannel = 2;
-    static const uint32_t rearRightChannel  = 3;
-    //Elevator Motor Ports (PWN):
-    static const int ElevatorMotorPort1 = 4;
-    static const int ElevatorMotorPort2 = 5;
+    // analog
+    static const int32_t GyroChannel = 0;
 
     //Joystick Ports:
-    static const uint32_t joystickChannel = 0;
-    static const uint32_t gamepadChannel  = 1;
+    static const uint32_t JoystickChannel = 0;
+    static const uint32_t GamepadChannel  = 1;
 
 
 };

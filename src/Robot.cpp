@@ -9,50 +9,61 @@
  */
 class Robot: public SampleRobot
 {
-	RobotDrive robotDrive;	// robot drive system
+	RobotDrive m_robotDrive;	// robot drive system
 
-	Team2342Joystick stick;			// only joystick
-	Joystick gamepad;       // the gamepad
-	Encoder driveEncoder1;
-	Encoder driveEncoder2;
-	Encoder driveEncoder3;
-	Encoder driveEncoder4;
-	Gyro gyro;
-	Dragger dragger;    // the gamepad
-
-        //tbd
         Talon m_elevatorMotor1;
         Talon m_elevatorMotor2;
+
+        Dragger m_dragger;
+        // tba Brake
+
+	Encoder m_leftRearDriveEncoder;
+        Encoder m_leftFrontDriveEncoder;
+        Encoder m_rightFrontDriveEncoder;
+        Encoder m_rightRearDriveEncoder;
+        Encoder m_elevatorEncoder;
+
         DigitalInput m_elevatorLowerLimit;
         DigitalInput m_elevatorUpperLimit;
         DigitalInput m_elevatorHomeSwitch;
 
-        Encoder m_elevatorEncoder;
+	Gyro m_gyro;
+
+        Team2342Joystick m_stick;                 // only joystick
+        Joystick m_gamepad;       // the gamepad
 
 public:
 	Robot() :
-			robotDrive(PortAssign::frontLeftChannel, PortAssign::rearLeftChannel,
-					  PortAssign::frontRightChannel, PortAssign::rearRightChannel),	// these must be initialized in the same order
-			stick(PortAssign::joystickChannel),
-			gamepad(PortAssign::gamepadChannel),
-			driveEncoder1(PortAssign::driveEncoder1ChannelA, PortAssign::driveEncoder1ChannelB),
-			driveEncoder2(PortAssign::driveEncoder2ChannelA, PortAssign::driveEncoder2ChannelB),
-			driveEncoder3(PortAssign::driveEncoder3ChannelA, PortAssign::driveEncoder3ChannelB),
-			driveEncoder4(PortAssign::driveEncoder4ChannelA, PortAssign::driveEncoder4ChannelB),
-			gyro(PortAssign::gyroChannel),
-			dragger(),
-		        m_elevatorMotor1(PortAssign::ElevatorMotorPort1),
-		        m_elevatorMotor2(PortAssign::ElevatorMotorPort2),
-		        m_elevatorLowerLimit(PortAssign::ElevatorLowerLimitChannel),
-                        m_elevatorUpperLimit(PortAssign::ElevatorUpperLimitChannel),
-                        m_elevatorHomeSwitch(PortAssign::ElevatorHomeSwitchChannel),
-		        m_elevatorEncoder(PortAssign::ElevatorEncoderChannelA, PortAssign::ElevatorEncoderChannelA)
+	    m_robotDrive(PortAssign::FrontLeftChannel, PortAssign::RearLeftChannel,
+					  PortAssign::FrontRightChannel, PortAssign::RearRightChannel),	// these must be initialized in the same order
+
+            m_elevatorMotor1(PortAssign::ElevatorMotor1),
+            m_elevatorMotor2(PortAssign::ElevatorMotor2),
+
+            m_dragger(),
+
+            m_leftRearDriveEncoder(PortAssign::LeftRearDriveEncoderChannelA, PortAssign::LeftRearDriveEncoderChannelB),
+            m_leftFrontDriveEncoder(PortAssign::LeftFrontDriveEncoderChannelA, PortAssign::LeftFrontDriveEncoderChannelB),
+            m_rightFrontDriveEncoder(PortAssign::RightFrontDriveEncoderChannelA, PortAssign::RightFrontDriveEncoderChannelB),
+            m_rightRearDriveEncoder(PortAssign::RightRearDriveEncoderChannelA, PortAssign::RightRearDriveEncoderChannelB),
+            m_elevatorEncoder(PortAssign::ElevatorEncoderChannelA, PortAssign::ElevatorEncoderChannelA),
+
+            m_elevatorLowerLimit(PortAssign::ElevatorLowerLimitChannel),
+            m_elevatorUpperLimit(PortAssign::ElevatorUpperLimitChannel),
+            m_elevatorHomeSwitch(PortAssign::ElevatorHomeSwitchChannel),
+
+            m_gyro(PortAssign::GyroChannel),
+
+            m_stick(PortAssign::JoystickChannel),
+            m_gamepad(PortAssign::GamepadChannel)
 
 // as they are declared above.
 	{
-		robotDrive.SetExpiration(0.1);
-		robotDrive.SetInvertedMotor(RobotDrive::kFrontRightMotor, true);	// invert the right side motors
-		robotDrive.SetInvertedMotor(RobotDrive::kRearRightMotor, true);	// you may need to change or remove this to match your robot
+		m_robotDrive.SetExpiration(0.1);
+		m_robotDrive.SetInvertedMotor(RobotDrive::kFrontRightMotor, true);	// invert the right side motors
+		m_robotDrive.SetInvertedMotor(RobotDrive::kRearRightMotor, true);	// you may need to change or remove this to match your robot
+		m_rightRearDriveEncoder.SetReverseDirection(true);
+		m_rightFrontDriveEncoder.SetReverseDirection(true);
 		SmartDashboard::init();
 	}
 
@@ -61,13 +72,14 @@ public:
 	 */
 	void OperatorControl()
 	{
-		robotDrive.SetSafetyEnabled(false);
+	    m_robotDrive.SetSafetyEnabled(false);
 		while (IsOperatorControl() && IsEnabled())
 		{
         	// Use the joystick X axis for lateral movement, Y axis for forward movement, and Z axis for rotation.
         	// This sample does not use field-oriented drive, so the gyro input is set to zero.
-			robotDrive.MecanumDrive_Cartesian(stick.GetX(), stick.GetY(), stick.GetZWithDeadZone(0.1)/*gyro.GetAngle()*/);
-			dragger.operateDragger(&gamepad);
+		    m_robotDrive.MecanumDrive_Cartesian(m_stick.GetX(), m_stick.GetY(), m_stick.GetZWithDeadZone(0.1)/*gyro.GetAngle()*/);
+		    m_dragger.operateDragger(&m_gamepad);
+
 			Wait(0.005); // wait 5ms to avoid hogging CPU cycles
 		}
 	}
@@ -75,11 +87,14 @@ public:
 	{
 
 		TestMode tester;
+		m_leftRearDriveEncoder.Reset();
+		m_leftFrontDriveEncoder.Reset();
+		m_rightRearDriveEncoder.Reset();
+		m_rightFrontDriveEncoder.Reset();
 
 		while (IsTest() && IsEnabled())
 		{
-			tester.PerformTesting(&gamepad, &stick, &driveEncoder1, &driveEncoder2, &driveEncoder3, &driveEncoder4, &gyro, &robotDrive);
-
+			tester.PerformTesting(&m_gamepad, &m_stick, &m_leftRearDriveEncoder, &m_leftFrontDriveEncoder, &m_rightFrontDriveEncoder, &m_rightRearDriveEncoder, &m_gyro, &m_elevatorMotor1, &m_elevatorMotor2, &m_robotDrive);
 			Wait(0.005);
 		}
 	}

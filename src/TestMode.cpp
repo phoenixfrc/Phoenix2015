@@ -12,28 +12,28 @@
 
 					//Change limitSwitch Port
 TestMode::TestMode():limitSwitch1(1){
-	c_mode = testTalon;
+	c_mode = testElevator;
 	currentEncoder = 0;
 	oldButton1 = false;
 	oldButton2 = false;
 }
 
-void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick, Encoder * driveEncoder1,
-		Encoder * driveEncoder2,Encoder * driveEncoder3,
-		Encoder * driveEncoder4, Gyro * gyro,  RobotDrive * driveTrain){
+void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick, Encoder * leftRearDriveEncoder,
+		Encoder * leftFrontDriveEncoder,Encoder * rightFrontDriveEncoder,
+		Encoder * rightRearDriveEncoder, Gyro * gyro, Talon * motor1, Talon * motor2,  RobotDrive * driveTrain){
 
     std::ostringstream mainMessageBuilder;
-	std::ostringstream encoderBuilder;
 	std::ostringstream limitBuilder;
 	std::ostringstream gyroBuilder;
 
-	driveTrain->MecanumDrive_Cartesian(stick->GetX(),stick->GetY(),stick->GetZWithDeadZone(0.1));
+	driveTrain->MecanumDrive_Cartesian(stick->GetX(), stick->GetY(), stick->GetZWithDeadZone(0.1));
 
 	mainMessageBuilder << "Testing: ";
 
 	bool button1 = gamePad->GetRawButton(1);
 	bool button2 = gamePad->GetRawButton(2);
 	bool button3 = gamePad->GetRawButton(3);
+	float thumbstick = -gamePad->GetY()/4;
 
 	if (button3){
 		currentEncoder++;
@@ -47,6 +47,16 @@ void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick, Enco
 		case testElevator:
 
 		    mainMessageBuilder << "Elevator";
+		    if(-0.0125 < thumbstick && thumbstick < 0.0125)
+		    {
+			    motor1->Set(0);
+			    motor2->Set(0);
+		    }
+		    else
+		    {
+		    motor1->Set(thumbstick);
+		    motor2->Set(thumbstick);
+		    }
 
 			if(button1Pressed)
 			{
@@ -82,29 +92,20 @@ void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick, Enco
 				c_mode = testJoystick;
 			}
 			break;
-		case testEncoder:
+		case testEncoder: {
 
 		    mainMessageBuilder << "Encoders";
+			std::ostringstream eblr, eblf, ebrf, ebrr;
+		    eblr << "Encoder: LR, Value: "<< leftRearDriveEncoder->Get();
+		    SmartDashboard::PutString("DB/String 1", eblr.str());
+		    eblf << "Encoder: LF, Value: "<< leftFrontDriveEncoder->Get();
+   		    SmartDashboard::PutString("DB/String 2", eblf.str());
+   		    ebrf << "Encoder: RF, Value: "<< rightFrontDriveEncoder->Get();
+   		    SmartDashboard::PutString("DB/String 3", ebrf.str());
+   		    ebrr << "Encoder: RR, Value: "<< rightRearDriveEncoder->Get();
+   		    SmartDashboard::PutString("DB/String 4", ebrr.str());
 
-		    encoderBuilder << "Encoder: ";
-		    encoderBuilder << currentEncoder;
-		    encoderBuilder << ", Value: ";
-			switch (currentEncoder){
-			    case 0:
-			        encoderBuilder << driveEncoder1->Get();
-			        break;
-			    case 1:
-			        encoderBuilder << driveEncoder2->Get();
-			    	break;
-			    case 2:
-			        encoderBuilder << driveEncoder3->Get();
-			    	break;
-			    case 3:
-			        encoderBuilder << driveEncoder4->Get();
-			    	break;
-			}
 
-			SmartDashboard::PutString("DB/String 1", mainMessageBuilder.str());
 
 			if(button1Pressed)
 			{
@@ -114,7 +115,7 @@ void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick, Enco
 			{
 				c_mode = testTalon;
 			}
-			break;
+			break; }
 		case testGyro:
 
 		    mainMessageBuilder << "Gyro";
