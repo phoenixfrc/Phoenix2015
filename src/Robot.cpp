@@ -73,9 +73,13 @@ public:
 		rightRearDriveEncoder.Reset();
 		rightFrontDriveEncoder.Reset();
 
+		m_ElevatorEncoder.Reset();
+
 		while (IsTest() && IsEnabled())
 		{
-			tester.PerformTesting(&gamepad, &stick, &leftRearDriveEncoder, &leftFrontDriveEncoder, &rightFrontDriveEncoder, &rightRearDriveEncoder, &gyro, &elevator1, &elevator2, &robotDrive, &m_ElevatorEncoder);
+			tester.PerformTesting(&gamepad, &stick,
+			        &leftRearDriveEncoder, &leftFrontDriveEncoder, &rightFrontDriveEncoder, &rightRearDriveEncoder,
+			        &gyro, &elevator1, &elevator2, &robotDrive, &m_ElevatorEncoder);
 			Wait(0.005);
 		}
 	}
