@@ -1,0 +1,4 @@
+echo "Hello from ~/.bashrc"
+echo "changing to Phoenix2015 subdirectory"
+
+cd /c/users/developer/workspace/Phoenix2015
