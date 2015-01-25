@@ -15,11 +15,12 @@ class TestMode
 		TestMode();
 		void PerformTesting(Joystick * gamePad, Team2342Joystick * stick, Encoder * driveEncoder1,
 				Encoder * driveEncoder2,Encoder * driveEncoder3,
-				Encoder * driveEncoder4, Gyro * gyro, Talon * motor1, Talon * motor2,  RobotDrive * driveTrain, Encoder * ElevatorEncoder);
+				Encoder * driveEncoder4, Gyro * gyro, Talon * motor1, Talon * motor2,  RobotDrive * driveTrain, Encoder * ElevatorEncoder,
+				Relay * ElevatorBrake);
 		~TestMode();
 	private:
 		DigitalInput limitSwitch1;
-
+		bool m_buttonWasPressed;
 };
 
 #endif

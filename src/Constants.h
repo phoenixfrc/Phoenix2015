@@ -42,6 +42,7 @@ struct PortAssign
     //Elevator Ports:
     static const uint32_t ElevatorEncoderChannelA = 8;
     static const uint32_t ElevatorEncoderChannelB = 9;
+    static const uint32_t ElevatorBrakeChannel = 0;//placeholder value.
 
 };
 

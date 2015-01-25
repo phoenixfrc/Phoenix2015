@@ -20,6 +20,7 @@ class Robot: public SampleRobot
 	Talon elevator1;
 	Talon elevator2;
 	Encoder m_ElevatorEncoder;
+	Relay m_brake;
 	Dragger dragger;    // the gamepad
 
 public:
@@ -36,6 +37,7 @@ public:
 			elevator1(PortAssign::ElevatorMotor1),
 			elevator2(PortAssign::ElevatorMotor2),
 			m_ElevatorEncoder(PortAssign::ElevatorEncoderChannelA, PortAssign::ElevatorEncoderChannelB),
+			m_brake(PortAssign::ElevatorBrakeChannel),
 			dragger()
 
 // as they are declared above.
@@ -79,7 +81,7 @@ public:
 		{
 			tester.PerformTesting(&gamepad, &stick,
 			        &leftRearDriveEncoder, &leftFrontDriveEncoder, &rightFrontDriveEncoder, &rightRearDriveEncoder,
-			        &gyro, &elevator1, &elevator2, &robotDrive, &m_ElevatorEncoder);
+			        &gyro, &elevator1, &elevator2, &robotDrive, &m_ElevatorEncoder, &m_brake);
 			Wait(0.005);
 		}
 	}

@@ -12,12 +12,13 @@
 #include <sstream>
 
 //Set limitSwitch port on init
-TestMode::TestMode():limitSwitch1(1){}
+TestMode::TestMode():limitSwitch1(1), m_buttonWasPressed(false){}
 
 
 void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick, Encoder * leftRearDriveEncoder,
 		Encoder * leftFrontDriveEncoder,Encoder * rightFrontDriveEncoder,
-		Encoder * rightRearDriveEncoder, Gyro * gyro, Talon * motor1, Talon * motor2,  RobotDrive * driveTrain, Encoder * ElevatorEncoder){
+		Encoder * rightRearDriveEncoder, Gyro * gyro, Talon * motor1, Talon * motor2,  RobotDrive * driveTrain, Encoder * ElevatorEncoder,
+		Relay * ElevatorBrake){
 
     //init string builders:
     std::ostringstream gyroBuilder, limitBuilder, eblr, eblf, ebrf, ebrr, elevatorBuilder1, elevatorBuilder2, elevatorEncoderBuilder;
@@ -30,6 +31,19 @@ void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick, Enco
 	thumbstick = fabs(thumbstick) < 0.0125 ? 0 : thumbstick;
 	motor1->Set(thumbstick);
 	motor2->Set(thumbstick);
+
+	//Toggle Brake:
+	bool buttonState = gamePad->GetRawButton(5);
+	bool buttonHit = buttonState && (! m_buttonWasPressed);
+	m_buttonWasPressed = buttonState;
+
+	if (buttonHit){
+	    if (ElevatorBrake->Get() == ElevatorBrake->kOff){
+	        ElevatorBrake->Set(ElevatorBrake->kOn);
+	    } else if (ElevatorBrake->Get() == ElevatorBrake->kOn){
+	        ElevatorBrake->Set(ElevatorBrake->kOn);
+        }
+	}
 
     //Prints out the values for gyro:
     gyroBuilder << "The Gyro angle is: ";

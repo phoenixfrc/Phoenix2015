@@ -23,7 +23,7 @@ limitSwitchDown(PortAssign::limitSwitchDownPort)
  * Gets whether the limit switches have been triggered.
  * Activates the motor appropriately.
  *
- * Todo: get the button number from Constants.h
+ * To-do: get the button number from Constants.h
  */
 
 void Dragger::operateDragger(Joystick * button){
@@ -45,7 +45,7 @@ void Dragger::operateDragger(Joystick * button){
      */
 
     if (isUp || isDown)
-    	motor.Set(buttonPressed && (isUp != isDown) ? (isUp ? motorSpeedDown : motorSpeedUp) : 0);
+        motor.Set(buttonPressed && (isUp != isDown) ? (isUp ? motorSpeedDown : motorSpeedUp) : 0);
 
 
 }
