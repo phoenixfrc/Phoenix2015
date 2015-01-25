@@ -1,29 +1,38 @@
 #include "Elevator.h"
 #include "Constants.h"
 
-Elevator::Elevator():
-    lowerLimit(PortAssign::ElevatorLowerLimitChannel),
-    upperLimit(PortAssign::ElevatorUpperLimitChannel),
-    homeSwitch(PortAssign::ElevatorHomeSwitchChannel),
-    motor1(PortAssign::ElevatorMotorPort1),
-    motor2(PortAssign::ElevatorMotorPort2),
-    encoder(PortAssign::ElevatorEncoderChannelA, PortAssign::ElevatorEncoderChannelA)
+Elevator::Elevator(
+        Talon* motor1,
+        Talon* motor2,
+        DigitalInput* lowerLimit,
+        DigitalInput* upperLimit,
+        DigitalInput* homeSwitch,
+        Encoder* encoder,
+        Joystick* gamePad):
+
+    m_motor1(motor1),
+    m_motor2(motor2),
+    m_lowerLimit(lowerLimit),
+    m_upperLimit(upperLimit),
+    m_homeSwitch(homeSwitch),
+    m_encoder(encoder),
+    m_gamePad(gamePad)
 {
     homeState = lookingForLowerLimit;
 
 
 }
-void Elevator::operateElevator(Joystick * gamePad)
+void Elevator::operateElevator()
 {
-    bool rightTrigger = gamePad->GetRawButton(8);
-
-    if(!rightTrigger && (homeState == homingComplete))
-    {
-        controlElevator(gamePad);
-    }
-    else if(rightTrigger && (homeState == homingComplete))
+    bool rightTrigger = m_gamePad->GetRawButton(8);
+    if(rightTrigger)
     {
         homeState = lookingForLowerLimit;
+    }
+
+    if(homeState == homingComplete)
+    {
+        controlElevator();
     }
     else
     {
@@ -41,7 +50,7 @@ void Elevator::find_home()
         switch(homeState)
         {
             case lookingForLowerLimit:
-                if(lowerLimit.Get())
+                if(m_lowerLimit->Get())
                 {
                     homeState = goingUpToHome;
                 }
@@ -51,15 +60,18 @@ void Elevator::find_home()
                 }
             break;
             case goingUpToHome:
-                if(homeSwitch.Get())
+                if(m_homeSwitch->Get())
                 {
                     homeState = homingComplete;
+                    m_encoder->Reset();
                 }
                 else
                 {
                     speed = HomeSpeed;
                 }
 
+            break;
+            case homingComplete:
             break;
         }
         moveMotors(speed);
@@ -69,19 +81,19 @@ void Elevator::find_home()
 
 
 
-void Elevator::controlElevator(Joystick * gamePad)
+void Elevator::controlElevator()
 {
     //buttons
-    bool xPressed = gamePad->GetRawButton(1);
-    bool aPressed = gamePad->GetRawButton(2);
-    bool bPressed = gamePad->GetRawButton(3);
-    bool yPressed = gamePad->GetRawButton(4);
+    bool xPressed = m_gamePad->GetRawButton(1);
+    bool aPressed = m_gamePad->GetRawButton(2);
+    bool bPressed = m_gamePad->GetRawButton(3);
+    bool yPressed = m_gamePad->GetRawButton(4);
 
     //joystick
-    double joystick = gamePad->GetY(); // right Joystick
+    double joystick = m_gamePad->GetY(); // right Joystick
 
     // distance from home
-    m_distance = (encoder.Get() * 8.17) / Ticks;
+    m_distance = (m_encoder->Get() * 8.17) / Ticks;
 
     // button computing
     if(xPressed)
@@ -114,14 +126,6 @@ void Elevator::controlElevator(Joystick * gamePad)
 
 void Elevator::moveElevator()
 {
-
-    bool home = homeSwitch.Get();
-
-    if(home)
-    {
-        encoder.Reset();
-    }
-
     if(m_distance > (m_goalDistance - Range) && m_distance < (m_goalDistance + Range))
     {
         moveMotors(0.0);
@@ -143,8 +147,8 @@ void Elevator::moveElevator()
 
 void Elevator::moveMotors(double desiredSpeed)
 {
-    bool atUpperLimit = upperLimit.Get();
-    bool atLowerLimit = lowerLimit.Get();
+    bool atUpperLimit = m_upperLimit->Get();
+    bool atLowerLimit = m_lowerLimit->Get();
     double actualSpeed = desiredSpeed;
 
 
@@ -158,8 +162,8 @@ void Elevator::moveMotors(double desiredSpeed)
     }
 
     // set the motor speed
-    motor1.Set(actualSpeed);
-    motor2.Set(actualSpeed);
+    m_motor1->Set(actualSpeed);
+    m_motor2->Set(actualSpeed);
 }
 
 

@@ -20,6 +20,15 @@ class Robot: public SampleRobot
 	Gyro gyro;
 	Dragger dragger;    // the gamepad
 
+        //tbd
+        Talon m_elevatorMotor1;
+        Talon m_elevatorMotor2;
+        DigitalInput m_elevatorLowerLimit;
+        DigitalInput m_elevatorUpperLimit;
+        DigitalInput m_elevatorHomeSwitch;
+
+        Encoder m_elevatorEncoder;
+
 public:
 	Robot() :
 			robotDrive(PortAssign::frontLeftChannel, PortAssign::rearLeftChannel,
@@ -31,7 +40,14 @@ public:
 			driveEncoder3(PortAssign::driveEncoder3ChannelA, PortAssign::driveEncoder3ChannelB),
 			driveEncoder4(PortAssign::driveEncoder4ChannelA, PortAssign::driveEncoder4ChannelB),
 			gyro(PortAssign::gyroChannel),
-			dragger()
+			dragger(),
+		        m_elevatorMotor1(PortAssign::ElevatorMotorPort1),
+		        m_elevatorMotor2(PortAssign::ElevatorMotorPort2),
+		        m_elevatorLowerLimit(PortAssign::ElevatorLowerLimitChannel),
+                        m_elevatorUpperLimit(PortAssign::ElevatorUpperLimitChannel),
+                        m_elevatorHomeSwitch(PortAssign::ElevatorHomeSwitchChannel),
+		        m_elevatorEncoder(PortAssign::ElevatorEncoderChannelA, PortAssign::ElevatorEncoderChannelA)
+
 // as they are declared above.
 	{
 		robotDrive.SetExpiration(0.1);
