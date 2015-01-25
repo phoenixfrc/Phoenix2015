@@ -19,6 +19,8 @@ EncoderTracker::EncoderTracker () {
     m_OldFRTicks = 0;
     m_OldBLTicks = 0;
     m_OldBRTicks = 0;
+    ticksToInchY = 20.5697;
+    ticksToInchX = 0;//???
 }
 
 void EncoderTracker::ResetPosition (Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight) {
@@ -71,7 +73,7 @@ float EncoderTracker::GetDeltaX (Encoder * frontLeft, Encoder * frontRight, Enco
 
 
     //Algorithm for X movement (needs work):
-    return (FLChange - FRChange - BLChange + BRChange)/4;
+    return (FRChange - FLChange - BRChange + BLChange)/4;
 }
 
 float EncoderTracker::GetDeltaY (Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight) {

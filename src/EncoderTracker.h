@@ -44,6 +44,9 @@ private:
     int32_t m_OldFRTicks;
     int32_t m_OldBLTicks;
     int32_t m_OldBRTicks;
+
+    float ticksToInchY;
+    float ticksToInchX;
 };
 
 
