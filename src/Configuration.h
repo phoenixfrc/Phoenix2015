@@ -22,7 +22,7 @@ public:
 
 
 	void ConfigurationInit();
-	static Configuration *GetInstance();
+	static Configuration *getInstance();
 
 };
 
