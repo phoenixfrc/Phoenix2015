@@ -7,37 +7,37 @@
 
 #ifndef SRC_CONSTANTS_H_
 #define SRC_CONSTANTS_H_
-
+#include "WPILib.h"
 
 struct PortAssign
 {
 	//Elevator Ports
-	 const static int ElevatorMotor1 = 4;
-	 const static int ElevatorMotor2 = 5;
+	static const uint32_t ElevatorMotor1 = 4;
+	static const uint32_t ElevatorMotor2 = 5;
     //Dragger Ports:
-	 const static int draggerMotorPort = 1;
-	 const static int limitSwitchUpPort = 1;
-	 const static int limitSwitchDownPort = 2;
-	 //DIO ports
-	 const static int driveEncoder1ChannelA = 0;
-	 const static int driveEncoder1ChannelB = 1;
-	 const static int driveEncoder2ChannelA = 2;
-	 const static int driveEncoder2ChannelB = 3;
-	 const static int driveEncoder3ChannelA = 4;
-	 const static int driveEncoder3ChannelB = 5;
-	 const static int driveEncoder4ChannelA = 6;
-	 const static int driveEncoder4ChannelB = 7;
-	 const static int gyroChannel = 0;
+	static const uint32_t draggerMotorPort = 1;
+	static const uint32_t limitSwitchUpPort = 1;
+	static const uint32_t limitSwitchDownPort = 2;
+	//DIO ports
+	static const uint32_t leftRearDriveEncoderChannelA = 0;
+	static const uint32_t leftRearDriveEncoderChannelB = 1;
+	static const uint32_t leftFrontDriveEncoderChannelA = 2;
+	static const uint32_t leftFrontDriveEncoderChannelB = 3;
+	static const uint32_t rightFrontDriveEncoderChannelA = 4;
+	static const uint32_t rightFrontDriveEncoderChannelB = 5;
+	static const uint32_t rightRearDriveEncoderChannelA = 6;
+	static const uint32_t rightRearDriveEncoderChannelB = 7;
+	static const int32_t gyroChannel = 0;
 
     //Drive Train Ports:
-    const static int rearLeftChannel   = 0;
-    const static int frontLeftChannel  = 1;
-    const static int frontRightChannel = 2;
-    const static int rearRightChannel  = 3;
+    static const uint32_t rearLeftChannel   = 0;
+    static const uint32_t frontLeftChannel  = 1;
+    static const uint32_t frontRightChannel = 2;
+    static const uint32_t rearRightChannel  = 3;
 
     //Joystick Ports:
-    const static int joystickChannel = 0;
-    const static int gamepadChannel  = 1;
+    static const uint32_t joystickChannel = 0;
+    static const uint32_t gamepadChannel  = 1;
 
 };
 
