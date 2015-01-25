@@ -12,6 +12,9 @@ class Configuration : public Preferences {
 private:
 
 	Configuration();
+
+	static Configuration *_instance;
+
 	~Configuration();
 
 
