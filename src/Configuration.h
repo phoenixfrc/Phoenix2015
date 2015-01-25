@@ -5,22 +5,22 @@
 
 
 
-class Configuration {
+class Configuration : public Preferences {
 
 
 
+private:
 
-
-
-
+	Configuration();
+	~Configuration();
 
 
 public:
-	Configuration();
+
 
 	void ConfigurationInit();
+	static Configuration *GetInstance();
 
-	~Configuration();
 };
 
 
