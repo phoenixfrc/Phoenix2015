@@ -3,6 +3,7 @@
 #include "TestMode.h"
 #include "Team2342Joystick.h"
 #include "Dragger.h"
+#include "Configuration.h"
 
 /**
  * This is a demo program showing how to use Mecanum control with the RobotDrive class.
@@ -19,7 +20,8 @@ class Robot: public SampleRobot
 	Gyro gyro;
 	Talon elevator1;
 	Talon elevator2;
-	Dragger dragger;    // the gamepad
+	Dragger dragger; // the gamepad
+	Configuration * m_myConfig = Configuration::getInstance();
 
 public:
 	Robot() :

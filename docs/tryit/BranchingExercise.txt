@@ -88,7 +88,7 @@ VII add some code to branch vision
   2. Add a new comment BELOW the first change/second change comment from part I through V 
 
   /*
-   * First change ON VISION branch by yourname to test branch
+   * First change ON VISION branch by Brin!
    */
 
   3. Commit this, and see how the vision is now ahead of master, grabber and test.
