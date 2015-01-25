@@ -18,12 +18,7 @@ class TestMode
 				Encoder * driveEncoder4, Gyro * gyro, Talon * motor1, Talon * motor2,  RobotDrive * driveTrain);
 		~TestMode();
 	private:
-		testModes c_mode; //current mode
 		DigitalInput limitSwitch1;
-		int currentEncoder;
-
-		bool oldButton2;
-		bool oldButton1;
 
 };
 
