@@ -20,11 +20,11 @@ public:
     //Main function (should be called in Robot.cpp loop):
     void TrackPosition(Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight);
 
-    //Functions that Kurtis should care about (the return value is currently in ticks):
+    //Functions that Kurtis should care about (the return value is currently in inches):
     float GetX();
     float GetY();
 
-    //Base functions (contains the algorithms):
+    //Base functions (contain the algorithms):
     float GetDeltaX(Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight);
     float GetDeltaY(Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight);
 
@@ -45,8 +45,8 @@ private:
     int32_t m_OldBLTicks;
     int32_t m_OldBRTicks;
 
-    float ticksToInchY;
-    float ticksToInchX;
+    const float ticksToInchesY;
+    const float ticksToInchesX;
 };
 
 
