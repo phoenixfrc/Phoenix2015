@@ -84,7 +84,7 @@ float EncoderTracker::GetDeltaY (Encoder * frontLeft, Encoder * frontRight, Enco
     float BRChange = m_BRTicks - m_OldBRTicks;
 
     //Algorithm for Y movement (needs work):
-    return (FLChange + FRChange + BLChange + BRChange)/4;
+    return (FLChange + FRChange + BLChange + BRChange)/4*ticksToInchY;
 }
 
 
