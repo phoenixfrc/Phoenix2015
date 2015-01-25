@@ -26,7 +26,7 @@ void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick, Enco
 	std::ostringstream limitBuilder;
 	std::ostringstream gyroBuilder;
 
-	driveTrain->MecanumDrive_Cartesian(stick->GetX(),/*stick->GetY()*//*temporarily using 0 for testing*/0,stick->GetZWithDeadZone(0.1));
+	driveTrain->MecanumDrive_Cartesian(stick->GetX(),/*stick->GetY()*//*temporarily using 0 for testing*/0,/*stick->GetZWithDeadZone(0.1)*/ 0);
 
 	mainMessageBuilder << "Testing: ";
 
