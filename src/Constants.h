@@ -39,6 +39,10 @@ struct PortAssign
     static const uint32_t joystickChannel = 0;
     static const uint32_t gamepadChannel  = 1;
 
+    //Elevator Ports:
+    static const uint32_t ElevatorEncoderChannelA = 9;
+    static const uint32_t ElevatorEncoderChannelB = 10;
+
 };
 
 

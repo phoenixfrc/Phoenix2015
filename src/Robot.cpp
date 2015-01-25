@@ -19,6 +19,7 @@ class Robot: public SampleRobot
 	Gyro gyro;
 	Talon elevator1;
 	Talon elevator2;
+	Encoder m_ElevatorEncoder;
 	Dragger dragger;    // the gamepad
 
 public:
@@ -34,6 +35,7 @@ public:
 			gyro(PortAssign::gyroChannel),
 			elevator1(PortAssign::ElevatorMotor1),
 			elevator2(PortAssign::ElevatorMotor2),
+			m_ElevatorEncoder(PortAssign::ElevatorEncoderChannelA, PortAssign::ElevatorEncoderChannelB),
 			dragger()
 
 // as they are declared above.
@@ -73,7 +75,7 @@ public:
 
 		while (IsTest() && IsEnabled())
 		{
-			tester.PerformTesting(&gamepad, &stick, &leftRearDriveEncoder, &leftFrontDriveEncoder, &rightFrontDriveEncoder, &rightRearDriveEncoder, &gyro, &elevator1, &elevator2, &robotDrive);
+			tester.PerformTesting(&gamepad, &stick, &leftRearDriveEncoder, &leftFrontDriveEncoder, &rightFrontDriveEncoder, &rightRearDriveEncoder, &gyro, &elevator1, &elevator2, &robotDrive, &m_ElevatorEncoder);
 			Wait(0.005);
 		}
 	}
