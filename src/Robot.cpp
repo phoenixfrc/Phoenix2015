@@ -7,6 +7,7 @@
 /**
  * This is a demo program showing how to use Mecanum control with the RobotDrive class.
  */
+
 class Robot: public SampleRobot
 {
 	RobotDrive m_robotDrive;	// robot drive system
@@ -16,6 +17,8 @@ class Robot: public SampleRobot
 
         Dragger m_dragger;
         // tba Brake
+
+        Relay m_brake;
 
 	Encoder m_leftRearDriveEncoder;
         Encoder m_leftFrontDriveEncoder;
@@ -32,6 +35,7 @@ class Robot: public SampleRobot
         Team2342Joystick m_stick;                 // only joystick
         Joystick m_gamepad;       // the gamepad
 
+
 public:
 	Robot() :
 	    m_robotDrive(PortAssign::FrontLeftChannel, PortAssign::RearLeftChannel,
@@ -41,6 +45,8 @@ public:
             m_elevatorMotor2(PortAssign::ElevatorMotor2),
 
             m_dragger(),
+
+            m_brake(PortAssign::ElevatorBrakeChannel),
 
             m_leftRearDriveEncoder(PortAssign::LeftRearDriveEncoderChannelA, PortAssign::LeftRearDriveEncoderChannelB),
             m_leftFrontDriveEncoder(PortAssign::LeftFrontDriveEncoderChannelA, PortAssign::LeftFrontDriveEncoderChannelB),
@@ -56,6 +62,7 @@ public:
 
             m_stick(PortAssign::JoystickChannel),
             m_gamepad(PortAssign::GamepadChannel)
+
 
 // as they are declared above.
 	{
@@ -92,9 +99,16 @@ public:
 		m_rightRearDriveEncoder.Reset();
 		m_rightFrontDriveEncoder.Reset();
 
+		m_elevatorEncoder.Reset();
+
 		while (IsTest() && IsEnabled())
 		{
-			tester.PerformTesting(&m_gamepad, &m_stick, &m_leftRearDriveEncoder, &m_leftFrontDriveEncoder, &m_rightFrontDriveEncoder, &m_rightRearDriveEncoder, &m_gyro, &m_elevatorMotor1, &m_elevatorMotor2, &m_robotDrive);
+			tester.PerformTesting(&m_gamepad, &m_stick,
+			        &m_leftRearDriveEncoder, &m_leftFrontDriveEncoder,
+			        &m_rightFrontDriveEncoder, &m_rightRearDriveEncoder,
+			        &m_gyro, &m_elevatorMotor1, &m_elevatorMotor2, &m_robotDrive,
+			        &m_elevatorEncoder, &m_brake);
+
 			Wait(0.005);
 		}
 	}

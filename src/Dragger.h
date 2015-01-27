@@ -12,7 +12,8 @@
 class Dragger {
     private:
         Talon motor;
-
+            DigitalInput limitSwitchUp;
+            DigitalInput limitSwitchDown;
     public:
         Dragger();
 

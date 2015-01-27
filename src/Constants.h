@@ -25,8 +25,10 @@ struct PortAssign
 
     // relay ports
     //Dragger Ports:
-    static const uint32_t DraggerMotorPort = 0;
-    static const uint32_t BrakeMotorPort = 1;
+    static const uint32_t DraggerMotorPort = 6;
+
+    //Elevator Ports:
+     static const uint32_t ElevatorBrakeChannel = 1;//placeholder value.
 
     //DIO ports
     static const uint32_t LeftRearDriveEncoderChannelA = 0;
@@ -42,6 +44,10 @@ struct PortAssign
     static const uint32_t ElevatorLowerLimitChannel = 10;
     static const uint32_t ElevatorUpperLimitChannel = 11;
     static const uint32_t ElevatorHomeSwitchChannel = 12;
+    static const uint32_t OpticalSensorChannel = 13;
+    static const uint32_t DraggerLowerLimitChannel = 14;
+    static const uint32_t DraggerUpperLimitChannel = 15;
+
 
     // analog
     static const int32_t GyroChannel = 0;

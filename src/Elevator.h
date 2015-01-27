@@ -1,3 +1,4 @@
+
 /*
  * Elevator.h
  *
@@ -25,11 +26,11 @@ class Elevator {
     } homeState;
 
     // initialized at class constructions then constant
+    Talon* m_motor1;
+    Talon* m_motor2;
     DigitalInput* m_lowerLimit;
     DigitalInput* m_upperLimit;
     DigitalInput* m_homeSwitch;
-    Talon* m_motor1;
-    Talon* m_motor2;
     Encoder* m_encoder;
     Joystick* m_gamePad;
 
@@ -60,3 +61,4 @@ public:
 
 
 #endif /* SRC_ELEVATOR_H_ */
+
