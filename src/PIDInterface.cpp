@@ -9,7 +9,7 @@ PIDInterface::PIDInterface(RobotDrive * robotDrive, Encoder * frontLeft, Encoder
     xPID.Disable();
     yPID.Disable();
     m_robotDrive = robotDrive;
-    m_currentAxis = x;
+    m_currentAxis = right;
 }
 
 void PIDInterface::Reset()
@@ -17,26 +17,27 @@ void PIDInterface::Reset()
     m_tracker.ResetPosition();
 }
 
+//TODO: should handle end of autonomous mode and abort
 void PIDInterface::SetGoal(double xGoalDistance, double yGoalDistance)
 {
     Reset();
-    //Go as far in the x axis as required
-    m_currentAxis = x;
+    //Go as far in the left-right axis as required
+    m_currentAxis = right;
     xPID.Enable();
     xPID.SetSetpoint(xGoalDistance);
     while(!xPID.OnTarget())
     {
-        Wait(0.005); //Wait until the x distance is reached, but only check every 5ms
+        Wait(0.005); //Wait until the left-right distance is reached, but only check every 5ms
     }
     xPID.Disable();
 
-    //Now to do the same for y
-    m_currentAxis = y;
+    //Now to do the same for forward-backward
+    m_currentAxis = forward;
     yPID.Enable();
     yPID.SetSetpoint(yGoalDistance);
     while(!yPID.OnTarget())
     {
-        Wait(0.005); //Wait until the y distance is reached, but only check every 5ms
+        Wait(0.005); //Wait until the forward-backward distance is reached, but only check every 5ms
     }
     yPID.Disable();
 }
@@ -47,10 +48,10 @@ double PIDInterface::PIDGet()
     m_tracker.TrackPosition();
     switch(m_currentAxis)
     {
-    case x:
+    case right:
         return m_tracker.GetX();
         break;
-    case y:
+    case forward:
         return m_tracker.GetY();
         break;
     }
@@ -61,10 +62,10 @@ void PIDInterface::PIDWrite(float output)
     //Output to the motors so they drive and move along the current axis
     switch(m_currentAxis)
     {
-    case x:
+    case right:
         m_robotDrive->MecanumDrive_Cartesian(output,0,0);
         break;
-    case y:
+    case forward:
         m_robotDrive->MecanumDrive_Cartesian(0,output,0);
         break;
     }
