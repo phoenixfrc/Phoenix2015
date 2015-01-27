@@ -1,6 +1,7 @@
 #ifndef PID_INTERFACE_H
 #define PID_INTERFACE_H
 #include "WPILib.h"
+#include "EncoderTracker.h"
 
 enum Axis {
     x,
