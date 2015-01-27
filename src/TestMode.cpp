@@ -32,13 +32,8 @@ void TestMode::PerformTesting(Joystick * gamePad,Encoder * driveEncoder1,
 	bool button2 = gamePad->GetRawButton(2);
 	bool button3 = gamePad->GetRawButton(3);
 
-	if (button3){
-		currentEncoder++;
-		currentEncoder %= 4;
-	}
-
-	bool button1Pressed = (button1&&(!oldButton1));
-	bool button2Pressed = (button2&&(!oldButton2));
+	bool button1Pressed = (button1&&(oldButton1 == false));
+	bool button2Pressed = (button2&&(oldButton2 == false));
 
 	switch (c_mode){
 		case testElevator:
@@ -80,6 +75,11 @@ void TestMode::PerformTesting(Joystick * gamePad,Encoder * driveEncoder1,
 			}
 			break;
 		case testEncoder:
+
+		    if (button3){
+                currentEncoder++;
+                currentEncoder %= 4;
+            }
 
 		    mainMessageBuilder << "Encoders";
 
