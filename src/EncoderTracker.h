@@ -12,20 +12,24 @@
 
 class EncoderTracker {
 public:
-    EncoderTracker::EncoderTracker();
+    EncoderTracker::EncoderTracker(Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight);
 
     void ResetPosition();
-    void TrackPosition(Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight);
+    void TrackPosition();
     float GetX();
     float GetY();
-    float GetDeltaX(Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight);
-    float GetDeltaY(Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight);
+    float GetDeltaX();
+    float GetDeltaY();
 
     EncoderTracker::~EncoderTracker();
 
 private:
     float m_xPos;
     float m_yPos;
+    Encoder * m_frontLeft;
+    Encoder * m_frontRight;
+    Encoder * m_backLeft;
+    Encoder * m_backRight;
 };
 
 

@@ -8,9 +8,13 @@
 #include "EncoderTracker.h"
 #include "WPILib.h"
 
-EncoderTracker::EncoderTracker () {
+EncoderTracker::EncoderTracker (Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight) {
     m_xPos = 0;
     m_yPos = 0;
+    m_frontLeft = frontLeft;
+    m_frontRight = frontRight;
+    m_backLeft = backLeft;
+    m_backRight = backRight;
 }
 
 void EncoderTracker::ResetPosition () {
@@ -18,9 +22,9 @@ void EncoderTracker::ResetPosition () {
     m_yPos = 0;
 }
 
-void EncoderTracker::TrackPosition (Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight) {
-    m_xPos += this->GetDeltaX(frontLeft, frontRight, backLeft, backRight);
-    m_yPos += this->GetDeltaY(frontLeft, frontRight, backLeft, backRight);
+void EncoderTracker::TrackPosition () {
+    m_xPos += this->GetDeltaX();
+    m_yPos += this->GetDeltaY();
 }
 
 float EncoderTracker::GetX () {
@@ -31,14 +35,14 @@ float EncoderTracker::GetY () {
     return m_yPos;
 }
 
-float EncoderTracker::GetDeltaX (Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight) {
+float EncoderTracker::GetDeltaX () {
     //Algorithm for X movement (needs work):
-    return (frontLeft->GetRate() - frontRight->GetRate() - backLeft->GetRate() + backRight->GetRate())/4;
+    return (m_frontLeft->GetRate() - m_frontRight->GetRate() - m_backLeft->GetRate() + m_backRight->GetRate())/4;
 }
 
-float EncoderTracker::GetDeltaY (Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight) {
+float EncoderTracker::GetDeltaY () {
     //Algorithm for Y movement (needs work):
-    return (frontLeft->GetRate() + frontRight->GetRate() + backLeft->GetRate() + backRight->GetRate())/4;
+    return (m_frontLeft->GetRate() + m_frontRight->GetRate() + m_backLeft->GetRate() + m_backRight->GetRate())/4;
 }
 
 
