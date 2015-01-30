@@ -32,10 +32,16 @@ public:
 
 private:
 
-    void UpdateEncoders(Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight);
+    void UpdateEncoders();
 
     float m_xPos;
     float m_yPos;
+
+    Encoder * m_frontLeft;
+    Encoder * m_frontRight;
+    Encoder * m_backLeft;
+    Encoder * m_backRight;
+
     int32_t m_FLTicks;
     int32_t m_FRTicks;
     int32_t m_BLTicks;

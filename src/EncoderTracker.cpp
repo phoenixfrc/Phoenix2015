@@ -8,9 +8,13 @@
 #include "EncoderTracker.h"
 #include "WPILib.h"
 
-EncoderTracker::EncoderTracker () {
+EncoderTracker::EncoderTracker (Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight) {
     m_xPos = 0;
     m_yPos = 0;
+    m_frontLeft = frontLeft;
+    m_frontRight = frontRight;
+    m_backLeft = backLeft;
+    m_backRight = backRight;
     m_FLTicks = 0;
     m_FRTicks = 0;
     m_BLTicks = 0;
@@ -23,7 +27,7 @@ EncoderTracker::EncoderTracker () {
     ticksToInchesX = 24.51875;
 }
 
-void EncoderTracker::ResetPosition (Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight) {
+void EncoderTracker::ResetPosition () {
     //Reset the position:
     m_xPos = 0;
     m_yPos = 0;
@@ -37,21 +41,19 @@ void EncoderTracker::ResetPosition (Encoder * frontLeft, Encoder * frontRight, E
     m_OldFRTicks = 0;
     m_OldBLTicks = 0;
     m_OldBRTicks = 0;
-
-    //Reset the encoders:
-    frontLeft->Reset();
-    frontRight->Reset();
-    backLeft->Reset();
-    backRight->Reset();
+    m_frontLeft->Reset();
+    m_frontRight->Reset();
+    m_backLeft->Reset();
+    m_backRight->Reset();
 }
 
-void EncoderTracker::TrackPosition (Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight) {
+void EncoderTracker::TrackPosition () {
     //Get the up-to-date encoder values:
-    this->UpdateEncoders(frontLeft, frontRight, backLeft, backRight);
+    this->UpdateEncoders();
 
     //Change the positions accordingly:
-    m_xPos += this->GetDeltaX(frontLeft, frontRight, backLeft, backRight);
-    m_yPos += this->GetDeltaY(frontLeft, frontRight, backLeft, backRight);
+    m_xPos += this->GetDeltaX();
+    m_yPos += this->GetDeltaY();
 }
 
 float EncoderTracker::GetX () {
@@ -64,14 +66,12 @@ float EncoderTracker::GetY () {
     return m_yPos;
 }
 
-
-float EncoderTracker::GetDeltaX (Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight) {
+float EncoderTracker::GetDeltaX () {
     //Get the difference (in ticks):
     float FLChange = m_FLTicks - m_OldFLTicks;
     float FRChange = m_FRTicks - m_OldFRTicks;
     float BLChange = m_BLTicks - m_OldBLTicks;
     float BRChange = m_BRTicks - m_OldBRTicks;
-
 
     //Algorithm for X movement (needs work):
     return (FRChange - FLChange - BRChange + BLChange)/4 * ticksToInchesX;
@@ -89,19 +89,19 @@ float EncoderTracker::GetDeltaY (Encoder * frontLeft, Encoder * frontRight, Enco
 }
 
 
-void EncoderTracker::UpdateEncoders(Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight){
+void EncoderTracker::UpdateEncoders(){
     //Update all the tick variables:
     m_OldFLTicks = m_FLTicks;
-    m_FLTicks = frontLeft->Get();
+    m_FLTicks = m_frontLeft->Get();
 
     m_OldFRTicks = m_FRTicks;
-    m_FRTicks = frontRight->Get();
+    m_FRTicks = m_frontRight->Get();
 
     m_OldBLTicks = m_BLTicks;
-    m_BLTicks = backLeft->Get();
+    m_BLTicks = m_backLeft->Get();
 
     m_OldBRTicks = m_BRTicks;
-    m_BRTicks = backRight->Get();
+    m_BRTicks = m_backRight->Get();
 }
 
 
