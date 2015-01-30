@@ -3,6 +3,7 @@
 #include "TestMode.h"
 #include "Team2342Joystick.h"
 #include "Dragger.h"
+#include "EncoderTracker.h"
 
 /**
  * This is a demo program showing how to use Mecanum control with the RobotDrive class.
@@ -18,6 +19,7 @@ class Robot: public SampleRobot
 	Encoder driveEncoder4;
 	Gyro gyro;
 	Dragger dragger;    // the gamepad
+	EncoderTracker m_tracker;
 
 public:
 	Robot() :
@@ -30,7 +32,8 @@ public:
 			driveEncoder3(PortAssign::driveEncoder3ChannelA, PortAssign::driveEncoder3ChannelB),
 			driveEncoder4(PortAssign::driveEncoder4ChannelA, PortAssign::driveEncoder4ChannelB),
 			gyro(PortAssign::gyroChannel),
-			dragger()
+			dragger(),
+			m_tracker(driveEncoder1, driveEncoder2, driveEncoder3, driveEncoder4)
 // as they are declared above.
 	{
 		robotDrive.SetExpiration(0.1);
@@ -61,7 +64,7 @@ public:
 
 		while (IsTest() && IsEnabled())
 		{
-			tester.PerformTesting(&stick, &driveEncoder1, &driveEncoder2, &driveEncoder3, &driveEncoder4, &gyro);
+			tester.PerformTesting(&stick, &driveEncoder1, &driveEncoder2, &driveEncoder3, &driveEncoder4, &gyro, &m_tracker, &robotDrive);
 
 			Wait(0.005);
 		}

@@ -2,6 +2,7 @@
 #define TESTMODE_H
 
 #include "WPILib.h"
+#include "EncoderTracker.h"
 
 
 enum testModes{testElevator, testJoystick, testTalon, testEncoder, testGyro, testLimitSwitch};
@@ -14,7 +15,8 @@ class TestMode
 		TestMode();
 		void PerformTesting(Joystick * gamePad,
 				Encoder * driveEncoder1, Encoder * driveEncoder2,
-				Encoder * driveEncoder3, Encoder * driveEncoder4, Gyro * gyro);
+				Encoder * driveEncoder3, Encoder * driveEncoder4, Gyro * gyro,
+				EncoderTracker * tracker, RobotDrive * driveTrain);
 		~TestMode();
 	private:
 		testModes c_mode; //current mode
