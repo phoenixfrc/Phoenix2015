@@ -1,0 +1,9 @@
+
+# see https://help.github.com/articles/dealing-with-line-endings/
+#  for the details on this.
+
+Please enter the command on windows systems
+
+git config --global core.autocrlf true
+
+
