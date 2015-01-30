@@ -8,23 +8,24 @@
 #include "EncoderTracker.h"
 #include "WPILib.h"
 
-EncoderTracker::EncoderTracker (Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight) {
+EncoderTracker::EncoderTracker (Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight){
     m_xPos = 0;
     m_yPos = 0;
+
     m_frontLeft = frontLeft;
     m_frontRight = frontRight;
     m_backLeft = backLeft;
     m_backRight = backRight;
+
     m_FLTicks = 0;
     m_FRTicks = 0;
     m_BLTicks = 0;
     m_BRTicks = 0;
+
     m_OldFLTicks = 0;
     m_OldFRTicks = 0;
     m_OldBLTicks = 0;
     m_OldBRTicks = 0;
-    ticksToInchesY = 20.5697;
-    ticksToInchesX = 24.51875;
 }
 
 void EncoderTracker::ResetPosition () {
@@ -77,7 +78,7 @@ float EncoderTracker::GetDeltaX () {
     return (FRChange - FLChange - BRChange + BLChange)/4 * ticksToInchesX;
 }
 
-float EncoderTracker::GetDeltaY (Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight) {
+float EncoderTracker::GetDeltaY () {
     //Get difference (in ticks):
     float FLChange = m_FLTicks - m_OldFLTicks;
     float FRChange = m_FRTicks - m_OldFRTicks;
