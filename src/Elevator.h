@@ -10,8 +10,11 @@
 class Elevator {
 
     // constants
-    float MotorSpeed = 0.5;
-    float HomeSpeed = 0.1;
+    /*
+     * motor speeds are n < 0 for up, n > 0 for down
+     */
+    float MotorSpeed = -0.5;
+    float HomeSpeed = -0.1;
     int Ticks = 200;
 
     int Heights[4] = {0, 13, 26, 39};
