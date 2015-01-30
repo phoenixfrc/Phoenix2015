@@ -26,7 +26,7 @@ Elevator::Elevator(
 void Elevator::operateElevator()
 {
     bool rightTrigger = m_gamePad->GetRawButton(8);
-    if(rightTrigger)
+    if(rightTrigger && (homeState == homingComplete))
     {
         homeState = lookingForLowerLimit;
     }

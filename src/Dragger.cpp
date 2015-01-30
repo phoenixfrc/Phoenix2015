@@ -13,9 +13,7 @@
  */
 
 Dragger::Dragger():
-motor(PortAssign::DraggerMotorPort),
-limitSwitchUp(PortAssign::DraggerUpperLimitChannel),
-limitSwitchDown(PortAssign::DraggerLowerLimitChannel)
+motor(PortAssign::DraggerMotorPort)
 {}
 
 /* Dragger operateDragger method:
@@ -26,11 +24,11 @@ limitSwitchDown(PortAssign::DraggerLowerLimitChannel)
  * To-do: get the button number from Constants.h
  */
 
-void Dragger::operateDragger(Joystick * button){
+void Dragger::operateDragger(Joystick * button, DigitalInput * limitSwitchDown, DigitalInput * limitSwitchUp){
     bool buttonPressed = button->GetRawButton(1); //Gets button state, 1 is a placeholder value
 
-    bool isUp = limitSwitchUp.Get(); //Is the up limit switch triggered?
-    bool isDown = limitSwitchDown.Get(); //Is the down limit switch triggered?
+    bool isUp = limitSwitchUp->Get(); //Is the up limit switch triggered?
+    bool isDown = limitSwitchDown->Get(); //Is the down limit switch triggered?
 
     float motorSpeed = 0.25; //Sets the motor speed, 0.25 is a placeholder value
     float motorSpeedUp = motorSpeed;

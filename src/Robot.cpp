@@ -66,15 +66,15 @@ public:
             m_leftFrontDriveEncoder(PortAssign::LeftFrontDriveEncoderChannelA, PortAssign::LeftFrontDriveEncoderChannelB),
             m_rightFrontDriveEncoder(PortAssign::RightFrontDriveEncoderChannelA, PortAssign::RightFrontDriveEncoderChannelB),
             m_rightRearDriveEncoder(PortAssign::RightRearDriveEncoderChannelA, PortAssign::RightRearDriveEncoderChannelB),
-            m_elevatorEncoder(PortAssign::ElevatorEncoderChannelA, PortAssign::ElevatorEncoderChannelA),
+            m_elevatorEncoder(PortAssign::ElevatorEncoderChannelA, PortAssign::ElevatorEncoderChannelB),
 
             m_elevatorLowerLimit(PortAssign::ElevatorLowerLimitChannel),
             m_elevatorUpperLimit(PortAssign::ElevatorUpperLimitChannel),
             m_elevatorHomeSwitch(PortAssign::ElevatorHomeSwitchChannel),
 
 	        m_opticalSensor(PortAssign::OpticalSensorChannel),
-	        m_draggerLowerLimit(PortAssign::DraggerLowerLimitChannel),
-	        m_draggerUpperLimit(PortAssign::DraggerUpperLimitChannel),
+			m_draggerLowerLimit(PortAssign::DraggerLowerLimitChannel),
+			m_draggerUpperLimit(PortAssign::DraggerUpperLimitChannel),
 	        m_DIO16(PortAssign::DIO16Channel),
 	        m_DIO17(PortAssign::DIO17Channel),
 	        m_DIO18(PortAssign::DIO18Channel),
@@ -114,7 +114,7 @@ public:
         	// Use the joystick X axis for lateral movement, Y axis for forward movement, and Z axis for rotation.
         	// This sample does not use field-oriented drive, so the gyro input is set to zero.
 		    m_robotDrive.MecanumDrive_Cartesian(m_stick.GetX(), m_stick.GetY(), m_stick.GetZWithDeadZone(0.1)/*gyro.GetAngle()*/);
-		    m_dragger.operateDragger(&m_gamepad);
+		    m_dragger.operateDragger(&m_gamepad, &m_draggerLowerLimit, &m_draggerUpperLimit);
 
 			Wait(0.005); // wait 5ms to avoid hogging CPU cycles
 		}
