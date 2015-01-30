@@ -1,3 +1,4 @@
+
 /*
  * Elevator.h
  *
@@ -28,17 +29,17 @@ class Elevator {
     } homeState;
 
     // initialized at class constructions then constant
+    Talon* m_motor1;
+    Talon* m_motor2;
     DigitalInput* m_lowerLimit;
     DigitalInput* m_upperLimit;
     DigitalInput* m_homeSwitch;
-    Talon* m_motor1;
-    Talon* m_motor2;
     Encoder* m_encoder;
     Joystick* m_gamePad;
 
 
     double m_goalDistance = 0;
-    double m_distance = 0; // distance form home (in)
+    double m_distance = 0; // distance from home (in)
 
 
 public:
@@ -63,3 +64,4 @@ public:
 
 
 #endif /* SRC_ELEVATOR_H_ */
+

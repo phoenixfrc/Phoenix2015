@@ -1,3 +1,4 @@
+
 #include "Elevator.h"
 #include "Constants.h"
 
@@ -50,7 +51,7 @@ void Elevator::find_home()
         switch(homeState)
         {
             case lookingForLowerLimit:
-                if(m_lowerLimit->Get())
+                if(!(m_lowerLimit->Get())) // change from !(m_lowerLimit->Get()) to m_lowerLimit->Get() after lower limit is changed
                 {
                     homeState = goingUpToHome;
                 }
@@ -148,7 +149,7 @@ void Elevator::moveElevator()
 void Elevator::moveMotors(double desiredSpeed)
 {
     bool atUpperLimit = m_upperLimit->Get();
-    bool atLowerLimit = m_lowerLimit->Get();
+    bool atLowerLimit = !(m_lowerLimit->Get()); // change from !(m_lowerLimit->Get()) to m_lowerLimit->Get() after lower limit is changed;
     double actualSpeed = desiredSpeed;
 
 
@@ -170,3 +171,4 @@ void Elevator::moveMotors(double desiredSpeed)
 
 
 Elevator::~Elevator(){}
+
