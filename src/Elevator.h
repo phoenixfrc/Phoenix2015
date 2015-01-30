@@ -36,7 +36,7 @@ class Elevator {
 
 
     double m_goalDistance = 0;
-    double m_distance = 0; // distance form home (in)
+    double m_distance = 0; // distance from home (in)
 
 
 public:
