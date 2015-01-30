@@ -16,7 +16,7 @@ class Elevator {
      */
     float MotorSpeed = -0.5;
     float HomeSpeed = -0.1;
-    int Ticks = 200;
+    int Ticks = 2048;
 
     int Heights[4] = {0, 13, 26, 39};
 

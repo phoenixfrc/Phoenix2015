@@ -1,6 +1,10 @@
 
 #include "Elevator.h"
 #include "Constants.h"
+#include <sstream>
+
+
+
 
 Elevator::Elevator(
         Talon* motor1,
@@ -18,6 +22,7 @@ Elevator::Elevator(
     m_homeSwitch(homeSwitch),
     m_encoder(encoder),
     m_gamePad(gamePad)
+
 {
     homeState = lookingForLowerLimit;
 
@@ -26,18 +31,22 @@ Elevator::Elevator(
 void Elevator::operateElevator()
 {
     bool rightTrigger = m_gamePad->GetRawButton(8);
-    if(rightTrigger)
-    {
-        homeState = lookingForLowerLimit;
-    }
 
     if(homeState == homingComplete)
     {
-        controlElevator();
+        if(rightTrigger)
+        {
+            homeState = lookingForLowerLimit;
+        }
+        else
+        {
+            controlElevator();
+        }
     }
     else
     {
-        find_home();
+        //find_home();
+        homeState = homingComplete;
     }
 
 
@@ -84,6 +93,8 @@ void Elevator::find_home()
 
 void Elevator::controlElevator()
 {
+    std::ostringstream ElevatorJoystickbuilder;
+    std::ostringstream ElevatorJoystickbuilder2;
     //buttons
     bool xPressed = m_gamePad->GetRawButton(1);
     bool aPressed = m_gamePad->GetRawButton(2);
@@ -95,6 +106,7 @@ void Elevator::controlElevator()
 
     // distance from home
     m_distance = (m_encoder->Get() * 8.17) / Ticks;
+
 
     // button computing
     if(xPressed)
@@ -117,9 +129,15 @@ void Elevator::controlElevator()
     //Joystick computing
     if(!(joystick > -0.05 && joystick < 0.05))
     {
-        m_goalDistance += (joystick / 20);
+        m_goalDistance += (joystick / 2000);
     }
 
+    ElevatorJoystickbuilder << "GoalDistance: ";
+    ElevatorJoystickbuilder << m_goalDistance;
+    SmartDashboard::PutString("DB/String 0", ElevatorJoystickbuilder.str());
+    ElevatorJoystickbuilder2 << "distance";
+    ElevatorJoystickbuilder << m_distance;
+    SmartDashboard::PutString("DB/String 1", ElevatorJoystickbuilder2.str());
     moveElevator();
 
 }
