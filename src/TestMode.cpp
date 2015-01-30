@@ -43,14 +43,18 @@ void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick, Enco
 		elevatorBuilder1, elevatorBuilder2, elevatorEncoderBuilder, elevatorBuilder3;
 
 
-    std::ostringstream messageBuilderX;
-    std::ostringstream messageBuilderY;
+    std::ostringstream trackerMessageBuilderX;
+    std::ostringstream trackerMessageBuilderY;
+
+    trackerMessageBuilderX << "TrackerX: ";
+    trackerMessageBuilderY << "TrackerY: ";
+    trackerMessageBuilderX << tracker->GetX();
+    trackerMessageBuilderY << tracker->GetY();
+    SmartDashboard::PutString("DB/String 4", trackerMessageBuilderX.str());//Bottom left spot
+    SmartDashboard::PutString("DB/String 9", trackerMessageBuilderY.str());//Bottom right spot
 
     //Move robot:
 	driveTrain->MecanumDrive_Cartesian(stick->GetX(), stick->GetY(), stick->GetZWithDeadZone(0.1));
-
-	messageBuilderX << "TrackerX: ";
-	messageBuilderY << "TrackerY: ";
 
 	//Move elevator:
 	float thumbstick = -gamePad->GetY()/4;
@@ -58,8 +62,6 @@ void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick, Enco
 	motor1->Set(thumbstick);
 	motor2->Set(thumbstick);
 
-	messageBuilderX << tracker->GetX();
-	messageBuilderY << tracker->GetY();
 	//Toggle Brake:
 	bool buttonState = gamePad->GetRawButton(5);
 	bool buttonHit = buttonState && (! m_buttonWasPressed);
@@ -72,9 +74,6 @@ void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick, Enco
 	        ElevatorBrake->Set(ElevatorBrake->kOff);
             }
 	}
-
-	SmartDashboard::PutString("DB/String 4", messageBuilderX.str());
-	SmartDashboard::PutString("DB/String 9", messageBuilderY.str());
 
     //Prints out the values for gyro:
     gyroBuilder << "The Gyro angle is: ";
