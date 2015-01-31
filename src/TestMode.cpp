@@ -36,15 +36,15 @@ void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick, Enco
 		DigitalInput *dio25){
 
     //init string builders:
-    std::ostringstream gyroBuilder, eblr, eblf, ebrf, ebrr,
-		elevatorBuilder1, elevatorBuilder2, elevatorEncoderBuilder, elevatorBuilder3;
+    std::ostringstream gyroBuilder, eb,
+		elevatorBuilder, elevatorEncoderBuilder, elevatorBuilder3;
 
     //Move robot:
 	driveTrain->MecanumDrive_Cartesian(stick->GetX(), stick->GetY(), stick->GetZWithDeadZone(0.1));
 
 	//Move elevator:
-	float thumbstick = -gamePad->GetY()/4;
-	thumbstick = fabs(thumbstick) < 0.0125 ? 0 : thumbstick;
+	float thumbstick = -gamePad->GetY()/2;
+	thumbstick = (fabs(thumbstick) < 0.0125) ? 0 : thumbstick;
 	motor1->Set(thumbstick);
 	motor2->Set(thumbstick);
 
@@ -68,26 +68,29 @@ void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick, Enco
 
 
     //Print the Elevator value:
-    elevatorBuilder1 << "ElevatorTal#1: " << motor1->Get();
-    SmartDashboard::PutString("DB/String 2", elevatorBuilder1.str());
+    elevatorBuilder << "ETal#1: " << motor1->Get();
+    elevatorBuilder << " ETal#2: " << motor2->Get();
+    SmartDashboard::PutString("DB/String 1", elevatorBuilder.str());
 
-    elevatorBuilder2 << "ElevatorTal#2: " << motor2->Get();
-    SmartDashboard::PutString("DB/String 3", elevatorBuilder2.str());
 
     elevatorEncoderBuilder << "ElevatorEnc: " << ElevatorEncoder->Get();
-    SmartDashboard::PutString("DB/String 4", elevatorEncoderBuilder.str());
+    SmartDashboard::PutString("DB/String 2", elevatorEncoderBuilder.str());
 
 
     //Print Encoder values:
-	eblr << "Encoder: LR, Value: "<< leftRearDriveEncoder->Get();
-	SmartDashboard::PutString("DB/String 5", eblr.str());
-	eblf << "Encoder: LF, Value: "<< leftFrontDriveEncoder->Get();
+	eb << "LR:"<< leftRearDriveEncoder->Get();
+	eb << " LF:"<< leftFrontDriveEncoder->Get();
+	eb << " RF:"<< rightFrontDriveEncoder->Get();
+	eb << " RR:"<< rightRearDriveEncoder->Get();
+	SmartDashboard::PutString("DB/String 3", eb.str());
+/*Old code
+ * 	eblf << "Encoder: LF, Value: "<< leftFrontDriveEncoder->Get();
     SmartDashboard::PutString("DB/String 6", eblf.str());
     ebrf << "Encoder: RF, Value: "<< rightFrontDriveEncoder->Get();
     SmartDashboard::PutString("DB/String 7", ebrf.str());
     ebrr << "Encoder: RR, Value: "<< rightRearDriveEncoder->Get();
     SmartDashboard::PutString("DB/String 8", ebrr.str());
-
+*/
     //Prints out the elevator limit switches
     elevatorBuilder3 << //"ElL,U,H;O;DL,U*: "<<
     		lowerElevatorLimitSwitch->Get() <<
@@ -106,8 +109,7 @@ void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick, Enco
 			dio23->Get() <<
 			dio24->Get() <<
 			dio25->Get();
-    SmartDashboard::PutString("DB/String 9", elevatorBuilder3.str());
-
+    SmartDashboard::PutString("DB/String 4", elevatorBuilder3.str());
 }
 
 TestMode::~TestMode(){
