@@ -160,7 +160,7 @@ public:
 		}
 	}
 	void DisplayInfo(){
-        std::ostringstream gyroBuilder, eb, elevatorBuilder, elevatorEncoderBuilder, elevatorBuilder3;
+        std::ostringstream gyroBuilder, eb, eb2, elevatorBuilder, elevatorEncoderBuilder, elevatorBuilder3;
 
 		//Prints out the values for gyro:
 		gyroBuilder << "The Gyro angle is: ";
@@ -168,11 +168,18 @@ public:
 	    SmartDashboard::PutString("DB/String 2", gyroBuilder.str());
 
 	    //Print Encoder values:
-	    eb << "LR:"<< m_leftRearDriveEncoder.Get();
-	    eb << " LF:"<< m_leftFrontDriveEncoder.Get();
-	    eb << " RF:"<< m_rightFrontDriveEncoder.Get();
-	    eb << " RR:"<< m_rightRearDriveEncoder.Get();
+	    eb << "LR: "<< m_leftRearDriveEncoder.Get();
+	    eb << " RR: "<< m_rightRearDriveEncoder.Get();
 	    SmartDashboard::PutString("DB/String 3", eb.str());
+
+
+
+	    eb2 << " LF: "<< m_leftFrontDriveEncoder.Get();
+	    eb2 << " RF: "<< m_rightFrontDriveEncoder.Get();
+	    SmartDashboard::PutString("DB/String 4", eb2.str());
+
+	    elevatorEncoderBuilder << "Elevator Encoder: " << m_elevatorEncoder.Get();
+	    SmartDashboard::PutString("DB/String 6", elevatorEncoderBuilder.str());
 
 
 	    //Prints out the elevator limit switches
@@ -193,7 +200,7 @@ public:
 	 			m_DIO23.Get() <<
 	 			m_DIO24.Get() <<
 	 			m_DIO25.Get();
-	     SmartDashboard::PutString("DB/String 4", elevatorBuilder3.str());
+	     SmartDashboard::PutString("DB/String 5", elevatorBuilder3.str());
 
 	}
 
