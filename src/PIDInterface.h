@@ -9,7 +9,6 @@ enum AxisOfMotion {
 };
 
 //Only supports L-shaped motion along the x and y axis (one axis at a time)
-//TODO: set PID output scaling (needs to be between -1 and 1)
 class PIDInterface : public PIDOutput, public PIDSource {
 public:
     PIDInterface(RobotDrive * robotDrive, Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight);
@@ -21,7 +20,7 @@ public:
 
     //My functions
     void Reset(); //Sets current location to 0
-    void SetGoal(double xGoalDistance, double yGoalDistance);
+    void SetGoal(double xGoalDistance, double yGoalDistance, bool (*IsAutoFunc));
 
     virtual ~PIDInterface();
 

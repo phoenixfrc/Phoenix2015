@@ -17,16 +17,20 @@ void PIDInterface::Reset()
     m_tracker.ResetPosition();
 }
 
-//TODO: should handle end of autonomous mode and abort
-void PIDInterface::SetGoal(double xGoalDistance, double yGoalDistance)
+void PIDInterface::SetGoal(double xGoalDistance, double yGoalDistance, bool (*IsAutoFunc))
 {
     Reset();
     //Go as far in the left-right axis as required
     m_currentAxis = right;
     xPID.Enable();
     xPID.SetSetpoint(xGoalDistance);
+    //This will break if autonomous mode ends during either of these loops
     while(!xPID.OnTarget())
     {
+        if(!IsAutoFunc())
+        {
+            break;
+        }
         Wait(0.005); //Wait until the left-right distance is reached, but only check every 5ms
     }
     xPID.Disable();
@@ -37,6 +41,10 @@ void PIDInterface::SetGoal(double xGoalDistance, double yGoalDistance)
     yPID.SetSetpoint(yGoalDistance);
     while(!yPID.OnTarget())
     {
+        if(!IsAutoFunc())
+        {
+            break;
+        }
         Wait(0.005); //Wait until the forward-backward distance is reached, but only check every 5ms
     }
     yPID.Disable();
