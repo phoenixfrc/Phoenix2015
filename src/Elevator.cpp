@@ -2,7 +2,7 @@
 #include "Elevator.h"
 #include "Constants.h"
 #include <sstream>
-
+#include <stdio.h>
 
 
 
@@ -24,70 +24,68 @@ Elevator::Elevator(
     m_homeSwitch(homeSwitch),
     m_encoder(encoder),
     m_gamePad(gamePad),
-    m_brake(ElevatorBrake),
-    m_goalPosition(0),
-    m_position(0)
+    m_brake(ElevatorBrake)
 {
+    printf("in elevator constructor...\n");
     m_homeState = lookingForLowerLimit;
+    m_encoder->SetDistancePerPulse(8.17 / Ticks);
+    m_elevatorControl = new PIDController(0.1, 0.001, 0.0, encoder, this);
 }
 
 void Elevator::operateElevator()
 {
-    bool rightTrigger = m_gamePad->GetRawButton(8);
-
     if(m_homeState == homingComplete)
     {
-        if(rightTrigger)
-        {
-            m_homeState = lookingForLowerLimit;
-        }
-        else
-        {
             controlElevator();
-        }
     }
     else
     {
-        //find_home();
-        m_homeState = homingComplete;
+        find_home();
     }
 
 
 }
-
-
+bool Elevator::elevatorIsHomed()
+{
+    return(m_homeState == homingComplete);
+}
+bool Elevator::elevatorIsAt(float position)
+{
+    float currentPosition = m_elevatorControl->Get();
+    return((currentPosition < (position + 0.5)) && (currentPosition > (position - 0.5)));
+}
 
 void Elevator::find_home()
 {
         double speed = 0.0;
-        switch(m_homeState)
+        if (m_homeState == lookingForLowerLimit)
         {
-            case lookingForLowerLimit:
-                if(!(m_lowerLimit->Get())) // change from !(m_lowerLimit->Get()) to m_lowerLimit->Get() after lower limit is changed
-                {
-                    m_homeState = goingUpToHome;
-                }
-                else
-                {
-                    speed = -MotorSpeed;
-                }
-            break;
-            case goingUpToHome:
-                if(m_homeSwitch->Get())
-                {
-                    m_homeState = homingComplete;
-                    m_encoder->Reset();
-                }
-                else
-                {
-                    speed = HomeSpeed;
-                }
-
-            break;
-            case homingComplete:
-            break;
+            if(!(m_lowerLimit->Get())) // change from !(m_lowerLimit->Get()) to m_lowerLimit->Get() after lower limit is changed
+            {
+                m_homeState = goingUpToHome;
+            }
+            else
+            {
+                speed = -HomeSpeed;
+            }
         }
-        moveMotors(speed);
+
+        if (m_homeState == goingUpToHome)
+        {
+            if(!(m_lowerLimit->Get())) //if(m_homeSwitch->Get())
+            {
+                m_homeState = homingComplete;
+                m_encoder->Reset();
+                m_elevatorControl->Enable();
+
+            }
+            else
+            {
+                speed = HomeSpeed;
+            }
+        }
+
+        PIDWrite(speed);
 }
 
 
@@ -108,88 +106,65 @@ void Elevator::controlElevator()
     //joystick
     double joystick = -m_gamePad->GetY(); // right Joystick, negative because up is negative
 
-    // distance from home
-    m_position = (m_encoder->Get() * 8.17) / Ticks;
-
-
+    float goalPosition = m_elevatorControl->GetSetpoint();
 
     // button computing
     if(xPressed)
     {
-        m_goalPosition = Heights[0];
+        goalPosition = kElevatorHook1Ready;
     }
     if(aPressed)
     {
-        m_goalPosition = Heights[1];
+        goalPosition = kElevatorHook2Ready;
     }
     if(bPressed)
     {
-        m_goalPosition = Heights[2];
+        goalPosition = kElevatorHook3Ready;
     }
     if(yPressed)
     {
-        m_goalPosition = Heights[3];
+        goalPosition = kElevatorHook4Ready;
     }
 
     //Joystick computing
     if(!(joystick > -0.05 && joystick < 0.05))
     {
-        m_goalPosition += (joystick / 5);
+        goalPosition += (joystick / 5);
     }
 
-    if (m_goalPosition > 85) {
+    if (goalPosition > 85)
+    {
 
-    	m_goalPosition = 85; //Stop large queues of goal position
+    	goalPosition = 85; //Stop large queues of goal position
     }
-    if (m_goalPosition < - 85) {
+    if (goalPosition < 0)
+    {
 
-    	m_goalPosition = -85; //stop large queues of goal position
+    	goalPosition = 0; //stop large queues of goal position
 
     }
 
     ElevatorJoystickbuilder << "GoalPosition: ";
-    ElevatorJoystickbuilder << m_goalPosition;
+    ElevatorJoystickbuilder << goalPosition;
     SmartDashboard::PutString("DB/String 0", ElevatorJoystickbuilder.str());
-    ElevatorJoystickbuilder2 << "position";
-    ElevatorJoystickbuilder2 << m_position;
+    ElevatorJoystickbuilder2 << "position: ";
+    ElevatorJoystickbuilder2 << m_elevatorControl->Get();
     SmartDashboard::PutString("DB/String 1", ElevatorJoystickbuilder2.str());
 
-    moveElevator();
+    setElevatorGoalPosition(goalPosition);
 
 }
 
-
-void Elevator::moveElevator()
+void Elevator::setElevatorGoalPosition(float position)
 {
-    if(m_position > (m_goalPosition - Range) && m_position < (m_goalPosition + Range))
-    {
-        moveMotors(0.0);
-    }
-
-    else if(m_position > m_goalPosition)
-    {
-        moveMotors(-MotorSpeed);
-    }
-
-    else if(m_position < m_goalPosition)
-    {
-        moveMotors(MotorSpeed);
-    }
-
-    else
-    {
-        moveMotors(0.0);
-    }
-
-
-
+    m_elevatorControl->SetSetpoint(position);
 }
 
-void Elevator::moveMotors(double desiredSpeed)
+void Elevator::PIDWrite(float desiredSpeed)
 {
     bool atUpperLimit = m_upperLimit->Get();
     bool atLowerLimit = !(m_lowerLimit->Get()); // change from !(m_lowerLimit->Get()) to m_lowerLimit->Get() after lower limit is changed;
-    double actualSpeed = desiredSpeed;
+    float actualSpeed = desiredSpeed;
 
 
     if (atUpperLimit && (desiredSpeed > 0.0))

@@ -16,7 +16,7 @@ class Robot: public SampleRobot
         Talon m_elevatorMotor1;
         Talon m_elevatorMotor2;
 
-        Elevator m_elevator;
+        Elevator* m_elevator;
         Dragger m_dragger;
         // tba Brake
 
@@ -60,14 +60,6 @@ public:
             m_elevatorMotor1(PortAssign::ElevatorMotor1),
             m_elevatorMotor2(PortAssign::ElevatorMotor2),
 
-            m_elevator(&m_elevatorMotor1,
-                    &m_elevatorMotor2,
-                    &m_elevatorLowerLimit,
-                    &m_elevatorUpperLimit,
-                    &m_elevatorHomeSwitch,
-                    &m_elevatorEncoder,
-                    &m_gamepad,
-                    &m_brake),
             m_dragger(),
 
             m_brake(PortAssign::ElevatorBrakeChannel),
@@ -105,7 +97,17 @@ public:
 
 // as they are declared above.
 	{
-		m_robotDrive.SetExpiration(0.1);
+	    printf("In robot constructor..\n");
+            m_elevator = new Elevator(&m_elevatorMotor1,
+                    &m_elevatorMotor2,
+                    &m_elevatorLowerLimit,
+                    &m_elevatorUpperLimit,
+                    &m_elevatorHomeSwitch,
+                    &m_elevatorEncoder,
+                    &m_gamepad,
+                    &m_brake);
+
+	    m_robotDrive.SetExpiration(0.1);
 		m_robotDrive.SetInvertedMotor(RobotDrive::kFrontRightMotor, true);	// invert the right side motors
 		m_robotDrive.SetInvertedMotor(RobotDrive::kRearRightMotor, true);	// you may need to change or remove this to match your robot
 		m_rightRearDriveEncoder.SetReverseDirection(true);
@@ -125,7 +127,7 @@ public:
         	// This sample does not use field-oriented drive, so the gyro input is set to zero.
 		    m_robotDrive.MecanumDrive_Cartesian(m_stick.GetX(), m_stick.GetY(), m_stick.GetZWithDeadZone(0.1)/*gyro.GetAngle()*/);
 		    m_dragger.operateDragger(&m_gamepad);
-		    m_elevator.operateElevator();
+		    m_elevator->operateElevator();
 
 			Wait(0.005); // wait 5ms to avoid hogging CPU cycles
 		}
