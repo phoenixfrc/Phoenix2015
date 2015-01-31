@@ -37,7 +37,7 @@ void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick, Enco
 
     //init string builders:
     std::ostringstream gyroBuilder, eb,
-		elevatorBuilder1, elevatorBuilder2, elevatorEncoderBuilder, elevatorBuilder3;
+		elevatorBuilder, elevatorEncoderBuilder, elevatorBuilder3;
 
     //Move robot:
 	driveTrain->MecanumDrive_Cartesian(stick->GetX(), stick->GetY(), stick->GetZWithDeadZone(0.1));
@@ -68,14 +68,13 @@ void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick, Enco
 
 
     //Print the Elevator value:
-    elevatorBuilder1 << "ElevatorTal#1: " << motor1->Get();
-    SmartDashboard::PutString("DB/String 2", elevatorBuilder1.str());
+    elevatorBuilder << "ETal#1: " << motor1->Get();
+    elevatorBuilder << " ETal#2: " << motor2->Get();
+    SmartDashboard::PutString("DB/String 1", elevatorBuilder.str());
 
-    elevatorBuilder2 << "ElevatorTal#2: " << motor2->Get();
-    SmartDashboard::PutString("DB/String 3", elevatorBuilder2.str());
 
     elevatorEncoderBuilder << "ElevatorEnc: " << ElevatorEncoder->Get();
-    SmartDashboard::PutString("DB/String 4", elevatorEncoderBuilder.str());
+    SmartDashboard::PutString("DB/String 2", elevatorEncoderBuilder.str());
 
 
     //Print Encoder values:
@@ -83,7 +82,7 @@ void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick, Enco
 	eb << " LF:"<< leftFrontDriveEncoder->Get();
 	eb << " RF:"<< rightFrontDriveEncoder->Get();
 	eb << " RR:"<< rightRearDriveEncoder->Get();
-	SmartDashboard::PutString("DB/String 5", eb.str());
+	SmartDashboard::PutString("DB/String 3", eb.str());
 /*Old code
  * 	eblf << "Encoder: LF, Value: "<< leftFrontDriveEncoder->Get();
     SmartDashboard::PutString("DB/String 6", eblf.str());
@@ -110,7 +109,7 @@ void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick, Enco
 			dio23->Get() <<
 			dio24->Get() <<
 			dio25->Get();
-    SmartDashboard::PutString("DB/String 9", elevatorBuilder3.str());
+    SmartDashboard::PutString("DB/String 4", elevatorBuilder3.str());
 }
 
 TestMode::~TestMode(){
