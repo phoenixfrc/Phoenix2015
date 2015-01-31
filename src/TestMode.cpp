@@ -15,36 +15,17 @@
 TestMode::TestMode(): m_buttonWasPressed(false){}
 
 
-void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick, Encoder * leftRearDriveEncoder,
-		Encoder * leftFrontDriveEncoder,Encoder * rightFrontDriveEncoder,
-		Encoder * rightRearDriveEncoder, Gyro * gyro, Talon * motor1,
-		Talon * motor2,  RobotDrive * driveTrain, Encoder * ElevatorEncoder,
-		Relay * ElevatorBrake, DigitalInput * lowerElevatorLimitSwitch,
-		DigitalInput * upperElevatorLimitSwitch, DigitalInput * homeElevatorLimitSwitch,
-		DigitalInput *opticalSensor,
-		DigitalInput *draggerLowerLimit,
-		DigitalInput *draggerUpperLimit,
-		DigitalInput *dio16,
-		DigitalInput *dio17,
-		DigitalInput *dio18,
-		DigitalInput *dio19,
-		DigitalInput *dio20,
-		DigitalInput *dio21,
-		DigitalInput *dio22,
-		DigitalInput *dio23,
-		DigitalInput *dio24,
-		DigitalInput *dio25){
+void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick,  Talon * motor1,
+		Talon * motor2,  RobotDrive * driveTrain,
+		Relay * ElevatorBrake){
 
-    //init string builders:
-    std::ostringstream gyroBuilder, eb,
-		elevatorBuilder, elevatorEncoderBuilder, elevatorBuilder3;
 
     //Move robot:
 	driveTrain->MecanumDrive_Cartesian(stick->GetX(), stick->GetY(), stick->GetZWithDeadZone(0.1));
 
 	//Move elevator:
-	float thumbstick = -gamePad->GetY()/2;
-	thumbstick = (fabs(thumbstick) < 0.0125) ? 0 : thumbstick;
+	float thumbstick = -gamePad->GetY()/4;
+	thumbstick = fabs(thumbstick) < 0.0125 ? 0 : thumbstick;
 	motor1->Set(thumbstick);
 	motor2->Set(thumbstick);
 
@@ -61,55 +42,8 @@ void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick, Enco
             }
 	}
 
-    //Prints out the values for gyro:
-    gyroBuilder << "The Gyro angle is: ";
-    gyroBuilder << gyro->GetAngle();
-    SmartDashboard::PutString("DB/String 0", gyroBuilder.str());
 
 
-    //Print the Elevator value:
-    elevatorBuilder << "ETal#1: " << motor1->Get();
-    elevatorBuilder << " ETal#2: " << motor2->Get();
-    SmartDashboard::PutString("DB/String 1", elevatorBuilder.str());
-
-
-    elevatorEncoderBuilder << "ElevatorEnc: " << ElevatorEncoder->Get();
-    SmartDashboard::PutString("DB/String 2", elevatorEncoderBuilder.str());
-
-
-    //Print Encoder values:
-	eb << "LR:"<< leftRearDriveEncoder->Get();
-	eb << " LF:"<< leftFrontDriveEncoder->Get();
-	eb << " RF:"<< rightFrontDriveEncoder->Get();
-	eb << " RR:"<< rightRearDriveEncoder->Get();
-	SmartDashboard::PutString("DB/String 3", eb.str());
-/*Old code
- * 	eblf << "Encoder: LF, Value: "<< leftFrontDriveEncoder->Get();
-    SmartDashboard::PutString("DB/String 6", eblf.str());
-    ebrf << "Encoder: RF, Value: "<< rightFrontDriveEncoder->Get();
-    SmartDashboard::PutString("DB/String 7", ebrf.str());
-    ebrr << "Encoder: RR, Value: "<< rightRearDriveEncoder->Get();
-    SmartDashboard::PutString("DB/String 8", ebrr.str());
-*/
-    //Prints out the elevator limit switches
-    elevatorBuilder3 << //"ElL,U,H;O;DL,U*: "<<
-    		lowerElevatorLimitSwitch->Get() <<
-			upperElevatorLimitSwitch->Get() <<
-			homeElevatorLimitSwitch->Get() <<
-			opticalSensor->Get() <<
-			draggerLowerLimit->Get() <<
-			draggerUpperLimit->Get() <<
-			dio16->Get() <<
-			dio17->Get() <<
-			dio18->Get() <<
-			dio19->Get() <<
-			dio20->Get() <<
-			dio21->Get() <<
-			dio22->Get() <<
-			dio23->Get() <<
-			dio24->Get() <<
-			dio25->Get();
-    SmartDashboard::PutString("DB/String 4", elevatorBuilder3.str());
 }
 
 TestMode::~TestMode(){

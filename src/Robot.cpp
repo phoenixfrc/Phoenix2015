@@ -4,7 +4,7 @@
 #include "Team2342Joystick.h"
 #include "Elevator.h"
 #include "Dragger.h"
-
+#include <sstream>
 /**
  * This is a demo program showing how to use Mecanum control with the RobotDrive class.
  */
@@ -129,6 +129,8 @@ public:
 
 		    m_dragger.operateDragger(&m_gamepad, &m_draggerLowerLimit, &m_draggerUpperLimit);
 
+		    DisplayInfo();
+
 
 			Wait(0.005); // wait 5ms to avoid hogging CPU cycles
 		}
@@ -146,28 +148,49 @@ public:
 		while (IsTest() && IsEnabled())
 		{
 			tester.PerformTesting(&m_gamepad, &m_stick,
-			        &m_leftRearDriveEncoder, &m_leftFrontDriveEncoder,
-			        &m_rightFrontDriveEncoder, &m_rightRearDriveEncoder,
-			        &m_gyro, &m_elevatorMotor1, &m_elevatorMotor2, &m_robotDrive,
-			        &m_elevatorEncoder, &m_brake,
-					&m_elevatorLowerLimit, &m_elevatorUpperLimit, &m_elevatorHomeSwitch,
-					&m_opticalSensor,
-					&m_draggerLowerLimit,
-					&m_draggerUpperLimit,
-					&m_DIO16,
-					&m_DIO17,
-					&m_DIO18,
-					&m_DIO19,
-					&m_DIO20,
-					&m_DIO21,
-					&m_DIO22,
-					&m_DIO23,
-					&m_DIO24,
-					&m_DIO25
-);
+			       &m_elevatorMotor1, &m_elevatorMotor2, &m_robotDrive, &m_brake );
+			DisplayInfo();
 
 			Wait(0.005);
 		}
+	}
+	void DisplayInfo(){
+
+		std::ostringstream gyroBuilder, eb, elevatorBuilder, elevatorEncoderBuilder, elevatorBuilder3;
+
+		//Prints out the values for gyro:
+		gyroBuilder << "The Gyro angle is: ";
+		gyroBuilder << m_gyro.GetAngle();
+	    SmartDashboard::PutString("DB/String 2", gyroBuilder.str());
+
+	    //Print Encoder values:
+	    eb << "LR:"<< m_leftRearDriveEncoder.Get();
+	    eb << " LF:"<< m_leftFrontDriveEncoder.Get();
+	    eb << " RF:"<< m_rightFrontDriveEncoder.Get();
+	    eb << " RR:"<< m_rightRearDriveEncoder.Get();
+	    SmartDashboard::PutString("DB/String 3", eb.str());
+
+
+	    //Prints out the elevator limit switches
+	     elevatorBuilder3 << //"ElL,U,H;O;DL,U*: "<<
+	     		m_elevatorLowerLimit.Get() <<
+				m_elevatorUpperLimit.Get() <<
+				m_elevatorHomeSwitch.Get() <<
+	 			m_opticalSensor.Get() <<
+	 			m_draggerLowerLimit.Get() <<
+	 			m_draggerUpperLimit.Get() <<
+	 			m_DIO16.Get() <<
+	 			m_DIO17.Get() <<
+	 			m_DIO18.Get() <<
+	 			m_DIO19.Get() <<
+	 			m_DIO20.Get() <<
+	 			m_DIO21.Get() <<
+	 			m_DIO22.Get() <<
+	 			m_DIO23.Get() <<
+	 			m_DIO24.Get() <<
+	 			m_DIO25.Get();
+	     SmartDashboard::PutString("DB/String 4", elevatorBuilder3.str());
+
 	}
 
 };

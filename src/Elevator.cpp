@@ -152,7 +152,7 @@ void Elevator::controlElevator()
     ElevatorJoystickbuilder << "GoalPosition: ";
     ElevatorJoystickbuilder << m_goalPosition;
     SmartDashboard::PutString("DB/String 0", ElevatorJoystickbuilder.str());
-    ElevatorJoystickbuilder2 << "position";
+    ElevatorJoystickbuilder2 << "Position: ";
     ElevatorJoystickbuilder2 << m_position;
     SmartDashboard::PutString("DB/String 1", ElevatorJoystickbuilder2.str());
 
