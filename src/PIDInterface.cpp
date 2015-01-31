@@ -69,3 +69,7 @@ void PIDInterface::PIDWrite(float output)
         break;
     }
 }
+
+PIDInterface::~PIDInterface(){
+
+}
