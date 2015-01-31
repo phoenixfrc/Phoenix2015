@@ -68,13 +68,13 @@ void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick, Enco
 
 
     //Print the Elevator value:
-    elevatorBuilder1 << "ElevatorTal#1:" << motor1->Get();
+    elevatorBuilder1 << "ElevatorTal#1: " << motor1->Get();
     SmartDashboard::PutString("DB/String 2", elevatorBuilder1.str());
 
-    elevatorBuilder2 << "ElevatorTal#2:" << motor2->Get();
+    elevatorBuilder2 << "ElevatorTal#2: " << motor2->Get();
     SmartDashboard::PutString("DB/String 3", elevatorBuilder2.str());
 
-    elevatorEncoderBuilder << "ElevatorEnc:" << ElevatorEncoder->Get();
+    elevatorEncoderBuilder << "ElevatorEnc: " << ElevatorEncoder->Get();
     SmartDashboard::PutString("DB/String 4", elevatorEncoderBuilder.str());
 
 

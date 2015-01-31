@@ -12,12 +12,10 @@
 class Dragger {
     private:
         Talon motor;
-            DigitalInput limitSwitchUp;
-            DigitalInput limitSwitchDown;
     public:
         Dragger();
 
-        void operateDragger(Joystick * button);
+        void operateDragger(Joystick * button, DigitalInput * limitSwitchDown, DigitalInput * limitSwitchUp);
 
         ~Dragger();
 

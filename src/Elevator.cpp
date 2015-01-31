@@ -34,6 +34,7 @@ Elevator::Elevator(
 
 void Elevator::operateElevator()
 {
+
     if(m_homeState == homingComplete)
     {
             controlElevator();
