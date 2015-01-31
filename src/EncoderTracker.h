@@ -88,14 +88,14 @@ private:
     //Wheel results Left:
     //???
 
-    //(estimates):
+    //(estimates) (using the same as Right for now)
     const float LConvFR = 0.05154639175257731958762886597938;//(48/931.2)
     const float LConvFL = 0.0509229789942711648631444939529;//(48/942.6)
     const float LConvBR = 0.04256828662646328485278467541681;//(48/1127.6)
     const float LConvBL = 0.03339827442248817144447536877261;//(48/1437.2)
 
 
-    //const float ticksToInchesX = 24.51875;
+    //old X const (was 24.51875) didn't work well.
 };
 
 
