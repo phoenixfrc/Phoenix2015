@@ -1,7 +1,6 @@
 
 #include "Elevator.h"
 #include "Constants.h"
-#include <sstream>
 
 
 
@@ -25,9 +24,8 @@ Elevator::Elevator(
 
 {
     homeState = lookingForLowerLimit;
-
-
 }
+
 void Elevator::operateElevator()
 {
     bool rightTrigger = m_gamePad->GetRawButton(8);
@@ -93,8 +91,6 @@ void Elevator::find_home()
 
 void Elevator::controlElevator()
 {
-    std::ostringstream ElevatorJoystickbuilder;
-    std::ostringstream ElevatorJoystickbuilder2;
     //buttons
     bool xPressed = m_gamePad->GetRawButton(1);
     bool aPressed = m_gamePad->GetRawButton(2);
@@ -105,39 +101,32 @@ void Elevator::controlElevator()
     double joystick = m_gamePad->GetY(); // right Joystick
 
     // distance from home
-    m_distance = (m_encoder->Get() * 8.17) / Ticks;
+    m_ticks = m_encoder->Get();
 
 
     // button computing
     if(xPressed)
     {
-        m_goalDistance = Heights[0];
+        m_goalTicks = toTicks(Heights[0]);
     }
     if(aPressed)
     {
-        m_goalDistance = Heights[1];
+        m_goalTicks = toTicks(Heights[1]);
     }
     if(bPressed)
     {
-        m_goalDistance = Heights[2];
+        m_goalTicks = toTicks(Heights[2]);
     }
     if(yPressed)
     {
-        m_goalDistance = Heights[3];
+        m_goalTicks = toTicks(Heights[3]);
     }
 
     //Joystick computing
     if(!(joystick > -0.05 && joystick < 0.05))
     {
-        m_goalDistance += (joystick / 2000);
+        m_goalTicks += joystick;
     }
-
-    ElevatorJoystickbuilder << "GoalDistance: ";
-    ElevatorJoystickbuilder << m_goalDistance;
-    SmartDashboard::PutString("DB/String 0", ElevatorJoystickbuilder.str());
-    ElevatorJoystickbuilder2 << "distance";
-    ElevatorJoystickbuilder << m_distance;
-    SmartDashboard::PutString("DB/String 1", ElevatorJoystickbuilder2.str());
     moveElevator();
 
 }
@@ -145,19 +134,23 @@ void Elevator::controlElevator()
 
 void Elevator::moveElevator()
 {
-    if(m_distance > (m_goalDistance - Range) && m_distance < (m_goalDistance + Range))
+    if(m_ticks > (m_goalTicks - Range) && m_ticks < (m_goalTicks + Range))
     {
         moveMotors(0.0);
     }
 
-    if(m_distance > m_goalDistance)
+    else if(m_ticks > m_goalTicks)
     {
         moveMotors(-MotorSpeed);
     }
 
-    if(m_distance < m_goalDistance)
+    else if(m_ticks < m_goalTicks)
     {
         moveMotors(MotorSpeed);
+    }
+    else
+    {
+        moveMotors(0.0);
     }
 
 
@@ -185,6 +178,12 @@ void Elevator::moveMotors(double desiredSpeed)
     m_motor2->Set(actualSpeed);
 }
 
+int Elevator::toTicks(double distance)
+{
+    int tick;
+    tick = (distance / 8.17) * Ticks;
+    return tick;
+}
 
 
 

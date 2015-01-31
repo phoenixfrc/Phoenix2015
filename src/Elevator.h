@@ -20,7 +20,7 @@ class Elevator {
 
     int Heights[4] = {0, 13, 26, 39};
 
-    double Range = 0.25; // range on either side of goalDistance
+    double Range = 100; // tick range on either side of goalTicks
     enum homingStates
     {
         lookingForLowerLimit,
@@ -38,8 +38,8 @@ class Elevator {
     Joystick* m_gamePad;
 
 
-    double m_goalDistance = 0;
-    double m_distance = 0; // distance from home (in)
+    double m_goalTicks = 0;
+    double m_ticks = 0; // distance from home (ticks)
 
 
 public:
@@ -55,6 +55,7 @@ public:
 	void controlElevator();
 	void moveElevator();
 	void moveMotors(double speed);
+	int toTicks(double distance);
 	~Elevator();
 
 };
