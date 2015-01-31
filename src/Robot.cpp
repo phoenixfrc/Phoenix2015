@@ -92,7 +92,7 @@ public:
             m_stick(PortAssign::JoystickChannel),
             m_gamepad(PortAssign::GamepadChannel),
 
-       m_tracker(driveEncoder1, driveEncoder2, driveEncoder3, driveEncoder4)
+       m_tracker(m_leftFrontDriveEncoder, m_rightFrontDriveEncoder, m_leftRearDriveEncoder, m_rightRearDriveEncoder)
 
 // as they are declared above.
 	{
