@@ -118,15 +118,33 @@ public:
 	    case complex:
             //Pick up tote here
 	        m_autoPID.SetGoal(-FieldDistances::autoCrateDiff,0);
+	        while(!m_autoPID.ReachedGoal())
+	        {
+	            Wait(0.005);
+	        }
             //Pick up another tote here
 	        m_autoPID.SetGoal(-FieldDistances::autoCrateDiff,0);
+            while(!m_autoPID.ReachedGoal())
+            {
+                Wait(0.005);
+            }
             //Pick up yet another tote here
 	        m_autoPID.SetGoal(0,FieldDistances::intoAutoDiff);
+            while(!m_autoPID.ReachedGoal())
+            {
+                Wait(0.005);
+            }
+            m_autoPID.Reset();
             break;
 	    case simple:
 	        //Pick up tote here
 	        m_autoPID.SetGoal(0,FieldDistances::intoAutoDiff);
 	        //Drop tote here
+            while(!m_autoPID.ReachedGoal())
+            {
+                Wait(0.005);
+            }
+            m_autoPID.Reset();
 	    }
 	}
 	/**

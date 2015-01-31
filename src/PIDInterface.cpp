@@ -15,31 +15,45 @@ PIDInterface::PIDInterface(RobotDrive * robotDrive, Encoder * frontLeft, Encoder
 void PIDInterface::Reset()
 {
     m_tracker.ResetPosition();
+    xPID.Disable();
+    yPID.Disable();
 }
 
 void PIDInterface::SetGoal(double xGoalDistance, double yGoalDistance)
 {
     Reset();
     //Go as far in the left-right axis as required
-    m_currentAxis = right;
-    xPID.Enable();
-    xPID.SetSetpoint(xGoalDistance);
-    //This will break if autonomous mode ends during either of these loops
-    while(!xPID.OnTarget())
+    if(xGoalDistance != 0)
     {
-        Wait(0.005); //Wait until the left-right distance is reached, but only check every 5ms
+        m_currentAxis = right;
+        xPID.Enable();
     }
-    xPID.Disable();
+    xPID.SetSetpoint(xGoalDistance);
 
     //Now to do the same for forward-backward
-    m_currentAxis = forward;
-    yPID.Enable();
-    yPID.SetSetpoint(yGoalDistance);
-    while(!yPID.OnTarget())
+    if(yGoalDistance != 0)
     {
-        Wait(0.005); //Wait until the forward-backward distance is reached, but only check every 5ms
+        m_currentAxis = forward;
+        yPID.Enable();
     }
-    yPID.Disable();
+    yPID.SetSetpoint(yGoalDistance);
+}
+
+//This will return true if either of the PID loops are enabled and have reached their target
+bool PIDInterface::ReachedGoal()
+{
+    if(xPID.IsEnabled())
+    {
+        return xPID.OnTarget();
+    }
+    else if(yPID.IsEnabled())
+    {
+        return yPID.OnTarget();
+    }
+    else
+    {
+        return false;
+    }
 }
 
 double PIDInterface::PIDGet()
