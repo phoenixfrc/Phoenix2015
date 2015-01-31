@@ -131,6 +131,8 @@ public:
 
 		m_elevatorEncoder.Reset();
 
+		m_tracker.ResetPosition();
+
 		while (IsTest() && IsEnabled())
 		{
 			tester.PerformTesting(&m_gamepad, &m_stick,

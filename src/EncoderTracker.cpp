@@ -67,6 +67,10 @@ float EncoderTracker::GetY () {
     return m_yPos;
 }
 
+float EncoderTracker::GetTicks(){
+    return m_FRTicks;
+}
+
 float EncoderTracker::GetDeltaX () {
     //Get the difference (in ticks):
     float FLChange = m_FLTicks - m_OldFLTicks;
@@ -75,7 +79,11 @@ float EncoderTracker::GetDeltaX () {
     float BRChange = m_BRTicks - m_OldBRTicks;
 
     //Algorithm for X movement (needs work):
-    return (FRChange - FLChange - BRChange + BLChange)/4 * ticksToInchesX;
+    if (FRChange - FLChange - BRChange + BLChange > 0){
+        return (float)(FRChange*LConvFR - FLChange*LConvFL - BRChange*LConvBR + BLChange*LConvBL) / 4;
+    } else {
+        return - (float)(FRChange*RConvFR - FLChange*RConvFL - BRChange*RConvBR + BLChange*RConvBL) / 4;
+    }
 }
 
 float EncoderTracker::GetDeltaY () {
@@ -85,8 +93,13 @@ float EncoderTracker::GetDeltaY () {
     float BLChange = m_BLTicks - m_OldBLTicks;
     float BRChange = m_BRTicks - m_OldBRTicks;
 
+
     //Algorithm for Y movement (needs work):
-    return (FLChange + FRChange + BLChange + BRChange)/4 * ticksToInchesY;
+    if (FRChange + FLChange + BRChange + BLChange > 0){
+        return (float)(FRChange*FConvFR + FLChange*FConvFL + BRChange*FConvBR + BLChange*FConvBL) / 4;
+    } else {
+        return - (float)(FRChange*BConvFR + FLChange*BConvFL + BRChange*BConvBR + BLChange*BConvBL) / 4;
+    }
 }
 
 

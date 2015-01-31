@@ -35,6 +35,7 @@ class TestMode
 		~TestMode();
 	private:
 		bool m_buttonWasPressed;
+		float m_prevGyroAng;
 };
 
 #endif
