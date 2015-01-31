@@ -153,7 +153,7 @@ public:
 		while (IsTest() && IsEnabled())
 		{
 			tester.PerformTesting(&m_gamepad, &m_stick,
-			       &m_elevatorMotor1, &m_elevatorMotor2, &m_robotDrive, &m_brake );
+			       &m_elevatorMotor1, &m_elevatorMotor2, &m_robotDrive, &m_brake, &m_draggerMotor);
 			DisplayInfo();
 
 			Wait(0.005);
