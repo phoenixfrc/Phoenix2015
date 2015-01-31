@@ -14,17 +14,18 @@ Elevator::Elevator(
         DigitalInput* homeSwitch,
         Encoder* encoder,
         Joystick* gamePad):
-
+	m_homeState(lookingForLowerLimit),
     m_motor1(motor1),
     m_motor2(motor2),
     m_lowerLimit(lowerLimit),
     m_upperLimit(upperLimit),
     m_homeSwitch(homeSwitch),
     m_encoder(encoder),
-    m_gamePad(gamePad)
-
+    m_gamePad(gamePad),
+	m_goalPosition(0),
+	m_position(0)
 {
-    homeState = lookingForLowerLimit;
+
 
 
 }
@@ -32,11 +33,11 @@ void Elevator::operateElevator()
 {
     bool rightTrigger = m_gamePad->GetRawButton(8);
 
-    if(homeState == homingComplete)
+    if(m_homeState == homingComplete)
     {
         if(rightTrigger)
         {
-            homeState = lookingForLowerLimit;
+            m_homeState = lookingForLowerLimit;
         }
         else
         {
@@ -46,7 +47,7 @@ void Elevator::operateElevator()
     else
     {
         //find_home();
-        homeState = homingComplete;
+        m_homeState = homingComplete;
     }
 
 
@@ -57,12 +58,12 @@ void Elevator::operateElevator()
 void Elevator::find_home()
 {
         double speed = 0.0;
-        switch(homeState)
+        switch(m_homeState)
         {
             case lookingForLowerLimit:
                 if(!(m_lowerLimit->Get())) // change from !(m_lowerLimit->Get()) to m_lowerLimit->Get() after lower limit is changed
                 {
-                    homeState = goingUpToHome;
+                    m_homeState = goingUpToHome;
                 }
                 else
                 {
@@ -72,7 +73,7 @@ void Elevator::find_home()
             case goingUpToHome:
                 if(m_homeSwitch->Get())
                 {
-                    homeState = homingComplete;
+                    m_homeState = homingComplete;
                     m_encoder->Reset();
                 }
                 else
@@ -102,42 +103,52 @@ void Elevator::controlElevator()
     bool yPressed = m_gamePad->GetRawButton(4);
 
     //joystick
-    double joystick = m_gamePad->GetY(); // right Joystick
+    double joystick = -m_gamePad->GetY(); // right Joystick, negative because up is negative
 
     // distance from home
-    m_distance = (m_encoder->Get() * 8.17) / Ticks;
+    m_position = (m_encoder->Get() * 8.17) / Ticks;
 
 
     // button computing
     if(xPressed)
     {
-        m_goalDistance = Heights[0];
+        m_goalPosition = Heights[0];
     }
     if(aPressed)
     {
-        m_goalDistance = Heights[1];
+        m_goalPosition = Heights[1];
     }
     if(bPressed)
     {
-        m_goalDistance = Heights[2];
+        m_goalPosition = Heights[2];
     }
     if(yPressed)
     {
-        m_goalDistance = Heights[3];
+        m_goalPosition = Heights[3];
     }
 
     //Joystick computing
     if(!(joystick > -0.05 && joystick < 0.05))
     {
-        m_goalDistance += (joystick / 2000);
+        m_goalPosition += (joystick / 5);
+    }
+    if (m_goalPosition > 85) {
+
+    	m_goalPosition = 85; //Stop large queues of goal position
+    }
+    if (m_goalPosition < - 85) {
+
+    	m_goalPosition = -85; //stop large queues of goal position
+
     }
 
-    ElevatorJoystickbuilder << "GoalDistance: ";
-    ElevatorJoystickbuilder << m_goalDistance;
+    ElevatorJoystickbuilder << "GoalPosition: ";
+    ElevatorJoystickbuilder << m_goalPosition;
     SmartDashboard::PutString("DB/String 0", ElevatorJoystickbuilder.str());
-    ElevatorJoystickbuilder2 << "distance";
-    ElevatorJoystickbuilder << m_distance;
+    ElevatorJoystickbuilder2 << "position";
+    ElevatorJoystickbuilder2 << m_position;
     SmartDashboard::PutString("DB/String 1", ElevatorJoystickbuilder2.str());
+
     moveElevator();
 
 }
@@ -145,17 +156,13 @@ void Elevator::controlElevator()
 
 void Elevator::moveElevator()
 {
-    if(m_distance > (m_goalDistance - Range) && m_distance < (m_goalDistance + Range))
+    if(m_position > (m_goalPosition - Range) && m_position < (m_goalPosition + Range))
     {
         moveMotors(0.0);
-    }
-
-    if(m_distance > m_goalDistance)
+    } else if(m_position > m_goalPosition)
     {
         moveMotors(-MotorSpeed);
-    }
-
-    if(m_distance < m_goalDistance)
+    } else if(m_position < m_goalPosition)
     {
         moveMotors(MotorSpeed);
     }

@@ -14,19 +14,19 @@ class Elevator {
     /*
      * motor speeds are n < 0 for up, n > 0 for down
      */
-    float MotorSpeed = -0.5;
-    float HomeSpeed = -0.1;
+    float MotorSpeed = 0.5;
+    float HomeSpeed = 0.1;
     int Ticks = 2048;
 
     int Heights[4] = {0, 13, 26, 39};
 
-    double Range = 0.25; // range on either side of goalDistance
+    double Range = 1; // range on either side of goalDistance
     enum homingStates
     {
         lookingForLowerLimit,
         goingUpToHome,
         homingComplete
-    } homeState;
+    } m_homeState;
 
     // initialized at class constructions then constant
     Talon* m_motor1;
@@ -38,8 +38,8 @@ class Elevator {
     Joystick* m_gamePad;
 
 
-    double m_goalDistance = 0;
-    double m_distance = 0; // distance from home (in)
+    double m_goalPosition;
+    double m_position; // distance from home (in)
 
 
 public:

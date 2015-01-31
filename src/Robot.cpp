@@ -131,7 +131,6 @@ public:
 	}
 	void Test()
 	{
-
 		TestMode tester;
 		m_leftRearDriveEncoder.Reset();
 		m_leftFrontDriveEncoder.Reset();
