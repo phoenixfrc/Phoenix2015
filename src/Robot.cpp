@@ -113,6 +113,9 @@ public:
 	}
 	void Autonomous()
 	{
+	    //This is the mode it's going to use
+	    autoMode = simple;
+
 	    switch(autoMode)
 	    {
 	    case complex:
