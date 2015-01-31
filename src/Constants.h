@@ -7,36 +7,63 @@
 
 #ifndef SRC_CONSTANTS_H_
 #define SRC_CONSTANTS_H_
+#include "WPILib.h"
 
 
 struct PortAssign
 {
 
-    //Dragger Ports:
-	 const static int draggerMotorPort = 1;
-	 const static int limitSwitchUpPort = 1;
-	 const static int limitSwitchDownPort = 2;
-	 //DIO ports
-	 const static int driveEncoder1ChannelA = 0;
-	 const static int driveEncoder1ChannelB = 1;
-	 const static int driveEncoder2ChannelA = 2;
-	 const static int driveEncoder2ChannelB = 3;
-	 const static int driveEncoder3ChannelA = 4;
-	 const static int driveEncoder3ChannelB = 5;
-	 const static int driveEncoder4ChannelA = 6;
-	 const static int driveEncoder4ChannelB = 7;
-	 const static int gyroChannel = 0;
-
+    // PWM ports
     //Drive Train Ports:
-    const static int rearLeftChannel   = 0;
-    const static int frontLeftChannel  = 1;
-    const static int frontRightChannel = 2;
-    const static int rearRightChannel  = 3;
+    static const uint32_t RearLeftChannel   = 0;
+    static const uint32_t FrontLeftChannel  = 1;
+    static const uint32_t FrontRightChannel = 2;
+    static const uint32_t RearRightChannel  = 3;
+    //Elevator Motor Ports
+    static const uint32_t ElevatorMotor1 = 4;
+    static const uint32_t ElevatorMotor2 = 5;
+
+    // relay ports
+    //Dragger Ports:
+    static const uint32_t DraggerMotorPort = 6;
+
+    //Elevator Ports:
+     static const uint32_t ElevatorBrakeChannel = 1;//placeholder value.
+
+    //DIO ports
+    static const uint32_t LeftRearDriveEncoderChannelA = 0;
+    static const uint32_t LeftRearDriveEncoderChannelB = 1;
+    static const uint32_t LeftFrontDriveEncoderChannelA = 2;
+    static const uint32_t LeftFrontDriveEncoderChannelB = 3;
+    static const uint32_t RightFrontDriveEncoderChannelA = 4;
+    static const uint32_t RightFrontDriveEncoderChannelB = 5;
+    static const uint32_t RightRearDriveEncoderChannelA = 6;
+    static const uint32_t RightRearDriveEncoderChannelB = 7;
+    static const uint32_t ElevatorEncoderChannelA = 8;
+    static const uint32_t ElevatorEncoderChannelB = 9;
+    static const uint32_t ElevatorLowerLimitChannel = 10;
+    static const uint32_t ElevatorUpperLimitChannel = 11;
+    static const uint32_t ElevatorHomeSwitchChannel = 12;
+    static const uint32_t OpticalSensorChannel = 13;
+    static const uint32_t DraggerLowerLimitChannel = 14;
+    static const uint32_t DraggerUpperLimitChannel = 15;
+    static const uint32_t DIO16Channel = 16;
+    static const uint32_t DIO17Channel = 17;
+    static const uint32_t DIO18Channel = 18;
+    static const uint32_t DIO19Channel = 19;
+    static const uint32_t DIO20Channel = 20;
+    static const uint32_t DIO21Channel = 21;
+    static const uint32_t DIO22Channel = 22;
+    static const uint32_t DIO23Channel = 23;
+    static const uint32_t DIO24Channel = 24;
+    static const uint32_t DIO25Channel = 25;
+
+    // analog
+    static const int32_t GyroChannel = 0;
 
     //Joystick Ports:
-    const static int joystickChannel = 0;
-    const static int gamepadChannel  = 1;
-
+    static const uint32_t JoystickChannel = 0;
+    static const uint32_t GamepadChannel  = 1;
 };
 
 struct FieldDistances

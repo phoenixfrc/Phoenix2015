@@ -8,23 +8,24 @@
 #include "EncoderTracker.h"
 #include "WPILib.h"
 
-EncoderTracker::EncoderTracker (Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight) {
+EncoderTracker::EncoderTracker (Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight){
     m_xPos = 0;
     m_yPos = 0;
+
     m_frontLeft = frontLeft;
     m_frontRight = frontRight;
     m_backLeft = backLeft;
     m_backRight = backRight;
+
     m_FLTicks = 0;
     m_FRTicks = 0;
     m_BLTicks = 0;
     m_BRTicks = 0;
+
     m_OldFLTicks = 0;
     m_OldFRTicks = 0;
     m_OldBLTicks = 0;
     m_OldBRTicks = 0;
-    ticksToInchY = 20.5697;
-    ticksToInchX = 0;//???
 }
 
 void EncoderTracker::ResetPosition () {
@@ -41,7 +42,6 @@ void EncoderTracker::ResetPosition () {
     m_OldFRTicks = 0;
     m_OldBLTicks = 0;
     m_OldBRTicks = 0;
-
     m_frontLeft->Reset();
     m_frontRight->Reset();
     m_backLeft->Reset();
@@ -58,12 +58,12 @@ void EncoderTracker::TrackPosition () {
 }
 
 float EncoderTracker::GetX () {
-    //return the x position (in ticks):
+    //return the x position (in inches):
     return m_xPos;
 }
 
 float EncoderTracker::GetY () {
-    //return the y position (in ticks):
+    //return the y position (in inches):
     return m_yPos;
 }
 
@@ -74,17 +74,19 @@ float EncoderTracker::GetDeltaX () {
     float BLChange = m_BLTicks - m_OldBLTicks;
     float BRChange = m_BRTicks - m_OldBRTicks;
 
-    return (FRChange - FLChange - BRChange + BLChange)/4;
+    //Algorithm for X movement (needs work):
+    return (FRChange - FLChange - BRChange + BLChange)/4 * ticksToInchesX;
 }
 
 float EncoderTracker::GetDeltaY () {
-    //Get difference:
+    //Get difference (in ticks):
     float FLChange = m_FLTicks - m_OldFLTicks;
     float FRChange = m_FRTicks - m_OldFRTicks;
     float BLChange = m_BLTicks - m_OldBLTicks;
     float BRChange = m_BRTicks - m_OldBRTicks;
 
-    return (FLChange + FRChange + BLChange + BRChange)/4*ticksToInchY;
+    //Algorithm for Y movement (needs work):
+    return (FLChange + FRChange + BLChange + BRChange)/4 * ticksToInchesY;
 }
 
 

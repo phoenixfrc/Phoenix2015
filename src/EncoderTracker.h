@@ -14,12 +14,17 @@ class EncoderTracker {
 public:
     EncoderTracker(Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight);
 
+    //Call to restart the encoder tracking system:
     void ResetPosition();
+
+    //Main function (should be called in Robot.cpp loop):
     void TrackPosition();
 
+    //Functions that Kurtis should care about (the return value is currently in inches):
     float GetX();
     float GetY();
 
+    //Base functions (contain the algorithms):
     float GetDeltaX();
     float GetDeltaY();
 
@@ -46,8 +51,8 @@ private:
     int32_t m_OldBLTicks;
     int32_t m_OldBRTicks;
 
-    float ticksToInchY;
-    float ticksToInchX;
+    const float ticksToInchesY = 20.5697;
+    const float ticksToInchesX = 24.51875;
 };
 
 
