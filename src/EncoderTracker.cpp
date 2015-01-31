@@ -104,8 +104,3 @@ void EncoderTracker::UpdateEncoders(){
     m_OldBRTicks = m_BRTicks;
     m_BRTicks = m_backRight->Get();
 }
-
-
-EncoderTracker::~EncoderTracker(){
-
-}

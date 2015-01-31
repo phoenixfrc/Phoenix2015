@@ -28,7 +28,7 @@ public:
     float GetDeltaX();
     float GetDeltaY();
 
-    ~EncoderTracker();
+    virtual ~EncoderTracker(){};
 
 private:
 

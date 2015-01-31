@@ -25,7 +25,7 @@ public:
 
     bool ReachedGoal();
 
-    virtual ~PIDInterface();
+    virtual ~PIDInterface(){};
 
 private:
     EncoderTracker m_tracker;
