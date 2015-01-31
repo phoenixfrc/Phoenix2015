@@ -51,7 +51,6 @@ class Robot: public SampleRobot
         Team2342Joystick m_stick;                 // only joystick
         Joystick m_gamepad;       // the gamepad
 
-        std::ostringstream gyroBuilder, eb, elevatorBuilder, elevatorEncoderBuilder, elevatorBuilder3;
 
 
 public:
@@ -157,6 +156,7 @@ public:
 		}
 	}
 	void DisplayInfo(){
+        std::ostringstream gyroBuilder, eb, elevatorBuilder, elevatorEncoderBuilder, elevatorBuilder3;
 
 		//Prints out the values for gyro:
 		gyroBuilder << "The Gyro angle is: ";
