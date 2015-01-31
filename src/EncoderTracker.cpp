@@ -42,6 +42,8 @@ void EncoderTracker::ResetPosition () {
     m_OldFRTicks = 0;
     m_OldBLTicks = 0;
     m_OldBRTicks = 0;
+
+    //Resets the Encoders:
     m_frontLeft->Reset();
     m_frontRight->Reset();
     m_backLeft->Reset();
@@ -80,8 +82,10 @@ float EncoderTracker::GetDeltaX () {
 
     //Algorithm for X movement (needs work):
     if (FRChange - FLChange - BRChange + BLChange > 0){
+        //if moving to the left:
         return (float)(FRChange*LConvFR - FLChange*LConvFL - BRChange*LConvBR + BLChange*LConvBL) / 4;
     } else {
+        //if moving to the right:
         return - (float)(FRChange*RConvFR - FLChange*RConvFL - BRChange*RConvBR + BLChange*RConvBL) / 4;
     }
 }
@@ -96,8 +100,10 @@ float EncoderTracker::GetDeltaY () {
 
     //Algorithm for Y movement (needs work):
     if (FRChange + FLChange + BRChange + BLChange > 0){
+        //if moving forward:
         return (float)(FRChange*FConvFR + FLChange*FConvFL + BRChange*FConvBR + BLChange*FConvBL) / 4;
     } else {
+        //if moving backward:
         return - (float)(FRChange*BConvFR + FLChange*BConvFL + BRChange*BConvBR + BLChange*BConvBL) / 4;
     }
 }
