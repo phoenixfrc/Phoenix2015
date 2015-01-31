@@ -16,6 +16,8 @@ class Robot: public SampleRobot
         Talon m_elevatorMotor1;
         Talon m_elevatorMotor2;
 
+        Talon m_draggerMotor;
+
         Elevator m_elevator;
         Dragger m_dragger;
         // tba Brake
@@ -60,6 +62,8 @@ public:
 
             m_elevatorMotor1(PortAssign::ElevatorMotor1),
             m_elevatorMotor2(PortAssign::ElevatorMotor2),
+
+			m_draggerMotor(PortAssign::DraggerMotorPort),
 
             m_elevator(&m_elevatorMotor1,
                     &m_elevatorMotor2,
@@ -128,7 +132,7 @@ public:
 
 		    m_elevator.operateElevator();
 
-		    m_dragger.operateDragger(&m_gamepad, &m_draggerLowerLimit, &m_draggerUpperLimit);
+		    m_dragger.operateDragger(&m_gamepad, &m_draggerLowerLimit, &m_draggerUpperLimit, &m_draggerMotor);
 
 		    DisplayInfo();
 

@@ -10,12 +10,10 @@
 #include "WPILib.h"
 
 class Dragger {
-    private:
-        Talon motor;
     public:
         Dragger();
 
-        void operateDragger(Joystick * button, DigitalInput * limitSwitchDown, DigitalInput * limitSwitchUp);
+        void operateDragger(Joystick * button, DigitalInput * limitSwitchDown, DigitalInput * limitSwitchUp, Talon * motor);
 
         ~Dragger();
 
