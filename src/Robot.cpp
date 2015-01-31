@@ -120,18 +120,30 @@ public:
 	        m_autoPID.SetGoal(-FieldDistances::autoCrateDiff,0);
 	        while(!m_autoPID.ReachedGoal())
 	        {
+	            if(!IsAutonomous())
+	            {
+	                break;
+	            }
 	            Wait(0.005);
 	        }
             //Pick up another tote here
 	        m_autoPID.SetGoal(-FieldDistances::autoCrateDiff,0);
             while(!m_autoPID.ReachedGoal())
             {
+                if(!IsAutonomous())
+                {
+                    break;
+                }
                 Wait(0.005);
             }
             //Pick up yet another tote here
 	        m_autoPID.SetGoal(0,FieldDistances::intoAutoDiff);
             while(!m_autoPID.ReachedGoal())
             {
+                if(!IsAutonomous())
+                {
+                    break;
+                }
                 Wait(0.005);
             }
             m_autoPID.Reset();
@@ -142,6 +154,10 @@ public:
 	        //Drop tote here
             while(!m_autoPID.ReachedGoal())
             {
+                if(!IsAutonomous())
+                {
+                    break;
+                }
                 Wait(0.005);
             }
             m_autoPID.Reset();
