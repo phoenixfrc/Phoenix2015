@@ -91,7 +91,7 @@ void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick, Enco
 		    encoderBuilder << ", Value: ";
 			switch (currentEncoder){
 			    case 0:
-			        encoderBuilder << driveEncoder1->Get();
+			encoderBuilder << driveEncoder1->Get();
 			        break;
 			    case 1:
 			        encoderBuilder << driveEncoder2->Get();
