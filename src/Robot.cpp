@@ -16,6 +16,8 @@ class Robot: public SampleRobot
         Talon m_elevatorMotor1;
         Talon m_elevatorMotor2;
 
+        Talon m_draggerMotor;
+
         Elevator m_elevator;
         Dragger m_dragger;
         // tba Brake
@@ -46,10 +48,11 @@ class Robot: public SampleRobot
         DigitalInput m_DIO25;
 
 
-	Gyro m_gyro;
+	    Gyro m_gyro;
 
         Team2342Joystick m_stick;                 // only joystick
         Joystick m_gamepad;       // the gamepad
+
 
 
 public:
@@ -59,6 +62,8 @@ public:
 
             m_elevatorMotor1(PortAssign::ElevatorMotor1),
             m_elevatorMotor2(PortAssign::ElevatorMotor2),
+
+			m_draggerMotor(PortAssign::DraggerMotorPort),
 
             m_elevator(&m_elevatorMotor1,
                     &m_elevatorMotor2,
@@ -127,7 +132,7 @@ public:
 
 		    m_elevator.operateElevator();
 
-		    m_dragger.operateDragger(&m_gamepad, &m_draggerLowerLimit, &m_draggerUpperLimit);
+		    m_dragger.operateDragger(&m_gamepad, &m_draggerLowerLimit, &m_draggerUpperLimit, &m_draggerMotor);
 
 		    DisplayInfo();
 
@@ -155,8 +160,7 @@ public:
 		}
 	}
 	void DisplayInfo(){
-
-		std::ostringstream gyroBuilder, eb, elevatorBuilder, elevatorEncoderBuilder, elevatorBuilder3;
+        std::ostringstream gyroBuilder, eb, elevatorBuilder, elevatorEncoderBuilder, elevatorBuilder3;
 
 		//Prints out the values for gyro:
 		gyroBuilder << "The Gyro angle is: ";
