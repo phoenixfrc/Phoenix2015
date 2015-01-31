@@ -66,7 +66,8 @@ public:
                     &m_elevatorUpperLimit,
                     &m_elevatorHomeSwitch,
                     &m_elevatorEncoder,
-                    &m_gamepad),
+                    &m_gamepad,
+                    &m_brake),
             m_dragger(),
 
             m_brake(PortAssign::ElevatorBrakeChannel),

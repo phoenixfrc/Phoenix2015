@@ -43,7 +43,7 @@ void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick, Enco
 	driveTrain->MecanumDrive_Cartesian(stick->GetX(), stick->GetY(), stick->GetZWithDeadZone(0.1));
 
 	//Move elevator:
-	float thumbstick = -gamePad->GetY()/4;
+	float thumbstick = -gamePad->GetY()/2;
 	thumbstick = (fabs(thumbstick) < 0.0125) ? 0 : thumbstick;
 	motor1->Set(thumbstick);
 	motor2->Set(thumbstick);

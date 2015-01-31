@@ -10,15 +10,22 @@
 #define SRC_ELEVATOR_H_
 class Elevator {
 
-    // constants
-    /*
-     * motor speeds are n < 0 for up, n > 0 for down
-     */
     float MotorSpeed = 0.5;
     float HomeSpeed = 0.1;
     int Ticks = 2048;
 
     int Heights[4] = {0, 13, 26, 39};
+
+    #define kElevatorHome         0
+    #define kElevatorHook1Ready   0
+    #define kElevatorHook1Lifted  kElevatorHook1Ready + 4
+    #define kElevatorHook2Ready   kElevatorHook1Ready + 14.5
+    #define kElevatorHook2Lifted  kElevatorHook2Ready + 4
+    #define kElevatorHook3Ready   kElevatorHook2Ready + 14.5
+    #define kElevatorHook3Lifted  kElevatorHook3Ready + 4
+    #define kElevatorHook4Ready   kElevatorHook3Ready + 14.5
+    #define kElevatorHook4Lifted  kElevatorHook4Ready + 4
+
 
     double Range = 1; // range on either side of goalDistance
     enum homingStates
@@ -36,6 +43,7 @@ class Elevator {
     DigitalInput* m_homeSwitch;
     Encoder* m_encoder;
     Joystick* m_gamePad;
+    Relay* m_brake;
 
 
 
@@ -50,13 +58,13 @@ public:
 	        DigitalInput* upperLimit,
 	        DigitalInput* homeSwitch,
 	        Encoder* encoder,
-	        Joystick* gamePad);
+	        Joystick* gamePad,
+	        Relay* ElevatorBrake);
 	void operateElevator();
 	void find_home();
 	void controlElevator();
 	void moveElevator();
 	void moveMotors(double speed);
-	int toTicks(double distance);
 	~Elevator();
 
 };

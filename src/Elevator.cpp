@@ -13,8 +13,10 @@ Elevator::Elevator(
         DigitalInput* upperLimit,
         DigitalInput* homeSwitch,
         Encoder* encoder,
-        Joystick* gamePad):
-	m_homeState(lookingForLowerLimit),
+        Joystick* gamePad,
+        Relay* ElevatorBrake):
+
+    m_homeState(lookingForLowerLimit),
     m_motor1(motor1),
     m_motor2(motor2),
     m_lowerLimit(lowerLimit),
@@ -22,8 +24,9 @@ Elevator::Elevator(
     m_homeSwitch(homeSwitch),
     m_encoder(encoder),
     m_gamePad(gamePad),
-	m_goalPosition(0),
-	m_position(0)
+    m_brake(ElevatorBrake),
+    m_goalPosition(0),
+    m_position(0)
 {
     m_homeState = lookingForLowerLimit;
 }
@@ -198,18 +201,20 @@ void Elevator::moveMotors(double desiredSpeed)
         actualSpeed = 0.0; // don't move past lower limit
     }
 
+    if (actualSpeed != 0.0 && !(m_brake->Get() == m_brake->kOff))
+    {
+        m_brake->Set(m_brake->kOff);
+    }
+
     // set the motor speed
     m_motor1->Set(actualSpeed);
     m_motor2->Set(actualSpeed);
-}
 
-int Elevator::toTicks(double distance)
-{
-    int tick;
-    tick = (distance / 8.17) * Ticks;
-    return tick;
+    if (actualSpeed == 0.0 && !(m_brake->Get() == m_brake->kForward))
+    {
+        m_brake->Set(m_brake->kForward);
+    }
 }
-
 
 
 Elevator::~Elevator(){}
