@@ -4,10 +4,16 @@
 #include "Team2342Joystick.h"
 #include "Dragger.h"
 #include "EncoderTracker.h"
+#include "PIDInterface.h"
 
 /**
  * This is a demo program showing how to use Mecanum control with the RobotDrive class.
  */
+
+enum AutoMode {
+    complex,
+    simple
+}autoMode;
 
 class Robot: public SampleRobot
 {
@@ -49,7 +55,8 @@ class Robot: public SampleRobot
         Team2342Joystick m_stick;                 // only joystick
         Joystick m_gamepad;       // the gamepad
 
-        EncoderTracker m_tracker;
+        EncoderTracker m_dummyTracker;
+        PIDInterface m_autoPID;
 
 public:
 	Robot() :
@@ -92,7 +99,8 @@ public:
             m_stick(PortAssign::JoystickChannel),
             m_gamepad(PortAssign::GamepadChannel),
 
-       m_tracker(driveEncoder1, driveEncoder2, driveEncoder3, driveEncoder4)
+       m_dummyTracker(&m_leftFrontDriveEncoder, &m_rightFrontDriveEncoder, &m_leftRearDriveEncoder, &m_rightRearDriveEncoder),
+       m_autoPID(&m_robotDrive, &m_leftFrontDriveEncoder, &m_rightFrontDriveEncoder, &m_leftRearDriveEncoder, &m_rightRearDriveEncoder)
 
 // as they are declared above.
 	{
@@ -109,15 +117,15 @@ public:
 	    {
 	    case complex:
             //Pick up tote here
-            MoveDistance(-FieldDistances::autoCrateDiff,0);
+	        m_autoPID.SetGoal(-FieldDistances::autoCrateDiff,0);
             //Pick up another tote here
-            MoveDistance(-FieldDistances::autoCrateDiff,0);
+	        m_autoPID.SetGoal(-FieldDistances::autoCrateDiff,0);
             //Pick up yet another tote here
-            MoveDistance(0,FieldDistances::intoAutoDiff);
+	        m_autoPID.SetGoal(0,FieldDistances::intoAutoDiff);
             break;
 	    case simple:
 	        //Pick up tote here
-	        MoveDistance(0, FieldDistances::intoAutoDiff);
+	        m_autoPID.SetGoal(0,FieldDistances::intoAutoDiff);
 	        //Drop tote here
 	    }
 	}
@@ -169,7 +177,7 @@ public:
 					&m_DIO23,
 					&m_DIO24,
 					&m_DIO25,
-					&m_tracker
+					&m_dummyTracker
 					);
 			Wait(0.005);
 		}

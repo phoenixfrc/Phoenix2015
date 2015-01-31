@@ -20,7 +20,7 @@ public:
 
     //My functions
     void Reset(); //Sets current location to 0
-    void SetGoal(double xGoalDistance, double yGoalDistance, bool (*IsAutoFunc));
+    void SetGoal(double xGoalDistance, double yGoalDistance);
 
     virtual ~PIDInterface();
 
