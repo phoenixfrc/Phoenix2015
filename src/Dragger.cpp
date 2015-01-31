@@ -13,9 +13,7 @@
  */
 
 Dragger::Dragger():
-motor(PortAssign::draggerMotorPort),
-limitSwitchUp(PortAssign::limitSwitchUpPort),
-limitSwitchDown(PortAssign::limitSwitchDownPort)
+motor(PortAssign::DraggerMotorPort)
 {}
 
 /* Dragger operateDragger method:
@@ -23,14 +21,14 @@ limitSwitchDown(PortAssign::limitSwitchDownPort)
  * Gets whether the limit switches have been triggered.
  * Activates the motor appropriately.
  *
- * Todo: get the button number from Constants.h
+ * To-do: get the button number from Constants.h
  */
 
-void Dragger::operateDragger(Joystick * button){
+void Dragger::operateDragger(Joystick * button, DigitalInput * limitSwitchDown, DigitalInput * limitSwitchUp){
     bool buttonPressed = button->GetRawButton(1); //Gets button state, 1 is a placeholder value
 
-    bool isUp = limitSwitchUp.Get(); //Is the up limit switch triggered?
-    bool isDown = limitSwitchDown.Get(); //Is the down limit switch triggered?
+    bool isUp = limitSwitchUp->Get(); //Is the up limit switch triggered?
+    bool isDown = limitSwitchDown->Get(); //Is the down limit switch triggered?
 
     float motorSpeed = 0.25; //Sets the motor speed, 0.25 is a placeholder value
     float motorSpeedUp = motorSpeed;
@@ -44,8 +42,10 @@ void Dragger::operateDragger(Joystick * button){
      *    If neither limit is tripped: do nothing, the motor will continue to move in its old direction.
      */
 
+
     if (isUp || isDown)
-    	motor.Set(buttonPressed && (isUp != isDown) ? (isUp ? motorSpeedDown : motorSpeedUp) : 0);
+        motor.Set(buttonPressed && (isUp != isDown) ? (isUp ? motorSpeedDown : motorSpeedUp) : 0);
+
 
 
 }
