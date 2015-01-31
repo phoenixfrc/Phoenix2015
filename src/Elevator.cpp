@@ -35,6 +35,7 @@ void Elevator::operateElevator()
 {
     bool rightTrigger = m_gamePad->GetRawButton(8);
 
+
     if(m_homeState == homingComplete)
     {
         if(rightTrigger)
@@ -50,6 +51,7 @@ void Elevator::operateElevator()
     {
         //find_home();
         m_homeState = homingComplete;
+
     }
 
 
