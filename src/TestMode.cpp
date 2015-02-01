@@ -40,7 +40,7 @@ void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick,  Tal
 	    } else{
 	        ElevatorBrake->Set(ElevatorBrake->kOff);
             }
-	float leftThumbstick = gamePad->GetY(Joystick::kLeftHand);
+	float leftThumbstick = gamePad->GetY(Joystick::kLeftHand)/4;
 		draggerMotor->Set(leftThumbstick);
 	}
 
