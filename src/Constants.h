@@ -23,9 +23,11 @@ struct PortAssign
     static const uint32_t ElevatorMotor1 = 4;
     static const uint32_t ElevatorMotor2 = 5;
 
+
     // relay ports
     //Dragger Ports:
     static const uint32_t DraggerMotorPort = 6;
+
 
     //Elevator Ports:
      static const uint32_t ElevatorBrakeChannel = 1;//placeholder value.
@@ -73,6 +75,7 @@ struct FieldDistances
     //Distance from start to the auto zone
     static const int intoAutoDiff = 24;//128; //This number comes from the manual but may be a little off
 };
+
 
 struct ObjectSizes
 {

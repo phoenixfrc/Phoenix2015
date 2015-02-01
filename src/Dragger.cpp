@@ -12,8 +12,8 @@
  * Call the constructors of the motor and limit switches, using port numbers from the Constants.h file.
  */
 
-Dragger::Dragger():
-motor(PortAssign::DraggerMotorPort)
+
+Dragger::Dragger()
 {}
 
 /* Dragger operateDragger method:
@@ -24,7 +24,9 @@ motor(PortAssign::DraggerMotorPort)
  * To-do: get the button number from Constants.h
  */
 
-void Dragger::operateDragger(Joystick * button, DigitalInput * limitSwitchDown, DigitalInput * limitSwitchUp){
+
+void Dragger::operateDragger(Joystick * button, DigitalInput * limitSwitchDown, DigitalInput * limitSwitchUp, Talon * motor){
+
     bool buttonPressed = button->GetRawButton(1); //Gets button state, 1 is a placeholder value
 
     bool isUp = limitSwitchUp->Get(); //Is the up limit switch triggered?
@@ -44,7 +46,7 @@ void Dragger::operateDragger(Joystick * button, DigitalInput * limitSwitchDown, 
 
 
     if (isUp || isDown)
-        motor.Set(buttonPressed && (isUp != isDown) ? (isUp ? motorSpeedDown : motorSpeedUp) : 0);
+        motor->Set(buttonPressed && (isUp != isDown) ? (isUp ? motorSpeedDown : motorSpeedUp) : 0);
 
 
 

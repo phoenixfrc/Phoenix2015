@@ -68,6 +68,8 @@ double PIDInterface::PIDGet()
     case forward:
         return m_tracker.GetY();
         break;
+    default:
+    	return 0;
     }
 }
 
