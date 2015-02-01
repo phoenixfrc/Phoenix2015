@@ -4,7 +4,7 @@
 #include "Team2342Joystick.h"
 #include "Elevator.h"
 #include "Dragger.h"
-
+#include <sstream>
 /**
  * This is a demo program showing how to use Mecanum control with the RobotDrive class.
  */
@@ -15,6 +15,8 @@ class Robot: public SampleRobot
 
         Talon m_elevatorMotor1;
         Talon m_elevatorMotor2;
+
+        Talon m_draggerMotor;
 
         Elevator* m_elevator;
         Dragger m_dragger;
@@ -46,10 +48,11 @@ class Robot: public SampleRobot
         DigitalInput m_DIO25;
 
 
-	Gyro m_gyro;
+	    Gyro m_gyro;
 
         Team2342Joystick m_stick;                 // only joystick
         Joystick m_gamepad;       // the gamepad
+
 
 
 public:
@@ -59,6 +62,8 @@ public:
 
             m_elevatorMotor1(PortAssign::ElevatorMotor1),
             m_elevatorMotor2(PortAssign::ElevatorMotor2),
+
+			m_draggerMotor(PortAssign::DraggerMotorPort),
 
             m_dragger(),
 
@@ -126,8 +131,12 @@ public:
         	// Use the joystick X axis for lateral movement, Y axis for forward movement, and Z axis for rotation.
         	// This sample does not use field-oriented drive, so the gyro input is set to zero.
 		    m_robotDrive.MecanumDrive_Cartesian(m_stick.GetX(), m_stick.GetY(), m_stick.GetZWithDeadZone(0.1)/*gyro.GetAngle()*/);
-		    m_elevator->operateElevator();
-		    m_dragger.operateDragger(&m_gamepad, &m_draggerLowerLimit, &m_draggerUpperLimit);
+
+		    m_elevator.operateElevator();
+
+		    m_dragger.operateDragger(&m_gamepad, &m_draggerLowerLimit, &m_draggerUpperLimit, &m_draggerMotor);
+
+		    DisplayInfo();
 
 			Wait(0.005); // wait 5ms to avoid hogging CPU cycles
 		}
@@ -145,28 +154,55 @@ public:
 		while (IsTest() && IsEnabled())
 		{
 			tester.PerformTesting(&m_gamepad, &m_stick,
-			        &m_leftRearDriveEncoder, &m_leftFrontDriveEncoder,
-			        &m_rightFrontDriveEncoder, &m_rightRearDriveEncoder,
-			        &m_gyro, &m_elevatorMotor1, &m_elevatorMotor2, &m_robotDrive,
-			        &m_elevatorEncoder, &m_brake,
-					&m_elevatorLowerLimit, &m_elevatorUpperLimit, &m_elevatorHomeSwitch,
-					&m_opticalSensor,
-					&m_draggerLowerLimit,
-					&m_draggerUpperLimit,
-					&m_DIO16,
-					&m_DIO17,
-					&m_DIO18,
-					&m_DIO19,
-					&m_DIO20,
-					&m_DIO21,
-					&m_DIO22,
-					&m_DIO23,
-					&m_DIO24,
-					&m_DIO25
-);
+			       &m_elevatorMotor1, &m_elevatorMotor2, &m_robotDrive, &m_brake );
+			DisplayInfo();
 
 			Wait(0.005);
 		}
+	}
+	void DisplayInfo(){
+        std::ostringstream gyroBuilder, eb, eb2, elevatorBuilder, elevatorEncoderBuilder, elevatorBuilder3;
+
+		//Prints out the values for gyro:
+		gyroBuilder << "The Gyro angle is: ";
+		gyroBuilder << m_gyro.GetAngle();
+	    SmartDashboard::PutString("DB/String 2", gyroBuilder.str());
+
+	    //Print Encoder values:
+	    eb << "LR: "<< m_leftRearDriveEncoder.Get();
+	    eb << " RR: "<< m_rightRearDriveEncoder.Get();
+	    SmartDashboard::PutString("DB/String 3", eb.str());
+
+
+
+	    eb2 << " LF: "<< m_leftFrontDriveEncoder.Get();
+	    eb2 << " RF: "<< m_rightFrontDriveEncoder.Get();
+	    SmartDashboard::PutString("DB/String 4", eb2.str());
+
+	    elevatorEncoderBuilder << "Elevator Encoder: " << m_elevatorEncoder.Get();
+	    SmartDashboard::PutString("DB/String 6", elevatorEncoderBuilder.str());
+
+
+	    //Prints out the elevator limit switches
+	     elevatorBuilder3 << //"ElL,U,H;O;DL,U*: "<<
+	     		m_elevatorLowerLimit.Get() <<
+				m_elevatorUpperLimit.Get() <<
+				m_elevatorHomeSwitch.Get() <<
+	 			m_opticalSensor.Get() <<
+	 			m_draggerLowerLimit.Get() <<
+	 			m_draggerUpperLimit.Get() <<
+	 			m_DIO16.Get() <<
+	 			m_DIO17.Get() <<
+	 			m_DIO18.Get() <<
+	 			m_DIO19.Get() <<
+	 			m_DIO20.Get() <<
+	 			m_DIO21.Get() <<
+	 			m_DIO22.Get() <<
+	 			m_DIO23.Get() <<
+	 			m_DIO24.Get() <<
+	 			m_DIO25.Get();
+	     SmartDashboard::PutString("DB/String 5", elevatorBuilder3.str());
+
 	}
 
 };
