@@ -14,19 +14,9 @@
 //Set limitSwitch port on init
 TestMode::TestMode(): m_buttonWasPressed(false){}
 
-    std::ostringstream trackerMessageBuilderX;
-    std::ostringstream trackerMessageBuilderY;
-
 void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick,  Talon * motor1,
 		Talon * motor2,  RobotDrive * driveTrain,
 		Relay * ElevatorBrake, EncoderTracker * tracker){
-    trackerMessageBuilderX << "TrackerX: ";
-    trackerMessageBuilderY << "TrackerY: ";
-    trackerMessageBuilderX << tracker->GetX();
-    trackerMessageBuilderY << tracker->GetY();
-    SmartDashboard::PutString("DB/String 4", trackerMessageBuilderX.str());//Bottom left spot
-    SmartDashboard::PutString("DB/String 9", trackerMessageBuilderY.str());//Bottom right spot
-
 
 	//Move elevator:
 	float thumbstick = -gamePad->GetY()/4;

@@ -161,10 +161,11 @@ public:
 	    case simple:
 	    	//This expects robot to be placed between tote and drive station facing into the field
 	        //Pick up tote here
-	        m_autoPID.SetGoal(0,FieldDistances::intoAutoDiff);
+	        m_autoPID.SetGoal(0,-FieldDistances::intoAutoDiff);
 
             while(IsAutonomous() && !m_autoPID.ReachedGoal())
             {
+            	DisplayInfo();
                 Wait(0.005);
             }
 
@@ -211,7 +212,13 @@ public:
 		}
 	}
 	void DisplayInfo(){
-        std::ostringstream gyroBuilder, eb, eb2, elevatorBuilder, elevatorEncoderBuilder, elevatorBuilder3;
+
+		static int count = 0;
+		if (count++ < 100) {
+			return;
+		}
+		count = 0;
+		std::ostringstream gyroBuilder, eb, eb2, elevatorBuilder, elevatorEncoderBuilder, elevatorBuilder3;
 
 		//Prints out the values for gyro:
 		gyroBuilder << "The Gyro angle is: ";

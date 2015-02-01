@@ -1,10 +1,11 @@
 #include "PIDInterface.h"
 #include "WPILib.h"
+#include <sstream>
 
 PIDInterface::PIDInterface(RobotDrive * robotDrive, Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight):
     m_tracker(frontLeft, frontRight, backLeft, backRight),
-    xPID(0.05, 0.05, 0.05, this, this), //PID values will need to be tuned for both of these
-    yPID(0.05, 0.05, 0.05, this, this)
+    xPID(0.1, 0.001, 0.0, this, this), //PID values will need to be tuned for both of these
+    yPID(0.1, 0.001, 0.0, this, this)
 {
     xPID.Disable();
     yPID.Disable();
@@ -39,6 +40,7 @@ void PIDInterface::SetGoal(double xGoalDistance, double yGoalDistance)
     yPID.SetSetpoint(yGoalDistance);
 }
 
+
 //This will return true if either of the PID loops are enabled and have reached their target
 bool PIDInterface::ReachedGoal()
 {
@@ -58,8 +60,15 @@ bool PIDInterface::ReachedGoal()
 
 double PIDInterface::PIDGet()
 {
+	std::ostringstream LR, FB, Goal;
     //Update the tracker's internal numbers and then return either x or y depending on which axis we're currently trying to move along
     m_tracker.TrackPosition();
+    LR << "Position LR: " << m_tracker.GetX();
+    SmartDashboard::PutString("DB/String 7", LR.str());
+    FB << "Position FB: " << m_tracker.GetY();
+    SmartDashboard::PutString("DB/String 8", FB.str());
+    Goal << "Goal: (" << xPID.GetSetpoint() << "," << yPID.GetSetpoint() << ")";
+    SmartDashboard::PutString("DB/String 9", Goal.str());
     switch(m_currentAxis)
     {
     case right:
@@ -76,6 +85,7 @@ double PIDInterface::PIDGet()
 void PIDInterface::PIDWrite(float output)
 {
     //Output to the motors so they drive and move along the current axis
+	output /= 4;
     switch(m_currentAxis)
     {
     case right:
