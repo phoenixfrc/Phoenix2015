@@ -106,8 +106,7 @@ void Elevator::controlElevator()
     bool rbPressed = m_gamePad->GetRawButton(6);
     bool rtPressed = m_gamePad->GetRawButton(8);
 
-    bool rbWasPressed = false;
-    bool rtWasPressed = false;
+
 
     //joystick
     double joystick = -m_gamePad->GetY(); // right Joystick, negative because up is negative
@@ -115,24 +114,24 @@ void Elevator::controlElevator()
     float goalPosition = m_elevatorControl->GetSetpoint();
 
     // button computing
-    if(rbPressed && !rbWasPressed)
+    if(rbPressed && !m_rbWasPressed)
     {
         goalPosition += 4;
-        rbWasPressed = true;
+        m_rbWasPressed = true;
     }
-    else if(!rbPressed && rbWasPressed)
+    else if(!rbPressed && m_rbWasPressed)
     {
-        rbWasPressed = false;
+        m_rbWasPressed = false;
     }
 
-    if(rtPressed && !rtWasPressed)
+    if(rtPressed && !m_rtWasPressed)
     {
         goalPosition -= 4;
-        rtWasPressed = true;
+        m_rtWasPressed = true;
     }
-    else if(!rtPressed && rtWasPressed)
+    else if(!rtPressed && m_rtWasPressed)
     {
-        rtWasPressed = false;
+        m_rtWasPressed = false;
     }
 
 
