@@ -16,15 +16,15 @@ Elevator::Elevator(
         Joystick* gamePad,
         Relay* ElevatorBrake):
 
-    m_homeState(lookingForLowerLimit),
-    m_motor1(motor1),
-    m_motor2(motor2),
-    m_lowerLimit(lowerLimit),
-    m_upperLimit(upperLimit),
-    m_homeSwitch(homeSwitch),
-    m_encoder(encoder),
-    m_gamePad(gamePad),
-    m_brake(ElevatorBrake)
+        m_homeState(lookingForLowerLimit),
+        m_motor1(motor1),
+        m_motor2(motor2),
+        m_lowerLimit(lowerLimit),
+        m_upperLimit(upperLimit),
+        m_homeSwitch(homeSwitch),
+        m_encoder(encoder),
+        m_gamePad(gamePad),
+        m_brake(ElevatorBrake)
 {
     printf("in elevator constructor...\n");
     m_homeState = lookingForLowerLimit;
@@ -58,35 +58,35 @@ bool Elevator::elevatorIsAt(float position)
 
 void Elevator::find_home()
 {
-        double speed = 0.0;
-        if (m_homeState == lookingForLowerLimit)
+    double speed = 0.0;
+    if (m_homeState == lookingForLowerLimit)
+    {
+        if(!(m_lowerLimit->Get())) // change from !(m_lowerLimit->Get()) to m_lowerLimit->Get() after lower limit is changed
         {
-            if(!(m_lowerLimit->Get())) // change from !(m_lowerLimit->Get()) to m_lowerLimit->Get() after lower limit is changed
-            {
-                m_homeState = goingUpToHome;
-            }
-            else
-            {
-                speed = -HomeSpeed;
-            }
+            m_homeState = goingUpToHome;
         }
-
-        if (m_homeState == goingUpToHome)
+        else
         {
-            if(!(m_lowerLimit->Get())) //if(m_homeSwitch->Get())
-            {
-                m_homeState = homingComplete;
-                m_encoder->Reset();
-                m_elevatorControl->Enable();
-
-            }
-            else
-            {
-                speed = HomeSpeed;
-            }
+            speed = -HomeSpeed;
         }
+    }
 
-        PIDWrite(speed);
+    if (m_homeState == goingUpToHome)
+    {
+        if(!(m_lowerLimit->Get())) //if(m_homeSwitch->Get())
+        {
+            m_homeState = homingComplete;
+            m_encoder->Reset();
+            m_elevatorControl->Enable();
+
+        }
+        else
+        {
+            speed = HomeSpeed;
+        }
+    }
+
+    PIDWrite(speed);
 }
 
 
@@ -145,12 +145,12 @@ void Elevator::controlElevator()
     if (goalPosition > 85)
     {
 
-    	goalPosition = 85; //Stop large queues of goal position
+        goalPosition = 85; //Stop large queues of goal position
     }
     if (goalPosition < 0)
     {
 
-    	goalPosition = 0; //stop large queues of goal position
+        goalPosition = 0; //stop large queues of goal position
 
     }
 

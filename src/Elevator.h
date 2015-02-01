@@ -41,39 +41,39 @@ class Elevator  : public PIDOutput
     void moveElevator();
 
 public:
-	Elevator(Talon* motor1,
-	        Talon* motor2,
-	        DigitalInput* lowerLimit,
-	        DigitalInput* upperLimit,
-	        DigitalInput* homeSwitch,
-	        Encoder* encoder,
-	        Joystick* gamePad,
-	        Relay* ElevatorBrake);
-	//Ecpected usage in teleop loop while(!elevatorIsHomed()) {operateElevator();}
-	// after that call setElevatorGoalPosition using the const below.
+    Elevator(Talon* motor1,
+            Talon* motor2,
+            DigitalInput* lowerLimit,
+            DigitalInput* upperLimit,
+            DigitalInput* homeSwitch,
+            Encoder* encoder,
+            Joystick* gamePad,
+            Relay* ElevatorBrake);
+    //Ecpected usage in teleop loop while(!elevatorIsHomed()) {operateElevator();}
+    // after that call setElevatorGoalPosition using the const below.
 
-	void operateElevator(); // for use in teleop
-	bool elevatorIsHomed();
-	bool elevatorIsAt(float position);
+    void operateElevator(); // for use in teleop
+    bool elevatorIsHomed();
+    bool elevatorIsAt(float position);
 
 
 
-        // for use in setElevatorGoalPosition call
-        #define kElevatorHome         0
-        #define kElevatorHook1Ready   0
-        #define kElevatorHook1Lifted  kElevatorHook1Ready + 4
-        #define kElevatorHook2Ready   kElevatorHook1Ready + 14.5
-        #define kElevatorHook2Lifted  kElevatorHook2Ready + 4
-        #define kElevatorHook3Ready   kElevatorHook2Ready + 14.5
-        #define kElevatorHook3Lifted  kElevatorHook3Ready + 4
-        #define kElevatorHook4Ready   kElevatorHook3Ready + 14.5
-        #define kElevatorHook4Lifted  kElevatorHook4Ready + 4
+    // for use in setElevatorGoalPosition call
+    #define kElevatorHome         0
+    #define kElevatorHook1Ready   0
+    #define kElevatorHook1Lifted  kElevatorHook1Ready + 4
+    #define kElevatorHook2Ready   kElevatorHook1Ready + 14.5
+    #define kElevatorHook2Lifted  kElevatorHook2Ready + 4
+    #define kElevatorHook3Ready   kElevatorHook2Ready + 14.5
+    #define kElevatorHook3Lifted  kElevatorHook3Ready + 4
+    #define kElevatorHook4Ready   kElevatorHook3Ready + 14.5
+    #define kElevatorHook4Lifted  kElevatorHook4Ready + 4
 
-	void setElevatorGoalPosition(float position); // use consts above
+    void setElevatorGoalPosition(float position); // use consts above
 
-	~Elevator();
+    ~Elevator();
 
-        void PIDWrite(float output);
+    void PIDWrite(float output);
 };
 
 
