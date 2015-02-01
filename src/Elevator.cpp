@@ -37,7 +37,7 @@ void Elevator::operateElevator()
 
     if(m_homeState == homingComplete)
     {
-            controlElevator();
+        controlElevator();
     }
     else
     {
@@ -52,7 +52,7 @@ bool Elevator::elevatorIsHomed()
 }
 bool Elevator::elevatorIsAt(float position)
 {
-    float currentPosition = m_elevatorControl->Get();
+    float currentPosition = (m_encoder->Get() / 8.17);
     return((currentPosition < (position + 0.5)) && (currentPosition > (position - 0.5)));
 }
 
@@ -103,6 +103,11 @@ void Elevator::controlElevator()
     bool aPressed = m_gamePad->GetRawButton(2);
     bool bPressed = m_gamePad->GetRawButton(3);
     bool yPressed = m_gamePad->GetRawButton(4);
+    bool rbPressed = m_gamepad->GetRawButton(6);
+    bool rtPressed = m_gamepad->GetRawButton(8);
+
+    bool rbWasPressed = false;
+    bool rtWasPressed = false;
 
     //joystick
     double joystick = -m_gamePad->GetY(); // right Joystick, negative because up is negative
@@ -110,22 +115,26 @@ void Elevator::controlElevator()
     float goalPosition = m_elevatorControl->GetSetpoint();
 
     // button computing
-    if(xPressed)
+    if(rbPressed && !rbWasPressed)
     {
-        goalPosition = kElevatorHook1Ready;
+        goalPosition += 4;
+        rbWasPressed = true;
     }
-    if(aPressed)
+    else if(!rbPressed && rbWasPressed)
     {
-        goalPosition = kElevatorHook2Ready;
+        rbWasPressed = false;
     }
-    if(bPressed)
+
+    if(rtPressed && !rtWasPressed)
     {
-        goalPosition = kElevatorHook3Ready;
+        goalPosition -= 4;
+        rtWasPressed = true;
     }
-    if(yPressed)
+    else if(!rtPressed && rtWasPressed)
     {
-        goalPosition = kElevatorHook4Ready;
+        rtWasPressed = false;
     }
+
 
     //Joystick computing
     if(!(joystick > -0.05 && joystick < 0.05))
@@ -166,7 +175,7 @@ void Elevator::PIDWrite(float desiredSpeed)
     bool atUpperLimit = m_upperLimit->Get();
     bool atLowerLimit = !(m_lowerLimit->Get()); // change from !(m_lowerLimit->Get()) to m_lowerLimit->Get() after lower limit is changed;
     float actualSpeed = desiredSpeed;
-
+    float deadZone = 0.1;
 
     if (atUpperLimit && (desiredSpeed > 0.0))
     {
@@ -177,7 +186,7 @@ void Elevator::PIDWrite(float desiredSpeed)
         actualSpeed = 0.0; // don't move past lower limit
     }
 
-    if (actualSpeed != 0.0 && !(m_brake->Get() == m_brake->kOff))
+    if (((actualSpeed < 0.0 - deadZone) || (actualSpeed > 0.0 + deadZone)) && !(m_brake->Get() == m_brake->kOff))
     {
         m_brake->Set(m_brake->kOff);
     }
@@ -186,7 +195,7 @@ void Elevator::PIDWrite(float desiredSpeed)
     m_motor1->Set(actualSpeed);
     m_motor2->Set(actualSpeed);
 
-    if (actualSpeed == 0.0 && !(m_brake->Get() == m_brake->kForward))
+    if (((actualSpeed > 0.0 - deadZone) && (actualSpeed < 0.0 + deadZone)) && !(m_brake->Get() == m_brake->kForward))
     {
         m_brake->Set(m_brake->kForward);
     }
