@@ -132,7 +132,7 @@ public:
         	// This sample does not use field-oriented drive, so the gyro input is set to zero.
 		    m_robotDrive.MecanumDrive_Cartesian(m_stick.GetX(), m_stick.GetY(), m_stick.GetZWithDeadZone(0.1)/*gyro.GetAngle()*/);
 
-		    m_elevator.operateElevator();
+		    m_elevator->operateElevator();
 
 		    m_dragger.operateDragger(&m_gamepad, &m_draggerLowerLimit, &m_draggerUpperLimit, &m_draggerMotor);
 

@@ -103,8 +103,8 @@ void Elevator::controlElevator()
     bool aPressed = m_gamePad->GetRawButton(2);
     bool bPressed = m_gamePad->GetRawButton(3);
     bool yPressed = m_gamePad->GetRawButton(4);
-    bool rbPressed = m_gamepad->GetRawButton(6);
-    bool rtPressed = m_gamepad->GetRawButton(8);
+    bool rbPressed = m_gamePad->GetRawButton(6);
+    bool rtPressed = m_gamePad->GetRawButton(8);
 
     bool rbWasPressed = false;
     bool rtWasPressed = false;
