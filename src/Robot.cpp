@@ -113,6 +113,8 @@ public:
 	}
 	void Autonomous()
 	{
+
+		//m_robotDrive.SetSafetyEnabled(false); this may be needed
 	    //This is the mode it's going to use
 	    autoMode = simple;
 
@@ -121,48 +123,37 @@ public:
 	    case complex:
             //Pick up tote here
 	        m_autoPID.SetGoal(-FieldDistances::autoCrateDiff,0);
-	        while(!m_autoPID.ReachedGoal())
+	        while(IsAutonomous() && !m_autoPID.ReachedGoal())
 	        {
-	            if(!IsAutonomous())
-	            {
-	                break;
-	            }
 	            Wait(0.005);
 	        }
             //Pick up another tote here
 	        m_autoPID.SetGoal(-FieldDistances::autoCrateDiff,0);
-            while(!m_autoPID.ReachedGoal())
+            while(IsAutonomous && !m_autoPID.ReachedGoal())
             {
-                if(!IsAutonomous())
-                {
-                    break;
-                }
                 Wait(0.005);
             }
             //Pick up yet another tote here
 	        m_autoPID.SetGoal(0,FieldDistances::intoAutoDiff);
-            while(!m_autoPID.ReachedGoal())
+            while(IsAutonomous() && !m_autoPID.ReachedGoal())
             {
-                if(!IsAutonomous())
-                {
-                    break;
-                }
                 Wait(0.005);
             }
+            //drop totes here
             m_autoPID.Reset();
             break;
 	    case simple:
+	    	//This expects robot to be placed between tote and drive station facing into the field
 	        //Pick up tote here
 	        m_autoPID.SetGoal(0,FieldDistances::intoAutoDiff);
-	        //Drop tote here
-            while(!m_autoPID.ReachedGoal())
+
+            while(IsAutonomous() && !m_autoPID.ReachedGoal())
             {
-                if(!IsAutonomous())
-                {
-                    break;
-                }
                 Wait(0.005);
             }
+
+            //Drop tote here
+
             m_autoPID.Reset();
 	    }
 	}
