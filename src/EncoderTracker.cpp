@@ -8,6 +8,9 @@
 #include "EncoderTracker.h"
 #include "WPILib.h"
 
+static const float ticksToInchesY = 20.5697;
+static const float ticksToInchesX = 24.51875;
+
 EncoderTracker::EncoderTracker (Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight){
     m_xPos = 0;
     m_yPos = 0;

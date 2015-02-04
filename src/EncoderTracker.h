@@ -50,9 +50,6 @@ private:
     int32_t m_OldFRTicks;
     int32_t m_OldBLTicks;
     int32_t m_OldBRTicks;
-
-    const float ticksToInchesY = 20.5697;
-    const float ticksToInchesX = 24.51875;
 };
 
 
