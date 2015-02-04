@@ -15,7 +15,6 @@ Elevator::Elevator(
         Encoder* encoder,
         Joystick* gamePad,
         Relay* ElevatorBrake):
-        m_homeState(lookingForLowerLimit),
         m_rbWasPressed(false),
         m_rtWasPressed(false),
         m_motor1(motor1),
@@ -25,11 +24,12 @@ Elevator::Elevator(
         m_homeSwitch(homeSwitch),
         m_encoder(encoder),
         m_gamePad(gamePad),
-        m_brake(ElevatorBrake)
+        m_brake(ElevatorBrake),
+        m_homeState(lookingForLowerLimit)
 {
     printf("in elevator constructor...\n");
     m_homeState = lookingForLowerLimit;
-    m_encoder->SetDistancePerPulse(8.17 / Ticks);
+    m_encoder->SetDistancePerPulse(1 / TicksPerInch);
     m_elevatorControl = new PIDController(0.1, 0.001, 0.0, encoder, this);
 }
 
@@ -53,7 +53,7 @@ bool Elevator::elevatorIsHomed()
 }
 bool Elevator::elevatorIsAt(float position)
 {
-    float currentPosition = (m_encoder->Get() / 8.17);
+    float currentPosition = (m_encoder->Get() / TicksPerInch);
     return((currentPosition < (position + 0.5)) && (currentPosition > (position - 0.5)));
 }
 
@@ -62,7 +62,7 @@ void Elevator::find_home()
     double speed = 0.0;
     if (m_homeState == lookingForLowerLimit)
     {
-        if(!(m_lowerLimit->Get())) // change from !(m_lowerLimit->Get()) to m_lowerLimit->Get() after lower limit is changed
+        if(m_lowerLimit->Get())
         {
             m_homeState = goingUpToHome;
         }
@@ -74,10 +74,11 @@ void Elevator::find_home()
 
     if (m_homeState == goingUpToHome)
     {
-        if(!(m_lowerLimit->Get())) //if(m_homeSwitch->Get())
+        if(m_lowerLimit->Get()) //if(m_homeSwitch->Get())
         {
             m_homeState = homingComplete;
             m_encoder->Reset();
+            setElevatorGoalPosition(0.0);
             m_elevatorControl->Enable();
 
         }
@@ -117,7 +118,7 @@ void Elevator::controlElevator()
     // button computing
     if(rbPressed && !m_rbWasPressed)
     {
-        goalPosition += 4;
+        goalPosition += kLiftDelta;
         m_rbWasPressed = true;
     }
     else if(!rbPressed && m_rbWasPressed)
@@ -127,7 +128,7 @@ void Elevator::controlElevator()
 
     if(rtPressed && !m_rtWasPressed)
     {
-        goalPosition -= 4;
+        goalPosition -= kLiftDelta;
         m_rtWasPressed = true;
     }
     else if(!rtPressed && m_rtWasPressed)
@@ -135,17 +136,26 @@ void Elevator::controlElevator()
         m_rtWasPressed = false;
     }
 
-
     //Joystick computing
+    // TODO limit offset from joystick
     if(!(joystick > -0.05 && joystick < 0.05))
     {
         goalPosition += (joystick / 5);
     }
 
-    if (goalPosition > 85)
+    if(aPressed)
+    {
+        goalPosition = kElevatorHook1Ready;
+    }
+    if(bPressed)
+    {
+        goalPosition = kElevatorHook2Ready;
+    }
+
+    if (goalPosition > 60)
     {
 
-        goalPosition = 85; //Stop large queues of goal position
+        goalPosition = 60; //Stop large queues of goal position
     }
     if (goalPosition < 0)
     {
@@ -158,7 +168,7 @@ void Elevator::controlElevator()
     ElevatorJoystickbuilder << goalPosition;
     SmartDashboard::PutString("DB/String 0", ElevatorJoystickbuilder.str());
     ElevatorJoystickbuilder2 << "position: ";
-    ElevatorJoystickbuilder2 << (m_encoder->Get() / 8.17);
+    ElevatorJoystickbuilder2 << (m_encoder->Get() / TicksPerInch);
     SmartDashboard::PutString("DB/String 1", ElevatorJoystickbuilder2.str());
 
     setElevatorGoalPosition(goalPosition);
@@ -173,7 +183,7 @@ void Elevator::setElevatorGoalPosition(float position)
 void Elevator::PIDWrite(float desiredSpeed)
 {
     bool atUpperLimit = m_upperLimit->Get();
-    bool atLowerLimit = !(m_lowerLimit->Get()); // change from !(m_lowerLimit->Get()) to m_lowerLimit->Get() after lower limit is changed;
+    bool atLowerLimit = m_lowerLimit->Get();
     float actualSpeed = desiredSpeed;
     float deadZone = 0.1;
 
@@ -188,7 +198,7 @@ void Elevator::PIDWrite(float desiredSpeed)
 
     if (((actualSpeed < 0.0 - deadZone) || (actualSpeed > 0.0 + deadZone)) && !(m_brake->Get() == m_brake->kOff))
     {
-        m_brake->Set(m_brake->kOff);
+        //m_brake->Set(m_brake->kOff);
     }
 
     // set the motor speed
@@ -197,7 +207,7 @@ void Elevator::PIDWrite(float desiredSpeed)
 
     if (((actualSpeed > 0.0 - deadZone) && (actualSpeed < 0.0 + deadZone)) && !(m_brake->Get() == m_brake->kForward))
     {
-        m_brake->Set(m_brake->kForward);
+        //m_brake->Set(m_brake->kForward);
     }
 }
 

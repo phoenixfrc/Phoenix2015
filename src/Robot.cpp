@@ -126,6 +126,7 @@ public:
     void OperatorControl()
     {
         m_robotDrive.SetSafetyEnabled(false);
+        m_elevator->m_homeState = m_elevator->lookingForLowerLimit;
         while (IsOperatorControl() && IsEnabled())
         {
             // Use the joystick X axis for lateral movement, Y axis for forward movement, and Z axis for rotation.
@@ -140,6 +141,7 @@ public:
 
             Wait(0.005); // wait 5ms to avoid hogging CPU cycles
         }
+        m_elevator->m_elevatorControl->Disable();
     }
     void Test()
     {
