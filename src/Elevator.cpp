@@ -15,8 +15,9 @@ Elevator::Elevator(
         Encoder* encoder,
         Joystick* gamePad,
         Relay* ElevatorBrake):
-
         m_homeState(lookingForLowerLimit),
+        m_rbWasPressed(false),
+        m_rtWasPressed(false),
         m_motor1(motor1),
         m_motor2(motor2),
         m_lowerLimit(lowerLimit),

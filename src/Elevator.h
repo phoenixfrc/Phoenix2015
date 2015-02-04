@@ -9,22 +9,21 @@
 #ifndef SRC_ELEVATOR_H_
 #define SRC_ELEVATOR_H_
 
+static const float MotorSpeed = 1.0;
+static const float HomeSpeed = 0.25;
+static const int Ticks = 2048;
+
 class Elevator  : public PIDOutput
 {
-
-    float MotorSpeed = 1.0;
-    float HomeSpeed = 0.25;
-    int Ticks = 2048;
-    bool m_rbWasPressed = false;
-    bool m_rtWasPressed = false;
-
-    double Range = 1; // range on either side of goalDistance
     enum homingStates
     {
         lookingForLowerLimit,
         goingUpToHome,
         homingComplete
     } m_homeState;
+
+    bool m_rbWasPressed;
+    bool m_rtWasPressed;
 
     // initialized at class constructions then constant
     Talon* m_motor1;
