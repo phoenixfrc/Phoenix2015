@@ -225,6 +225,8 @@ public:
 	{
 	    ClearDisplay();
 
+	    m_autoPID.TestEnable();
+
 		TestMode tester;
 		m_leftRearDriveEncoder.Reset();
 		m_leftFrontDriveEncoder.Reset();
@@ -235,7 +237,7 @@ public:
 		{
 			tester.PerformTesting(&m_gamepad, &m_stick,
 			       &m_elevatorMotor1, &m_elevatorMotor2, &m_robotDrive, &m_brake, &m_dummyTracker);
-			//DisplayInfo();
+			DisplayInfo();
 			Wait(0.005);
 		}
 	}

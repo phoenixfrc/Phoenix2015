@@ -4,8 +4,8 @@
 
 PIDInterface::PIDInterface(RobotDrive * robotDrive, Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight):
     m_tracker(frontLeft, frontRight, backLeft, backRight),
-    xPID(0.1, 0.001, 0.0, this, this), //PID values will need to be tuned for both of these
-    yPID(0.1, 0.001, 0.0, this, this)
+    xPID(100.0, 0.0, 2.0, this, this), //PID values will need to be tuned for both of these
+    yPID(100.0, 0.0, 2.0, this, this)
 {
     xPID.Disable();
     yPID.Disable();
@@ -61,6 +61,12 @@ bool PIDInterface::ReachedGoal()
     }
 }
 
+void PIDInterface::TestEnable()
+{
+    xPID.Enable();
+    yPID.Enable();
+}
+
 double PIDInterface::PIDGet()
 {
 	std::ostringstream LR, FB, State;
@@ -90,7 +96,10 @@ double PIDInterface::PIDGet()
 void PIDInterface::PIDWrite(float output)
 {
     //Output to the motors so they drive and move along the current axis
-	//output /= 4;
+    std::ostringstream Output;
+    Output << "Desired out: " << output;
+    SmartDashboard::PutString("DB/String 2", Output.str());
+    output /= 4;
     switch(m_currentAxis)
     {
     case right:
