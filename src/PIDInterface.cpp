@@ -22,6 +22,7 @@ void PIDInterface::Reset()
 
 void PIDInterface::SetGoal(double xGoalDistance, double yGoalDistance)
 {
+    std::ostringstream Goal;
     Reset();
     //Go as far in the left-right axis as required
     if(xGoalDistance != 0)
@@ -38,6 +39,8 @@ void PIDInterface::SetGoal(double xGoalDistance, double yGoalDistance)
         yPID.Enable();
     }
     yPID.SetSetpoint(yGoalDistance);
+    Goal << "Goal: (" << xGoalDistance << "," << yGoalDistance << ")";
+    SmartDashboard::PutString("DB/String 1", Goal.str());
 }
 
 
@@ -60,21 +63,23 @@ bool PIDInterface::ReachedGoal()
 
 double PIDInterface::PIDGet()
 {
-	std::ostringstream LR, FB, Goal;
+	std::ostringstream LR, FB, State;
     //Update the tracker's internal numbers and then return either x or y depending on which axis we're currently trying to move along
     m_tracker.TrackPosition();
     LR << "Position LR: " << m_tracker.GetX();
     SmartDashboard::PutString("DB/String 7", LR.str());
     FB << "Position FB: " << m_tracker.GetY();
     SmartDashboard::PutString("DB/String 8", FB.str());
-    Goal << "Goal: (" << xPID.GetSetpoint() << "," << yPID.GetSetpoint() << ")";
-    SmartDashboard::PutString("DB/String 9", Goal.str());
     switch(m_currentAxis)
     {
     case right:
+        State << "Pos_X: " << m_tracker.GetX();
+        SmartDashboard::PutString("DB/String 0", State.str());
         return m_tracker.GetX();
         break;
     case forward:
+        State << "Pos_Y: " << m_tracker.GetY();
+        SmartDashboard::PutString("DB/String 0", State.str());
         return m_tracker.GetY();
         break;
     default:
@@ -85,14 +90,14 @@ double PIDInterface::PIDGet()
 void PIDInterface::PIDWrite(float output)
 {
     //Output to the motors so they drive and move along the current axis
-	output /= 4;
+	//output /= 4;
     switch(m_currentAxis)
     {
     case right:
         m_robotDrive->MecanumDrive_Cartesian(output,0,0);
         break;
     case forward:
-        m_robotDrive->MecanumDrive_Cartesian(0,output,0);
+        m_robotDrive->MecanumDrive_Cartesian(0,-output,0);
         break;
     }
 }

@@ -15,7 +15,7 @@
 enum AutoMode {
     complex,
     simple
-}autoMode;
+};
 
 class Robot: public SampleRobot
 {
@@ -127,12 +127,28 @@ public:
 		m_rightFrontDriveEncoder.SetReverseDirection(true);
 		SmartDashboard::init();
 	}
+	void ClearDisplay()
+	{
+        SmartDashboard::PutString("DB/String 0", " ");
+        SmartDashboard::PutString("DB/String 1", " ");
+        SmartDashboard::PutString("DB/String 2", " ");
+        SmartDashboard::PutString("DB/String 3", " ");
+        SmartDashboard::PutString("DB/String 4", " ");
+        SmartDashboard::PutString("DB/String 5", " ");
+        SmartDashboard::PutString("DB/String 6", " ");
+        SmartDashboard::PutString("DB/String 7", " ");
+        SmartDashboard::PutString("DB/String 8", " ");
+        SmartDashboard::PutString("DB/String 9", " ");
+	}
 	void Autonomous()
 	{
+	    ClearDisplay();
+
+	    m_robotDrive.SetSafetyEnabled(false);
 
 		//m_robotDrive.SetSafetyEnabled(false); this may be needed
 	    //This is the mode it's going to use
-	    autoMode = simple;
+	    AutoMode autoMode = simple;
 
 	    switch(autoMode)
 	    {
@@ -159,14 +175,22 @@ public:
             m_autoPID.Reset();
             break;
 	    case simple:
+	        SmartDashboard::PutString("DB/String 0", "Starting Autonomous");
+
 	    	//This expects robot to be placed between tote and drive station facing into the field
 	        //Pick up tote here
-	        m_autoPID.SetGoal(0,-FieldDistances::intoAutoDiff);
+	        m_autoPID.SetGoal(0,FieldDistances::intoAutoDiff);
 
-            while(IsAutonomous() && !m_autoPID.ReachedGoal())
+	        int counter = 0;
+
+            while(IsAutonomous() && IsEnabled() && !m_autoPID.ReachedGoal())
             {
+                counter++;
             	DisplayInfo();
                 Wait(0.005);
+                std::ostringstream builder;
+                builder << "We looped " << counter << " times";
+                SmartDashboard::PutString("DB/String 3", builder.str());
             }
 
             //Drop tote here
@@ -179,6 +203,8 @@ public:
 	 */
 	void OperatorControl()
 	{
+	    ClearDisplay();
+
 	    m_robotDrive.SetSafetyEnabled(false);
 		while (IsOperatorControl() && IsEnabled())
 		{
@@ -197,6 +223,8 @@ public:
 	}
 	void Test()
 	{
+	    ClearDisplay();
+
 		TestMode tester;
 		m_leftRearDriveEncoder.Reset();
 		m_leftFrontDriveEncoder.Reset();
@@ -207,7 +235,7 @@ public:
 		{
 			tester.PerformTesting(&m_gamepad, &m_stick,
 			       &m_elevatorMotor1, &m_elevatorMotor2, &m_robotDrive, &m_brake, &m_dummyTracker);
-			DisplayInfo();
+			//DisplayInfo();
 			Wait(0.005);
 		}
 	}
