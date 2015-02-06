@@ -10,14 +10,15 @@ enum testModes{testElevator, testJoystick, testTalon, testEncoder, testGyro, tes
 
 class TestMode
 {
-	public:
 
-		TestMode();
-		void PerformTesting(Joystick * gamePad, Team2342Joystick * stick,  Talon * motor1,
-				Talon * motor2,  RobotDrive * driveTrain, Relay * ElevatorBrake);
-		~TestMode();
-	private:
-		bool m_buttonWasPressed;
+public:
+
+    TestMode();
+    void PerformTesting(Joystick * gamePad, Team2342Joystick * stick,  Talon * motor1,
+            Talon * motor2,  RobotDrive * driveTrain, Relay * ElevatorBrake);
+    ~TestMode();
+private:
+    bool m_buttonWasPressed;
 };
 
 #endif

@@ -9,21 +9,17 @@
 #ifndef SRC_ELEVATOR_H_
 #define SRC_ELEVATOR_H_
 
+static const float MotorSpeed = 1.0;
+static const float HomeSpeed = 0.25;
+static const int Ticks = 2048;
+static const float TicksPerInch = Ticks / 8.17;
+
 
 class Elevator  : public PIDOutput
 {
 
-    float MotorSpeed = 1.0;
-    float HomeSpeed = 0.25;
-    int Ticks = 2048;
-
-    double Range = 1; // range on either side of goalDistance
-    enum homingStates
-    {
-        lookingForLowerLimit,
-        goingUpToHome,
-        homingComplete
-    } m_homeState;
+    bool m_rbWasPressed;
+    bool m_rtWasPressed;
 
     // initialized at class constructions then constant
     Talon* m_motor1;
@@ -34,46 +30,57 @@ class Elevator  : public PIDOutput
     Encoder* m_encoder;
     Joystick* m_gamePad;
     Relay* m_brake;
-    PIDController* m_elevatorControl;
+
 
 
     void find_home();
     void controlElevator();
     void moveElevator();
+
 public:
-	Elevator(Talon* motor1,
-	        Talon* motor2,
-	        DigitalInput* lowerLimit,
-	        DigitalInput* upperLimit,
-	        DigitalInput* homeSwitch,
-	        Encoder* encoder,
-	        Joystick* gamePad,
-	        Relay* ElevatorBrake);
-	//Ecpected usage in teleop loop while(!elevatorIsHomed()) {operateElevator();}
-	// after that call setElevatorGoalPosition using the const below.
+    enum homingStates
+    {
+        lookingForLowerLimit,
+        goingUpToHome,
+        homingComplete
+    } m_homeState;
 
-	void operateElevator(); // for use in teleop
-	bool elevatorIsHomed();
-	bool elevatorIsAt(float position);
+    PIDController* m_elevatorControl;
+    Elevator(Talon* motor1,
+            Talon* motor2,
+            DigitalInput* lowerLimit,
+            DigitalInput* upperLimit,
+            DigitalInput* homeSwitch,
+            Encoder* encoder,
+            Joystick* gamePad,
+            Relay* ElevatorBrake);
+    //Ecpected usage in teleop loop while(!elevatorIsHomed()) {operateElevator();}
+    // after that call setElevatorGoalPosition using the const below.
+
+    void operateElevator(); // for use in teleop
+    bool elevatorIsHomed();
+    bool elevatorIsAt(float position);
 
 
 
-        // for use in setElevatorGoalPosition call
-        #define kElevatorHome         0
-        #define kElevatorHook1Ready   0
-        #define kElevatorHook1Lifted  kElevatorHook1Ready + 4
-        #define kElevatorHook2Ready   kElevatorHook1Ready + 14.5
-        #define kElevatorHook2Lifted  kElevatorHook2Ready + 4
-        #define kElevatorHook3Ready   kElevatorHook2Ready + 14.5
-        #define kElevatorHook3Lifted  kElevatorHook3Ready + 4
-        #define kElevatorHook4Ready   kElevatorHook3Ready + 14.5
-        #define kElevatorHook4Lifted  kElevatorHook4Ready + 4
+    // for use in setElevatorGoalPosition call
+    #define kLiftDelta            (8)
+    #define kToteDelta            (14.5)
+    #define kElevatorHome         (0)
+    #define kElevatorHook1Ready   (0)
+    #define kElevatorHook1Lifted  (kElevatorHook1Ready + kLiftDelta)
+    #define kElevatorHook2Ready   (kElevatorHook1Ready + kToteDelta)
+    #define kElevatorHook2Lifted  (kElevatorHook2Ready + kLiftDelta)
+    #define kElevatorHook3Ready   (kElevatorHook2Ready + kToteDelta)
+    #define kElevatorHook3Lifted  (kElevatorHook3Ready + kLiftDelta)
+    #define kElevatorHook4Ready   (kElevatorHook3Ready + kToteDelta)
+    #define kElevatorHook4Lifted  (kElevatorHook4Ready + kLiftDelta)
 
-	void setElevatorGoalPosition(float position); // use consts above
+    void setElevatorGoalPosition(float position); // use consts above
 
-	~Elevator();
+    ~Elevator();
 
-        void PIDWrite(float output);
+    void PIDWrite(float output);
 };
 
 

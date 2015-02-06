@@ -15,29 +15,34 @@
 TestMode::TestMode(): m_buttonWasPressed(false){}
 
 void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick,  Talon * motor1,
-		Talon * motor2,  RobotDrive * driveTrain,
-		Relay * ElevatorBrake){
+        Talon * motor2,  RobotDrive * driveTrain,
+        Relay * ElevatorBrake){
 
-	//Move elevator:
-	float thumbstick = -gamePad->GetY()/4;
-	thumbstick = fabs(thumbstick) < 0.0125 ? 0 : thumbstick;
-	motor1->Set(thumbstick);
-	motor2->Set(thumbstick);
+
     //Move robot:
-	driveTrain->MecanumDrive_Cartesian(stick->GetX(), stick->GetY(), stick->GetZWithDeadZone(0.1));
+    driveTrain->MecanumDrive_Cartesian(stick->GetX(), stick->GetY(), stick->GetZWithDeadZone(0.1));
 
-	//Toggle Brake:
-	bool buttonState = gamePad->GetRawButton(5);
-	bool buttonHit = buttonState && (! m_buttonWasPressed);
-	m_buttonWasPressed = buttonState;
+    //Move elevator:
+    float thumbstick = -gamePad->GetY()/4;
+    thumbstick = fabs(thumbstick) < 0.0125 ? 0 : thumbstick;
+    motor1->Set(thumbstick);
+    motor2->Set(thumbstick);
 
-	if (buttonHit){
-	    if (ElevatorBrake->Get() == ElevatorBrake->kOff){
-	        ElevatorBrake->Set(ElevatorBrake->kForward);
-	    } else{
-	        ElevatorBrake->Set(ElevatorBrake->kOff);
-            }
-	}
+    //Toggle Brake:
+    bool buttonState = gamePad->GetRawButton(5);
+    bool buttonHit = buttonState && (! m_buttonWasPressed);
+    m_buttonWasPressed = buttonState;
+
+    if (buttonHit){
+        if (ElevatorBrake->Get() == ElevatorBrake->kOff){
+            ElevatorBrake->Set(ElevatorBrake->kForward);
+        } else{
+            ElevatorBrake->Set(ElevatorBrake->kOff);
+        }
+    }
+
+
+
 }
 
 TestMode::~TestMode(){
