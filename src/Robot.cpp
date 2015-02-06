@@ -155,19 +155,19 @@ public:
 	    case complex:
             //Pick up tote here
 	        m_autoPID.SetGoal(-FieldDistances::autoCrateDiff,0);
-	        while(IsAutonomous() && !m_autoPID.ReachedGoal())
+	        while(IsAutonomous() && IsEnabled() && !m_autoPID.ReachedGoal())
 	        {
 	            Wait(0.005);
 	        }
             //Pick up another tote here
 	        m_autoPID.SetGoal(-FieldDistances::autoCrateDiff,0);
-            while(IsAutonomous() && !m_autoPID.ReachedGoal())
+            while(IsAutonomous() && IsEnabled() && !m_autoPID.ReachedGoal())
             {
                 Wait(0.005);
             }
             //Pick up yet another tote here
 	        m_autoPID.SetGoal(0,FieldDistances::intoAutoDiff);
-            while(IsAutonomous() && !m_autoPID.ReachedGoal())
+            while(IsAutonomous() && IsEnabled() && !m_autoPID.ReachedGoal())
             {
                 Wait(0.005);
             }
