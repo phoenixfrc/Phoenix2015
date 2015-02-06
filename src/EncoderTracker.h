@@ -54,48 +54,6 @@ private:
     int32_t m_OldFRTicks;
     int32_t m_OldBLTicks;
     int32_t m_OldBRTicks;
-
-    //Wheel results Forward:
-    //Partially known. (old const was 20.5697)
-
-    //(estimates):
-    const float FConvFR = 0.04861519613800881879657943479973;
-    const float FConvFL = 0.04861519613800881879657943479973;
-    const float FConvBR = 0.04861519613800881879657943479973;
-    const float FConvBL = 0.04861519613800881879657943479973;
-
-    //Wheel results Backwards:
-    //???
-
-    //(estimates):
-    const float BConvFR = 0.04861519613800881879657943479973;
-    const float BConvFL = 0.04861519613800881879657943479973;
-    const float BConvBR = 0.04861519613800881879657943479973;
-    const float BConvBL = 0.04861519613800881879657943479973;
-
-
-    //Wheel results Right: (4 feet driven, 48 inches)
-    //Right Front: 931.2
-    //Left Front: 942.6
-    //Right Back: 1127.6
-    //Left Back: 1437.2
-
-    const float RConvFR = 0.05154639175257731958762886597938;//(48/931.2)
-    const float RConvFL = 0.0509229789942711648631444939529;//(48/942.6)
-    const float RConvBR = 0.04256828662646328485278467541681;//(48/1127.6)
-    const float RConvBL = 0.03339827442248817144447536877261;//(48/1437.2)
-
-    //Wheel results Left:
-    //???
-
-    //(estimates) (using the same as Right for now)
-    const float LConvFR = 0.05154639175257731958762886597938;//(48/931.2)
-    const float LConvFL = 0.0509229789942711648631444939529;//(48/942.6)
-    const float LConvBR = 0.04256828662646328485278467541681;//(48/1127.6)
-    const float LConvBL = 0.03339827442248817144447536877261;//(48/1437.2)
-
-
-    //old X const (was 24.51875) didn't work well.
 };
 
 

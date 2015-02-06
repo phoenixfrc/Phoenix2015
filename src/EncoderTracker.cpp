@@ -8,6 +8,15 @@
 #include "EncoderTracker.h"
 #include "WPILib.h"
 
+
+//Ticks to Inches conversion rates:
+static const float FrontConv = 0.048615;////Forwards
+static const float BackConv = 0.048615;//Backwards, (using the same value as Forwards for now)
+static const float RightConv = 0.0446045;//Right
+static const float LeftConv = 0.0446045;//Left, (using the same value as Right for now)
+//old X const (was 24.51875) didn't work well.
+
+
 EncoderTracker::EncoderTracker (Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight){
     m_xPos = 0;
     m_yPos = 0;
@@ -80,13 +89,15 @@ float EncoderTracker::GetDeltaX () {
     float BLChange = m_BLTicks - m_OldBLTicks;
     float BRChange = m_BRTicks - m_OldBRTicks;
 
+    float d = (float)(FRChange - FLChange - BRChange + BLChange) / 4;
+
     //Algorithm for X movement (needs work):
-    if (FRChange - FLChange - BRChange + BLChange > 0){
+    if (d > 0){
         //if moving to the left:
-        return (float)(FRChange*LConvFR - FLChange*LConvFL - BRChange*LConvBR + BLChange*LConvBL) / 4;
+        return d * LeftConv;
     } else {
         //if moving to the right:
-        return - (float)(FRChange*RConvFR - FLChange*RConvFL - BRChange*RConvBR + BLChange*RConvBL) / 4;
+        return d * RightConv;
     }
 }
 
@@ -97,17 +108,17 @@ float EncoderTracker::GetDeltaY () {
     float BLChange = m_BLTicks - m_OldBLTicks;
     float BRChange = m_BRTicks - m_OldBRTicks;
 
+    float d = (float)(FRChange + FLChange + BRChange + BLChange) / 4;
 
     //Algorithm for Y movement (needs work):
-    if (FRChange + FLChange + BRChange + BLChange > 0){
+    if (d > 0){
         //if moving forward:
-        return (float)(FRChange*FConvFR + FLChange*FConvFL + BRChange*FConvBR + BLChange*FConvBL) / 4;
+        return d * RightConv;
     } else {
         //if moving backward:
-        return - (float)(FRChange*BConvFR + FLChange*BConvFL + BRChange*BConvBR + BLChange*BConvBL) / 4;
+        return d * LeftConv;
     }
 }
-
 
 void EncoderTracker::UpdateEncoders(){
     //Update all the tick variables:
@@ -123,7 +134,6 @@ void EncoderTracker::UpdateEncoders(){
     m_OldBRTicks = m_BRTicks;
     m_BRTicks = m_backRight->Get();
 }
-
 
 EncoderTracker::~EncoderTracker(){
 
