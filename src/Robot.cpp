@@ -60,7 +60,7 @@ class Robot: public SampleRobot
         Team2342Joystick m_stick;                 // only joystick
         Joystick m_gamepad;       // the gamepad
 
-        EncoderTracker m_dummyTracker;
+        //EncoderTracker m_dummyTracker;
         PIDInterface m_autoPID;
 
 public:
@@ -105,7 +105,7 @@ public:
             m_stick(PortAssign::JoystickChannel),
             m_gamepad(PortAssign::GamepadChannel),
 
-			m_dummyTracker(&m_leftFrontDriveEncoder, &m_rightFrontDriveEncoder, &m_leftRearDriveEncoder, &m_rightRearDriveEncoder),
+			/*m_dummyTracker(&m_leftFrontDriveEncoder, &m_rightFrontDriveEncoder, &m_leftRearDriveEncoder, &m_rightRearDriveEncoder),*/
 			m_autoPID(&m_robotDrive, &m_leftFrontDriveEncoder, &m_rightFrontDriveEncoder, &m_leftRearDriveEncoder, &m_rightRearDriveEncoder)
 
 // as they are declared above.
@@ -155,19 +155,19 @@ public:
 	    case complex:
             //Pick up tote here
 	        m_autoPID.SetGoal(-FieldDistances::autoCrateDiff,0);
-	        while(IsAutonomous() && !m_autoPID.ReachedGoal())
+	        while(IsAutonomous()  && IsEnabled() && !m_autoPID.ReachedGoal())
 	        {
 	            Wait(0.005);
 	        }
             //Pick up another tote here
 	        m_autoPID.SetGoal(-FieldDistances::autoCrateDiff,0);
-            while(IsAutonomous() && !m_autoPID.ReachedGoal())
+            while(IsAutonomous()  && IsEnabled() && !m_autoPID.ReachedGoal())
             {
                 Wait(0.005);
             }
             //Pick up yet another tote here
 	        m_autoPID.SetGoal(0,FieldDistances::intoAutoDiff);
-            while(IsAutonomous() && !m_autoPID.ReachedGoal())
+            while(IsAutonomous()  && IsEnabled() && !m_autoPID.ReachedGoal())
             {
                 Wait(0.005);
             }
@@ -236,7 +236,7 @@ public:
 		while (IsTest() && IsEnabled())
 		{
 			tester.PerformTesting(&m_gamepad, &m_stick,
-			       &m_elevatorMotor1, &m_elevatorMotor2, &m_robotDrive, &m_brake, &m_dummyTracker);
+			       &m_elevatorMotor1, &m_elevatorMotor2, &m_robotDrive, &m_brake);
 			DisplayInfo();
 			Wait(0.005);
 		}

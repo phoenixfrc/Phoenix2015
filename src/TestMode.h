@@ -14,7 +14,7 @@ class TestMode
 
 		TestMode();
 		void PerformTesting(Joystick * gamePad, Team2342Joystick * stick,  Talon * motor1,
-				Talon * motor2,  RobotDrive * driveTrain, Relay * ElevatorBrake, EncoderTracker * tracker);
+				Talon * motor2,  RobotDrive * driveTrain, Relay * ElevatorBrake);
 		~TestMode();
 	private:
 		bool m_buttonWasPressed;

@@ -14,7 +14,9 @@
 
 
 Dragger::Dragger()
-{}
+{
+
+}
 
 /* Dragger operateDragger method:
  * Takes one Joystick parameter, to get a boolean for the button press.

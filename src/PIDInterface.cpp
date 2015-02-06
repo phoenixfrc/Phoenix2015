@@ -7,8 +7,8 @@ PIDInterface::PIDInterface(RobotDrive * robotDrive, Encoder * frontLeft, Encoder
     xPID(0.1, 0.001, 0.0, this, this), //PID values will need to be tuned for both of these
     yPID(0.1, 0.001, 0.0, this, this) // Old values were 100.0, 0.0, 2.0
 {
-    xPID.Disable();
-    yPID.Disable();
+    //xPID.Disable();
+    //yPID.Disable();
     m_robotDrive = robotDrive;
     m_currentAxis = right;
 }

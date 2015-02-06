@@ -16,7 +16,7 @@ TestMode::TestMode(): m_buttonWasPressed(false){}
 
 void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick,  Talon * motor1,
 		Talon * motor2,  RobotDrive * driveTrain,
-		Relay * ElevatorBrake, EncoderTracker * tracker){
+		Relay * ElevatorBrake){
 
 	//Move elevator:
 	float thumbstick = -gamePad->GetY()/4;
