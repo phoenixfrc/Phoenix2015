@@ -30,7 +30,7 @@ Elevator::Elevator(
     printf("in elevator constructor...\n");
     m_homeState = lookingForLowerLimit;
     m_encoder->SetDistancePerPulse(1 / TicksPerInch);
-    m_elevatorControl = new PIDController(0.1, 0.001, 0.0, encoder, this);
+    m_elevatorControl = new PIDController(0.4, 0.001, 0.0, encoder, this);
 }
 
 void Elevator::operateElevator()
@@ -177,16 +177,24 @@ void Elevator::controlElevator()
 
 void Elevator::setElevatorGoalPosition(float position)
 {
+
     m_elevatorControl->SetSetpoint(position);
 }
 
+/*
+ * This function is responsible for enforcing limit switches, the brake and provides the call back for the PIDController
+ * when it wants to move the motors.
+ */
 void Elevator::PIDWrite(float desiredSpeed)
 {
     bool atUpperLimit = m_upperLimit->Get();
     bool atLowerLimit = m_lowerLimit->Get();
     float actualSpeed = desiredSpeed;
-    float deadZone = 0.1;
 
+    if(actualSpeed >= -0.1 && actualSpeed <= 0.1)
+    {
+        actualSpeed = 0.0;
+    }
     if (atUpperLimit && (desiredSpeed > 0.0))
     {
         actualSpeed = 0.0; // don't move past upper limit
@@ -196,19 +204,20 @@ void Elevator::PIDWrite(float desiredSpeed)
         actualSpeed = 0.0; // don't move past lower limit
     }
 
-    if (((actualSpeed < 0.0 - deadZone) || (actualSpeed > 0.0 + deadZone)) && !(m_brake->Get() == m_brake->kOff))
+    //turn off the brake before moving
+    if(actualSpeed != 0.0)
     {
-        //m_brake->Set(m_brake->kOff);
+        m_brake->Set(m_brake->kOff);
+    }
+    else
+    {
+        m_brake->Set(m_brake->kForward);
     }
 
     // set the motor speed
     m_motor1->Set(actualSpeed);
     m_motor2->Set(actualSpeed);
 
-    if (((actualSpeed > 0.0 - deadZone) && (actualSpeed < 0.0 + deadZone)) && !(m_brake->Get() == m_brake->kForward))
-    {
-        //m_brake->Set(m_brake->kForward);
-    }
 }
 
 
