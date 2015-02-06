@@ -25,6 +25,8 @@ public:
 
     bool ReachedGoal();
 
+    void TestEnable();
+
     virtual ~PIDInterface(){};
 
 private:

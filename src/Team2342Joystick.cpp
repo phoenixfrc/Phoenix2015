@@ -16,13 +16,13 @@ Team2342Joystick::Team2342Joystick(uint32_t port):Joystick(port){
 }
 
 float Team2342Joystick::GetZWithDeadZone(float deadZone = 0.1){
-	float twistValue = this->GetZ();
+    float twistValue = this->GetZ();
 
-	if (fabs(twistValue) <= deadZone){
-		return 0.0;
-	}
+    if (fabs(twistValue) <= deadZone){
+        return 0.0;
+    }
 
-	return (twistValue - deadZone * (twistValue / fabs(twistValue))) * (1 / ( 1 - deadZone ) );
+    return (twistValue - deadZone * (twistValue / fabs(twistValue))) * (1 / ( 1 - deadZone ) );
 }
 
 

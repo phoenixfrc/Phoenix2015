@@ -9,12 +9,14 @@
 #define SRC_DRAGGER_H_
 #include "WPILib.h"
 
-class Dragger {
-    public:
-        Dragger();
-        void operateDragger(Joystick * button, DigitalInput * limitSwitchDown, DigitalInput * limitSwitchUp, Talon * motor);
-        ~Dragger();
 
+class Dragger {
+public:
+    Dragger();
+
+    void operateDragger(Joystick * button, DigitalInput * limitSwitchDown, DigitalInput * limitSwitchUp, Talon * motor);
+
+    ~Dragger();
 };
 
 
