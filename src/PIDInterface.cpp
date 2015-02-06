@@ -97,9 +97,10 @@ void PIDInterface::PIDWrite(float output)
 {
     //Output to the motors so they drive and move along the current axis
     std::ostringstream Output;
-    Output << "Desired out: " << output;
+    output /= 2;
+    Output << "Modified out: " << output;
     SmartDashboard::PutString("DB/String 2", Output.str());
-    output /= 4;
+
     switch(m_currentAxis)
     {
     case right:
