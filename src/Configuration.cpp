@@ -34,7 +34,8 @@ Configuration * Configuration::getInstance()
 
 void Configuration::PutConfigInt(const char * key, int value)
 {
-
+    string intasstring = std::to_string(value);
+    PutString(key, intasstring.c_str());
 }
 
 int Configuration::GetConfigInt (const char * key, int defaultValue)
