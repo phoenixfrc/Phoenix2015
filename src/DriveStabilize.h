@@ -13,8 +13,17 @@
 
 class DriveStabilize {
 public:
-    DriveStabilize();
+    DriveStabilize(Gyro * gyro, float referenceAngle, float scale);
+
+    void SetReferenceAngle(float newAngle);
+
+    float GetCorrectionAngle();
+
     ~DriveStabilize();
+private:
+    Gyro * m_gyro;
+    float m_referenceAngle;
+    float m_scale;
 };
 
 
