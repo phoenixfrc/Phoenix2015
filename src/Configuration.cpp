@@ -10,7 +10,11 @@ Configuration::Configuration()
 
 void Configuration::configurationInit()
 {
-
+    if (_instance != 0)
+    {
+        return;
+    }
+    _instance = new Configuration();
 }
 
 /*
