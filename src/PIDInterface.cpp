@@ -65,11 +65,11 @@ bool PIDInterface::PastGoal(double xGoalDistance, double yGoalDistance) {
 
 	   if(xPID.IsEnabled())
 	    {
-	        return xPID.Get() > xGoalDistance;
+	        return m_tracker.GetX() > xGoalDistance;
 	    }
 	    else if(yPID.IsEnabled())
 	    {
-	        return yPID.Get() > yGoalDistance ;
+	        return m_tracker.GetY() > yGoalDistance ;
 	    }
 	    else
 	    {
@@ -81,11 +81,11 @@ bool PIDInterface::BeforeGoal(double xGoalDistance, double yGoalDistance) {
 
 	   if(xPID.IsEnabled())
 	    {
-	        return xPID.Get() < xGoalDistance;
+	        return m_tracker.GetX() < xGoalDistance;
 	    }
 	    else if(yPID.IsEnabled())
 	    {
-	        return yPID.Get() < yGoalDistance ;
+	        return m_tracker.GetY() < yGoalDistance ;
 	    }
 	    else
 	    {
