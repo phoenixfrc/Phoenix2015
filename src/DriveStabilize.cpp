@@ -9,19 +9,20 @@
 #include "DriveStabilize.h"
 
 
-DriveStabilize::DriveStabilize(Gyro * gyro, float referenceAngle, float scale){
+DriveStabilize::DriveStabilize(Gyro * gyro, Joystick * stick, float referenceAngle, float scale){
     m_gyro = gyro;
-    m_referenceAngle = referenceAngle;
+    m_stick = stick;
+    m_goalAngle = referenceAngle;
     m_scale = scale;
 }
 
-void DriveStabilize::SetReferenceAngle(float newAngle){
-    m_referenceAngle = newAngle;
+void DriveStabilize::UpdateGoalAngle(float newAngle){
+    m_goalAngle += m_stick->GetZ();
 }
 
 
 float DriveStabilize::GetCorrectionAngle(){
-    return (m_referenceAngle - m_gyro->GetAngle())*m_scale;
+    return (m_goalAngle - m_gyro->GetAngle())*m_scale;
 }
 
 DriveStabilize::~DriveStabilize(){

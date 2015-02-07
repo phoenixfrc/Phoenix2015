@@ -13,16 +13,17 @@
 
 class DriveStabilize {
 public:
-    DriveStabilize(Gyro * gyro, float referenceAngle, float scale);
+    DriveStabilize(Gyro * gyro, Joystick * stick, float referenceAngle, float scale = 1.0);
 
-    void SetReferenceAngle(float newAngle);
+    void UpdateGoalAngle(float newAngle);
 
     float GetCorrectionAngle();
 
     ~DriveStabilize();
 private:
     Gyro * m_gyro;
-    float m_referenceAngle;
+    Joystick * m_stick;
+    float m_goalAngle;
     float m_scale;
 };
 
