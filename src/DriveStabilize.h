@@ -14,6 +14,7 @@
 class DriveStabilize {
 public:
     DriveStabilize();
+    ~DriveStabilize();
 };
 
 

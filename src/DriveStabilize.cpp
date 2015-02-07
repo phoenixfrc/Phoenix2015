@@ -12,3 +12,7 @@
 DriveStabilize::DriveStabilize(){
 
 }
+
+DriveStabilize::~DriveStabilize(){
+
+}
