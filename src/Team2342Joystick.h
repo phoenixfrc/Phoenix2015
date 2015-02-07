@@ -12,8 +12,8 @@
 
 class Team2342Joystick: public Joystick { //This class is our customization of 'class Joystick'.
 public:
-	Team2342Joystick(uint32_t port);
-	float GetZWithDeadZone(float deadZone);
+    Team2342Joystick(uint32_t port);
+    float GetZWithDeadZone(float deadZone);
 };
 
 

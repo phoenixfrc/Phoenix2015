@@ -1,6 +1,10 @@
 
 #include "Elevator.h"
 #include "Constants.h"
+#include <sstream>
+#include <stdio.h>
+
+
 
 Elevator::Elevator(
         Talon* motor1,
@@ -9,29 +13,30 @@ Elevator::Elevator(
         DigitalInput* upperLimit,
         DigitalInput* homeSwitch,
         Encoder* encoder,
-        Joystick* gamePad):
-
-    m_motor1(motor1),
-    m_motor2(motor2),
-    m_lowerLimit(lowerLimit),
-    m_upperLimit(upperLimit),
-    m_homeSwitch(homeSwitch),
-    m_encoder(encoder),
-    m_gamePad(gamePad)
+        Joystick* gamePad,
+        Relay* ElevatorBrake):
+        m_rbWasPressed(false),
+        m_rtWasPressed(false),
+        m_motor1(motor1),
+        m_motor2(motor2),
+        m_lowerLimit(lowerLimit),
+        m_upperLimit(upperLimit),
+        m_homeSwitch(homeSwitch),
+        m_encoder(encoder),
+        m_gamePad(gamePad),
+        m_brake(ElevatorBrake),
+        m_homeState(lookingForLowerLimit)
 {
-    homeState = lookingForLowerLimit;
-
-
+    printf("in elevator constructor...\n");
+    m_homeState = lookingForLowerLimit;
+    m_encoder->SetDistancePerPulse(1 / TicksPerInch);
+    m_elevatorControl = new PIDController(0.4, 0.001, 0.0, encoder, this);
 }
+
 void Elevator::operateElevator()
 {
-    bool rightTrigger = m_gamePad->GetRawButton(8);
-    if(rightTrigger && (homeState == homingComplete))
-    {
-        homeState = lookingForLowerLimit;
-    }
 
-    if(homeState == homingComplete)
+    if(m_homeState == homingComplete)
     {
         controlElevator();
     }
@@ -42,40 +47,48 @@ void Elevator::operateElevator()
 
 
 }
-
-
+bool Elevator::elevatorIsHomed()
+{
+    return(m_homeState == homingComplete);
+}
+bool Elevator::elevatorIsAt(float position)
+{
+    float currentPosition = (m_encoder->Get() / TicksPerInch);
+    return((currentPosition < (position + 0.5)) && (currentPosition > (position - 0.5)));
+}
 
 void Elevator::find_home()
 {
-        double speed = 0.0;
-        switch(homeState)
+    double speed = 0.0;
+    if (m_homeState == lookingForLowerLimit)
+    {
+        if(m_lowerLimit->Get())
         {
-            case lookingForLowerLimit:
-                if(m_lowerLimit->Get())
-                {
-                    homeState = goingUpToHome;
-                }
-                else
-                {
-                    speed = -MotorSpeed;
-                }
-            break;
-            case goingUpToHome:
-                if(m_homeSwitch->Get())
-                {
-                    homeState = homingComplete;
-                    m_encoder->Reset();
-                }
-                else
-                {
-                    speed = HomeSpeed;
-                }
-
-            break;
-            case homingComplete:
-            break;
+            m_homeState = goingUpToHome;
         }
-        moveMotors(speed);
+        else
+        {
+            speed = -HomeSpeed;
+        }
+    }
+
+    if (m_homeState == goingUpToHome)
+    {
+        if(m_lowerLimit->Get()) //if(m_homeSwitch->Get())
+        {
+            m_homeState = homingComplete;
+            m_encoder->Reset();
+            setElevatorGoalPosition(0.0);
+            m_elevatorControl->Enable();
+
+        }
+        else
+        {
+            speed = HomeSpeed;
+        }
+    }
+
+    PIDWrite(speed);
 }
 
 
@@ -84,75 +97,104 @@ void Elevator::find_home()
 
 void Elevator::controlElevator()
 {
+    std::ostringstream ElevatorJoystickbuilder;
+    std::ostringstream ElevatorJoystickbuilder2;
+
     //buttons
     bool xPressed = m_gamePad->GetRawButton(1);
     bool aPressed = m_gamePad->GetRawButton(2);
     bool bPressed = m_gamePad->GetRawButton(3);
     bool yPressed = m_gamePad->GetRawButton(4);
+    bool rbPressed = m_gamePad->GetRawButton(6);
+    bool rtPressed = m_gamePad->GetRawButton(8);
+
+
 
     //joystick
-    double joystick = m_gamePad->GetY(); // right Joystick
+    double joystick = -m_gamePad->GetY(); // right Joystick, negative because up is negative
 
-    // distance from home
-    m_distance = (m_encoder->Get() * 8.17) / Ticks;
+    float goalPosition = m_elevatorControl->GetSetpoint();
 
     // button computing
-    if(xPressed)
+    if(rbPressed && !m_rbWasPressed)
     {
-        m_goalDistance = Heights[0];
+        goalPosition += kLiftDelta;
+        m_rbWasPressed = true;
     }
-    if(aPressed)
+    else if(!rbPressed && m_rbWasPressed)
     {
-        m_goalDistance = Heights[1];
+        m_rbWasPressed = false;
     }
-    if(bPressed)
+
+    if(rtPressed && !m_rtWasPressed)
     {
-        m_goalDistance = Heights[2];
+        goalPosition -= kLiftDelta;
+        m_rtWasPressed = true;
     }
-    if(yPressed)
+    else if(!rtPressed && m_rtWasPressed)
     {
-        m_goalDistance = Heights[3];
+        m_rtWasPressed = false;
     }
 
     //Joystick computing
+    // TODO limit offset from joystick
     if(!(joystick > -0.05 && joystick < 0.05))
     {
-        m_goalDistance += (joystick / 20);
+        goalPosition += (joystick / 5);
     }
 
-    moveElevator();
+    if(aPressed)
+    {
+        goalPosition = kElevatorHook1Ready;
+    }
+    if(bPressed)
+    {
+        goalPosition = kElevatorHook2Ready;
+    }
+
+    if (goalPosition > 60)
+    {
+
+        goalPosition = 60; //Stop large queues of goal position
+    }
+    if (goalPosition < 0)
+    {
+
+        goalPosition = 0; //stop large queues of goal position
+
+    }
+
+    ElevatorJoystickbuilder << "GoalPosition: ";
+    ElevatorJoystickbuilder << goalPosition;
+    SmartDashboard::PutString("DB/String 0", ElevatorJoystickbuilder.str());
+    ElevatorJoystickbuilder2 << "position: ";
+    ElevatorJoystickbuilder2 << (m_encoder->Get() / TicksPerInch);
+    SmartDashboard::PutString("DB/String 1", ElevatorJoystickbuilder2.str());
+
+    setElevatorGoalPosition(goalPosition);
 
 }
 
-
-void Elevator::moveElevator()
+void Elevator::setElevatorGoalPosition(float position)
 {
-    if(m_distance > (m_goalDistance - Range) && m_distance < (m_goalDistance + Range))
-    {
-        moveMotors(0.0);
-    }
 
-    if(m_distance > m_goalDistance)
-    {
-        moveMotors(-MotorSpeed);
-    }
-
-    if(m_distance < m_goalDistance)
-    {
-        moveMotors(MotorSpeed);
-    }
-
-
-
+    m_elevatorControl->SetSetpoint(position);
 }
 
-void Elevator::moveMotors(double desiredSpeed)
+/*
+ * This function is responsible for enforcing limit switches, the brake and provides the call back for the PIDController
+ * when it wants to move the motors.
+ */
+void Elevator::PIDWrite(float desiredSpeed)
 {
     bool atUpperLimit = m_upperLimit->Get();
     bool atLowerLimit = m_lowerLimit->Get();
-    double actualSpeed = desiredSpeed;
+    float actualSpeed = desiredSpeed;
 
-
+    if(actualSpeed >= -0.1 && actualSpeed <= 0.1)
+    {
+        actualSpeed = 0.0;
+    }
     if (atUpperLimit && (desiredSpeed > 0.0))
     {
         actualSpeed = 0.0; // don't move past upper limit
@@ -162,12 +204,21 @@ void Elevator::moveMotors(double desiredSpeed)
         actualSpeed = 0.0; // don't move past lower limit
     }
 
+    //turn off the brake before moving
+    if(actualSpeed != 0.0)
+    {
+        m_brake->Set(m_brake->kOff);
+    }
+    else
+    {
+        m_brake->Set(m_brake->kForward);
+    }
+
     // set the motor speed
     m_motor1->Set(actualSpeed);
     m_motor2->Set(actualSpeed);
+
 }
-
-
 
 
 Elevator::~Elevator(){}
