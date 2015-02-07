@@ -1,5 +1,8 @@
 #include "Configuration.h"
 #include "WPILib.h"
+#include <string>
+
+using std::string;
 
 Configuration * Configuration::_instance = 0; // pointer to our only instance of the Configuration class
 
