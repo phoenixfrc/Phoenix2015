@@ -56,7 +56,19 @@ class Robot: public SampleRobot
 
 
         Configuration * m_myConfig = Configuration::getInstance();
-
+        void readParameters(){
+        	printf("In readParameters\n");
+        	if(m_myConfig == 0){
+        		printf("No config object");
+        	}
+        	int test1int = 0;
+        	if(m_myConfig->ContainsKey("config/test1")){
+        		test1int = m_myConfig->GetInt("config/test1", 0);
+        	}
+        	test1int++;
+        	m_myConfig->PutInt("config/test1", test1int);
+        	printf("test1 parameter=%d", test1int);
+        }
 
 public:
     Robot() :
@@ -120,6 +132,7 @@ public:
         m_robotDrive.SetInvertedMotor(RobotDrive::kRearRightMotor, true);	// you may need to change or remove this to match your robot
         m_rightRearDriveEncoder.SetReverseDirection(true);
         m_rightFrontDriveEncoder.SetReverseDirection(true);
+        readParameters();
         SmartDashboard::init();
 }
 
