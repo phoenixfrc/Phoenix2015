@@ -4,6 +4,7 @@
 #include "Team2342Joystick.h"
 #include "Elevator.h"
 #include "Dragger.h"
+#include "DriveStabilize.h"
 #include <sstream>
 /**
  * This is a demo program showing how to use Mecanum control with the RobotDrive class.
@@ -24,7 +25,7 @@ class Robot: public SampleRobot
 
         Relay m_brake;
 
-	Encoder m_leftRearDriveEncoder;
+	    Encoder m_leftRearDriveEncoder;
         Encoder m_leftFrontDriveEncoder;
         Encoder m_rightFrontDriveEncoder;
         Encoder m_rightRearDriveEncoder;
@@ -51,6 +52,9 @@ class Robot: public SampleRobot
 	    Gyro m_gyro;
 
         Team2342Joystick m_stick;                 // only joystick
+
+        DriveStabilize m_stabilizer;
+
         Joystick m_gamepad;       // the gamepad
 
 
@@ -96,6 +100,7 @@ public:
 			m_gyro(PortAssign::GyroChannel),
 
             m_stick(PortAssign::JoystickChannel),
+            m_stabilizer(&m_gyro, &m_stick, m_gyro.GetAngle(), 1.0, 1.0),
             m_gamepad(PortAssign::GamepadChannel)
 
 
@@ -130,7 +135,7 @@ public:
 		{
         	// Use the joystick X axis for lateral movement, Y axis for forward movement, and Z axis for rotation.
         	// This sample does not use field-oriented drive, so the gyro input is set to zero.
-		    m_robotDrive.MecanumDrive_Cartesian(m_stick.GetX(), m_stick.GetY(), m_stick.GetZWithDeadZone(0.1)/*gyro.GetAngle()*/);
+		    m_robotDrive.MecanumDrive_Cartesian(m_stick.GetX(), m_stick.GetY(), m_stabilizer.GetCorrectionAngle()/*gyro.GetAngle()*/);
 
 		    m_elevator->operateElevator();
 
