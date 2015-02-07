@@ -39,7 +39,18 @@ void Configuration::PutConfigInt(const char * key, int value)
 
 int Configuration::GetConfigInt (const char * key, int defaultValue)
 {
-return 0;
+    int theintvalue = 0;
+
+    if (ContainsKey(key))
+    {
+        std::string intasstring = GetString(key);
+        theintvalue = stoi(intasstring);
+    }
+    else
+    {
+        theintvalue = defaultValue;
+    }
+    return theintvalue;
 }
 
 Configuration::~Configuration()

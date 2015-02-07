@@ -63,11 +63,11 @@ class Robot: public SampleRobot
         }
         int test1int = 0;
         if(m_myConfig->ContainsKey("test1")){
-            test1int = m_myConfig->GetInt("test1", 0);
+            test1int = m_myConfig->GetConfigInt("test1", 0);
         }
         test1int++;
         printf("test1 parameter=%d", test1int);
-        m_myConfig->PutInt("test1", test1int);
+        m_myConfig->PutConfigInt("test1", test1int);
         m_myConfig->PutString("test2", "Hello World!");
         m_myConfig->Save();
         printf("test1 parameter=%d", test1int);
