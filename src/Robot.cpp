@@ -55,19 +55,22 @@ class Robot: public SampleRobot
     Joystick m_gamepad;       // the gamepad
 
 
-        Configuration * m_myConfig = Configuration::getInstance();
-        void readParameters(){
-        	printf("In readParameters\n");
-        	if(m_myConfig == 0){
-        		printf("No config object");
-        	}
-        	int test1int = 0;
-        	if(m_myConfig->ContainsKey("config/test1")){
-        		test1int = m_myConfig->GetInt("config/test1", 0);
-        	}
-        	test1int++;
-        	m_myConfig->PutInt("config/test1", test1int);
-        	printf("test1 parameter=%d", test1int);
+    Configuration * m_myConfig = Configuration::getInstance();
+    void readParameters(){
+        printf("In readParameters\n");
+        if(m_myConfig == 0){
+            printf("No config object");
+        }
+        int test1int = 0;
+        if(m_myConfig->ContainsKey("test1")){
+            test1int = m_myConfig->GetInt("test1", 0);
+        }
+        test1int++;
+        printf("test1 parameter=%d", test1int);
+        m_myConfig->PutInt("test1", test1int);
+        m_myConfig->PutString("test2", "Hello World!");
+        m_myConfig->Save();
+        printf("test1 parameter=%d", test1int);
         }
 
 public:

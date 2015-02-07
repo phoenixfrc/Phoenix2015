@@ -29,6 +29,16 @@ Configuration * Configuration::getInstance()
     return _instance;
 }
 
+void Configuration::PutConfigInt(const char * key, int value)
+{
+
+}
+
+int Configuration::GetConfigInt (const char * key, int defaultValue)
+{
+return 0;
+}
+
 Configuration::~Configuration()
 {
 
