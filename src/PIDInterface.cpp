@@ -2,7 +2,7 @@
 #include "WPILib.h"
 #include <sstream>
 
-PIDInterface::PIDInterface(RobotDrive * robotDrive, Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight):
+PIDInterface::PIDInterface(RobotDrive * robotDrive, Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight, Gyro * gyro):
     m_tracker(frontLeft, frontRight, backLeft, backRight),
     xPID(0.1, 0.001, 0.0, this, this), //PID values will need to be tuned for both of these
     yPID(0.1, 0.001, 0.0, this, this) // Old values were 100.0, 0.0, 2.0
@@ -11,6 +11,7 @@ PIDInterface::PIDInterface(RobotDrive * robotDrive, Encoder * frontLeft, Encoder
     //yPID.Disable();
     m_robotDrive = robotDrive;
     m_currentAxis = right;
+    m_gyro = gyro;
 }
 
 void PIDInterface::Reset()
@@ -137,10 +138,10 @@ void PIDInterface::PIDWrite(float output)
     switch(m_currentAxis)
     {
     case right:
-        m_robotDrive->MecanumDrive_Cartesian(output,0,0);
+        m_robotDrive->MecanumDrive_Cartesian(output, 0.0, 0.0, m_gyro->GetAngle());
         break;
     case forward:
-        m_robotDrive->MecanumDrive_Cartesian(0,-output,0);
+        m_robotDrive->MecanumDrive_Cartesian(0.0, -output, 0.0, m_gyro->GetAngle());
         break;
     }
 }
