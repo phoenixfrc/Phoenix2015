@@ -155,13 +155,15 @@ public:
 
 		//m_robotDrive.SetSafetyEnabled(false); this may be needed
 	    //This is the mode it's going to use
-	    AutoMode autoMode = simple;
+	    AutoMode autoMode = complex;
 
 	    switch(autoMode)
 	    {
 	    case complex:
-            //Pick up tote  6 inch
+	    	SmartDashboard::PutString("DB/String 0", "Starting Autonomous");
 
+	    	//Pick up tote  6 inch
+	    	SmartDashboard::PutString("DB/String 0", "Initial Pick up");
 	    	m_elevator->setElevatorGoalPosition(kElevatorHook1Lifted);
 			while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook1Lifted))
 			{
@@ -170,26 +172,29 @@ public:
 			}
 
 			// move left + move up over container
+			SmartDashboard::PutString("DB/String 0", "Pick Up and Move 1");
 
 			m_autoPID.SetGoal(-FieldDistances::autoCrateDiff,0);
-			m_elevator->setElevatorGoalPosition(kElevatorHook1Lifted);
-			while(IsAutonomous() && IsEnabled() && (!m_autoPID.ReachedGoal() && !m_elevator->elevatorIsAt(kElevatorHook1Lifted)))
+			m_elevator->setElevatorGoalPosition(kElevatorHook3Lifted);
+			while(IsAutonomous() && IsEnabled() && (!m_autoPID.PastGoal(-FieldDistances::autoCrateDiff,0) && !m_elevator->elevatorIsAt(kElevatorHook1Lifted)))
 			{
 				DisplayInfo();
-				Wait(0.005);
+				Wait(0.005);q
 			}
 
 	    	// move right
+			SmartDashboard::PutString("DB/String 0", "Move right 1");
 	        m_autoPID.SetGoal(-FieldDistances::autoCrateDiff,0);
-	        while(IsAutonomous()  && IsEnabled() && !m_autoPID.ReachedGoal())
+	        while(IsAutonomous()  && IsEnabled() && !m_autoPID.PastGoal(-FieldDistances::autoCrateDiff,0))
 	        {
 	            Wait(0.005);
 	        }
 
 
 	        //move down
+	        SmartDashboard::PutString("DB/String 0", "Lower Crate 1 ");
 
-	        m_elevator->setElevatorGoalPosition(kElevatorHook1Lifted);
+	        m_elevator->setElevatorGoalPosition(kElevatorHook2Ready);
 			while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook1Lifted))
 			{
 				DisplayInfo();
@@ -198,7 +203,9 @@ public:
 
             //Pick up another tote here
 
-			 m_elevator->setElevatorGoalPosition(kElevatorHook1Lifted);
+			SmartDashboard::PutString("DB/String 0", "Pick up 2");
+
+			 m_elevator->setElevatorGoalPosition(kElevatorHook2Lifted);
 			while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook1Lifted))
 			{
 				DisplayInfo();
@@ -206,9 +213,10 @@ public:
 			}
 
 	        //up left
+			SmartDashboard::PutString("DB/String 0", "Move Pickup 2");
 			m_autoPID.SetGoal(-FieldDistances::autoCrateDiff,0);
-			m_elevator->setElevatorGoalPosition(kElevatorHook1Lifted);
-			while(IsAutonomous() && IsEnabled() && (!m_autoPID.ReachedGoal() && !m_elevator->elevatorIsAt(kElevatorHook1Lifted)))
+			m_elevator->setElevatorGoalPosition(kElevatorHook4Lifted);
+			while(IsAutonomous() && IsEnabled() && (!m_autoPID.PastGoal(-FieldDistances::autoCrateDiff,0) && !m_elevator->elevatorIsAt(kElevatorHook1Lifted)))
 			{
 				DisplayInfo();
 				Wait(0.005);
@@ -216,8 +224,10 @@ public:
 
 	        //move right
 
+			SmartDashboard::PutString("DB/String 0", "Move Right 2");
+
 			m_autoPID.SetGoal(-FieldDistances::autoCrateDiff,0);
-			while(IsAutonomous()  && IsEnabled() && !m_autoPID.ReachedGoal())
+			while(IsAutonomous()  && IsEnabled() && !m_autoPID.PastGoal(-FieldDistances::autoCrateDiff,0))
 			{
 				Wait(0.005);
 			}
@@ -225,32 +235,48 @@ public:
 
 	        //move down
 
-			 m_elevator->setElevatorGoalPosition(kElevatorHook1Lifted);
+			SmartDashboard::PutString("DB/String 0", "Put down 2");
+
+			 m_elevator->setElevatorGoalPosition(kElevatorHook3Ready);
 			 while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook1Lifted))
 			 {
 				DisplayInfo();
 				Wait(0.005);
 			 }
 
+			 //pick up
 
+			 SmartDashboard::PutString("DB/String 0", "Pick up 3");
+
+			 m_elevator->setElevatorGoalPosition(kElevatorHook3Lifted);
+			 while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook1Lifted))
+			 {
+				DisplayInfo();
+				Wait(0.005);
+			 }
+
+			 SmartDashboard::PutString("DB/String 0", "Move back");
 	        //move back
 			 m_autoPID.SetGoal(-FieldDistances::autoCrateDiff,0);
-			while(IsAutonomous()  && IsEnabled() && !m_autoPID.ReachedGoal())
+			while(IsAutonomous()  && IsEnabled() && !m_autoPID.PastGoal(-FieldDistances::autoCrateDiff,0))
 			{
 				Wait(0.005);
 			}
 
+			SmartDashboard::PutString("DB/String 0", "Backoff totes");
 
 	        //move forward
 			m_autoPID.SetGoal(-FieldDistances::autoCrateDiff,0);
-			while(IsAutonomous()  && IsEnabled() && !m_autoPID.ReachedGoal())
+			while(IsAutonomous()  && IsEnabled() && !m_autoPID.PastGoal(-FieldDistances::autoCrateDiff,0))
 			{
 				Wait(0.005);
 			}
 
 
             //drop totes here
-			m_elevator->setElevatorGoalPosition(kElevatorHook1Lifted);
+			SmartDashboard::PutString("DB/String 0", "Put down all");
+
+			m_elevator->setElevatorGoalPosition(kElevatorHook1Ready);
 			while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook1Lifted))
 			 {
 				DisplayInfo();
