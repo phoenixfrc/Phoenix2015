@@ -145,13 +145,17 @@ public:
 	}
 	void Autonomous()
 	{
+		while(!m_elevator->elevatorIsHomed())
+		{
+			m_elevator->operateElevator();
+		}
 	    ClearDisplay();
 
 	    m_robotDrive.SetSafetyEnabled(false);
 
 		//m_robotDrive.SetSafetyEnabled(false); this may be needed
 	    //This is the mode it's going to use
-	    AutoMode autoMode = complex;
+	    AutoMode autoMode = simple;
 
 	    switch(autoMode)
 	    {
@@ -185,21 +189,45 @@ public:
 
 	    	//This expects robot to be placed between tote and drive station facing into the field
 	        //Pick up tote here
-	        m_autoPID.SetGoal(0,FieldDistances::intoAutoDiff);
+	        SmartDashboard::PutString("DB/String 0", "Initial Pick-up");
 
-	        int counter = 0;
-
-            while(IsAutonomous() && IsEnabled() && !m_autoPID.ReachedGoal())
+	        m_elevator->setElevatorGoalPosition(kElevatorHook1Lifted);
+            while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook1Lifted))
             {
-                counter++;
             	DisplayInfo();
                 Wait(0.005);
-                std::ostringstream builder;
-                builder << "We looped " << counter << " times";
-                SmartDashboard::PutString("DB/String 3", builder.str());
             }
 
-            //Drop tote here
+	        SmartDashboard::PutString("DB/String 0", "Moving Forward");
+
+            m_autoPID.SetGoal(0,FieldDistances::intoAutoDiff);
+            while(IsAutonomous() && IsEnabled() && !m_autoPID.PastGoal(0,FieldDistances::intoAutoDiff))
+		    {
+            	DisplayInfo();
+            	Wait(0.005);
+		    }
+
+	        SmartDashboard::PutString("DB/String 0", "Dropping");
+
+	        m_elevator->setElevatorGoalPosition(kElevatorHook1Ready);
+            while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook1Ready))
+            {
+            	DisplayInfo();
+                Wait(0.005);
+            }
+
+	        SmartDashboard::PutString("DB/String 0", "Moving Back");
+
+
+            m_autoPID.SetGoal(0,-4.0);
+			while(IsAutonomous() && IsEnabled() && !m_autoPID.BeforeGoal(0,-4))
+			{
+				DisplayInfo();
+				Wait(0.005);
+			}
+
+	        SmartDashboard::PutString("DB/String 0", "Finished");
+
 
             m_autoPID.Reset();
 	    }

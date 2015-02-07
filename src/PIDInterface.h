@@ -25,6 +25,9 @@ public:
 
     bool ReachedGoal();
 
+    bool PastGoal(double xGoalDistance, double yGoalDistance);
+    bool BeforeGoal(double xGoalDistance, double yGoalDistance);
+
     void TestEnable();
 
     virtual ~PIDInterface(){};

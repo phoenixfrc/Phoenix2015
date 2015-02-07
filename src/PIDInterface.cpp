@@ -61,6 +61,39 @@ bool PIDInterface::ReachedGoal()
     }
 }
 
+bool PIDInterface::PastGoal(double xGoalDistance, double yGoalDistance) {
+
+	   if(xPID.IsEnabled())
+	    {
+	        return xPID.Get() > xGoalDistance;
+	    }
+	    else if(yPID.IsEnabled())
+	    {
+	        return yPID.Get() > yGoalDistance ;
+	    }
+	    else
+	    {
+	        return false;
+	    }
+}
+
+bool PIDInterface::BeforeGoal(double xGoalDistance, double yGoalDistance) {
+
+	   if(xPID.IsEnabled())
+	    {
+	        return xPID.Get() < xGoalDistance;
+	    }
+	    else if(yPID.IsEnabled())
+	    {
+	        return yPID.Get() < yGoalDistance ;
+	    }
+	    else
+	    {
+	        return false;
+	    }
+}
+
+
 void PIDInterface::TestEnable()
 {
     xPID.Enable();
