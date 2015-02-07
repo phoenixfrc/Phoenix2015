@@ -128,6 +128,8 @@ public:
 		m_robotDrive.SetInvertedMotor(RobotDrive::kRearRightMotor, true);	// you may need to change or remove this to match your robot
 		m_rightRearDriveEncoder.SetReverseDirection(true);
 		m_rightFrontDriveEncoder.SetReverseDirection(true);
+		m_elevatorEncoder.SetReverseDirection(true); 		// Difference between proto and real
+
 		SmartDashboard::init();
 	}
 	void ClearDisplay()
@@ -145,17 +147,20 @@ public:
 	}
 	void Autonomous()
 	{
+	    m_robotDrive.SetSafetyEnabled(false);
+
+		ClearDisplay();
+
+		SmartDashboard::PutString("DB/String 0", "Initial Homeing");
+
 		while(!m_elevator->elevatorIsHomed())
 		{
 			m_elevator->operateElevator();
 		}
-	    ClearDisplay();
-
-	    m_robotDrive.SetSafetyEnabled(false);
 
 		//m_robotDrive.SetSafetyEnabled(false); this may be needed
 	    //This is the mode it's going to use
-	    AutoMode autoMode = complex;
+	    AutoMode autoMode = simple;
 
 	    switch(autoMode)
 	    {
@@ -163,8 +168,10 @@ public:
 	    	SmartDashboard::PutString("DB/String 0", "Starting Autonomous");
 
 	    	//Pick up tote  6 inch
-	    	SmartDashboard::PutString("DB/String 0", "Initial Pick up");
-	    	m_elevator->setElevatorGoalPosition(kElevatorHook1Lifted);
+	    	if (!IsAutonomous() || !IsEnabled()) {
+	    		SmartDashboard::PutString("DB/String 0", "Initial Pick up");
+	    		m_elevator->setElevatorGoalPosition(kElevatorHook1Lifted);
+	    	}
 			while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook1Lifted))
 			{
 				DisplayInfo();
@@ -176,10 +183,11 @@ public:
 
 			m_autoPID.SetGoal(-FieldDistances::autoCrateDiff,0);
 			m_elevator->setElevatorGoalPosition(kElevatorHook3Lifted);
-			while(IsAutonomous() && IsEnabled() && (!m_autoPID.PastGoal(-FieldDistances::autoCrateDiff,0) && !m_elevator->elevatorIsAt(kElevatorHook1Lifted)))
+			while(IsAutonomous() && IsEnabled() &&
+						(!m_autoPID.PastGoal(-FieldDistances::autoCrateDiff,0) && !m_elevator->elevatorIsAt(kElevatorHook3Lifted)))
 			{
 				DisplayInfo();
-				Wait(0.005);q
+				Wait(0.005);
 			}
 
 	    	// move right
@@ -195,7 +203,7 @@ public:
 	        SmartDashboard::PutString("DB/String 0", "Lower Crate 1 ");
 
 	        m_elevator->setElevatorGoalPosition(kElevatorHook2Ready);
-			while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook1Lifted))
+			while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook2Ready))
 			{
 				DisplayInfo();
 				Wait(0.005);
@@ -206,7 +214,7 @@ public:
 			SmartDashboard::PutString("DB/String 0", "Pick up 2");
 
 			 m_elevator->setElevatorGoalPosition(kElevatorHook2Lifted);
-			while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook1Lifted))
+			while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook2Lifted))
 			{
 				DisplayInfo();
 				Wait(0.005);
@@ -216,7 +224,8 @@ public:
 			SmartDashboard::PutString("DB/String 0", "Move Pickup 2");
 			m_autoPID.SetGoal(-FieldDistances::autoCrateDiff,0);
 			m_elevator->setElevatorGoalPosition(kElevatorHook4Lifted);
-			while(IsAutonomous() && IsEnabled() && (!m_autoPID.PastGoal(-FieldDistances::autoCrateDiff,0) && !m_elevator->elevatorIsAt(kElevatorHook1Lifted)))
+			while(IsAutonomous() && IsEnabled() &&
+					(!m_autoPID.PastGoal(-FieldDistances::autoCrateDiff,0) && !m_elevator->elevatorIsAt(kElevatorHook4Lifted)))
 			{
 				DisplayInfo();
 				Wait(0.005);
@@ -238,7 +247,7 @@ public:
 			SmartDashboard::PutString("DB/String 0", "Put down 2");
 
 			 m_elevator->setElevatorGoalPosition(kElevatorHook3Ready);
-			 while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook1Lifted))
+			 while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook3Ready))
 			 {
 				DisplayInfo();
 				Wait(0.005);
@@ -249,7 +258,7 @@ public:
 			 SmartDashboard::PutString("DB/String 0", "Pick up 3");
 
 			 m_elevator->setElevatorGoalPosition(kElevatorHook3Lifted);
-			 while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook1Lifted))
+			 while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook3Lifted))
 			 {
 				DisplayInfo();
 				Wait(0.005);
@@ -277,7 +286,7 @@ public:
 			SmartDashboard::PutString("DB/String 0", "Put down all");
 
 			m_elevator->setElevatorGoalPosition(kElevatorHook1Ready);
-			while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook1Lifted))
+			while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook1Ready))
 			 {
 				DisplayInfo();
 				Wait(0.005);
@@ -391,10 +400,10 @@ public:
 			return;
 		}
 		count = 0;
-		std::ostringstream gyroBuilder, eb, eb2, elevatorBuilder, elevatorEncoderBuilder, elevatorBuilder3;
+		std::ostringstream gyroBuilder, eb, eb2, elevatorBuilder, elevatorEncoderBuilder, elevatorEncoderBuilder2, limitSwitches;
 
         //Prints out the values for gyro:
-        gyroBuilder << "The Gyro angle is: ";
+        gyroBuilder << "Gyro angle: ";
         gyroBuilder << m_gyro.GetAngle();
         SmartDashboard::PutString("DB/String 2", gyroBuilder.str());
 
@@ -409,12 +418,11 @@ public:
         eb2 << " RF: "<< m_rightFrontDriveEncoder.Get();
         SmartDashboard::PutString("DB/String 4", eb2.str());
 
-        elevatorEncoderBuilder << "Elevator Encoder: " << m_elevatorEncoder.Get();
-        SmartDashboard::PutString("DB/String 6", elevatorEncoderBuilder.str());
+
 
 
         //Prints out the elevator limit switches
-        elevatorBuilder3 << //"ElL,U,H;O;DL,U*: "<<
+        limitSwitches << //"ElL,U,H;O;DL,U*: "<<
                 m_elevatorLowerLimit.Get() <<
                 m_elevatorUpperLimit.Get() <<
                 m_elevatorHomeSwitch.Get() <<
@@ -431,7 +439,15 @@ public:
                 m_DIO23.Get() <<
                 m_DIO24.Get() <<
                 m_DIO25.Get();
-        SmartDashboard::PutString("DB/String 5", elevatorBuilder3.str());
+        SmartDashboard::PutString("DB/String 5", limitSwitches.str());
+
+        elevatorEncoderBuilder << "Ele. Encoder: " << m_elevatorEncoder.Get()/TicksPerInch; // in inches
+        SmartDashboard::PutString("DB/String 6", elevatorEncoderBuilder.str());
+
+        elevatorEncoderBuilder2 << "Ele. Target: " << m_elevator->getElevatorGoalPosition();
+
+        SmartDashboard::PutString("DB/String 7", elevatorEncoderBuilder2.str());
+
 
     }
 

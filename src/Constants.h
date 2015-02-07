@@ -44,8 +44,8 @@ struct PortAssign
     static const uint32_t ElevatorEncoderChannelA = 8;
     static const uint32_t ElevatorEncoderChannelB = 9;
     static const uint32_t ElevatorLowerLimitChannel = 10;
-    static const uint32_t ElevatorUpperLimitChannel = 11;
-    static const uint32_t ElevatorHomeSwitchChannel = 12;
+    static const uint32_t ElevatorUpperLimitChannel = 12;
+    static const uint32_t ElevatorHomeSwitchChannel = 11; // not actually used
     static const uint32_t OpticalSensorChannel = 13;
     static const uint32_t DraggerLowerLimitChannel = 14;
     static const uint32_t DraggerUpperLimitChannel = 15;
