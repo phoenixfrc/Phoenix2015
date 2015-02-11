@@ -5,7 +5,8 @@
 
 enum AxisOfMotion {
     right,
-    forward
+    forward,
+	stop
 };
 
 //Only supports L-shaped motion along the x and y axis (one axis at a time)
