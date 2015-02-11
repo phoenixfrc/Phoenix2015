@@ -30,7 +30,7 @@ Elevator::Elevator(
     printf("in elevator constructor...\n");
     m_homeState = lookingForLowerLimit;
     m_encoder->SetDistancePerPulse(1 / TicksPerInch);
-    m_elevatorControl = new PIDController(0.4, 0.001, 0.0, encoder, this);
+    m_elevatorControl = new PIDController(0.1, 0.001, 0.0, encoder, this);
 }
 
 void Elevator::operateElevator()
@@ -152,15 +152,15 @@ void Elevator::controlElevator()
         goalPosition = kElevatorHook2Ready;
     }
 
-    if (goalPosition > 60)
+    if (goalPosition > kSoftUpperLimit)
     {
 
-        goalPosition = 60; //Stop large queues of goal position
+        goalPosition = kSoftUpperLimit; //Stop large queues of goal position
     }
-    if (goalPosition < 0)
+    if (goalPosition < kSoftLowerLimit)
     {
 
-        goalPosition = 0; //stop large queues of goal position
+        goalPosition = kSoftLowerLimit; //stop large queues of goal position
 
     }
 

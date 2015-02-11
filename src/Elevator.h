@@ -63,10 +63,12 @@ public:
 
 
     // for use in setElevatorGoalPosition call
+    #define kSoftLowerLimit       (0.5)
+    #define kSoftUpperLimit       (63)
     #define kLiftDelta            (8)
     #define kToteDelta            (14.5)
-    #define kElevatorHome         (0)
-    #define kElevatorHook1Ready   (0)
+    #define kElevatorHome         (kSoftLowerLimit)
+    #define kElevatorHook1Ready   (kSoftLowerLimit)
     #define kElevatorHook1Lifted  (kElevatorHook1Ready + kLiftDelta)
     #define kElevatorHook2Ready   (kElevatorHook1Ready + kToteDelta)
     #define kElevatorHook2Lifted  (kElevatorHook2Ready + kLiftDelta)
