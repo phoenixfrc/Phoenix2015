@@ -11,7 +11,7 @@
 
 static const float MotorSpeed = 1.0;
 static const float HomeSpeed = 0.25;
-static const int Ticks = 2048;
+static const int Ticks = 384;
 static const float TicksPerInch = Ticks / 8.17;
 
 class Elevator  : public PIDOutput

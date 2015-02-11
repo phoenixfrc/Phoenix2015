@@ -117,6 +117,7 @@ public:
         m_robotDrive.SetInvertedMotor(RobotDrive::kRearRightMotor, true);	// you may need to change or remove this to match your robot
         m_rightRearDriveEncoder.SetReverseDirection(true);
         m_rightFrontDriveEncoder.SetReverseDirection(true);
+        m_elevatorEncoder.SetReverseDirection(true);
         SmartDashboard::init();
 }
 
