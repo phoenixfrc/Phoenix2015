@@ -195,7 +195,7 @@ public:
 	        m_autoPID.SetGoal(-FieldDistances::autoCrateDiff,0);
 	        while(IsAutonomous()  && IsEnabled() && !m_autoPID.PastGoal(-FieldDistances::autoCrateDiff,0))
 	        {
-	            Wait(0.005);
+	        	Wait(0.005);
 	        }
 
 
@@ -264,19 +264,19 @@ public:
 				Wait(0.005);
 			 } */
 
-			 SmartDashboard::PutString("DB/String 0", "Move back");
-	        //move back
-			 m_autoPID.SetGoal(-FieldDistances::autoCrateDiff,0);
-			while(IsAutonomous()  && IsEnabled() && !m_autoPID.PastGoal(-FieldDistances::autoCrateDiff,0))
-			{
-				Wait(0.005);
-			}
+//			 SmartDashboard::PutString("DB/String 0", "Move back");
+//	        //move back
+//			 m_autoPID.SetGoal(-FieldDistances::autoCrateDiff,0);
+//			while(IsAutonomous()  && IsEnabled() && !m_autoPID.PastGoal(-FieldDistances::autoCrateDiff,0))
+//			{
+//				Wait(0.005);
+//			}
 
 			SmartDashboard::PutString("DB/String 0", "Backoff totes");
 
 	        //move forward
-			m_autoPID.SetGoal(-FieldDistances::autoCrateDiff,0);
-			while(IsAutonomous()  && IsEnabled() && !m_autoPID.PastGoal(-FieldDistances::autoCrateDiff,0))
+			m_autoPID.SetGoal(0,-FieldDistances::autoCrateDiff);
+			while(IsAutonomous()  && IsEnabled() && !m_autoPID.PastGoal(0,FieldDistances::intoAutoDiff))
 			{
 				Wait(0.005);
 			}
@@ -376,8 +376,6 @@ public:
 	void Test()
 	{
 	    ClearDisplay();
-
-	    m_autoPID.TestEnable();
 
 		TestMode tester;
 		m_leftRearDriveEncoder.Reset();

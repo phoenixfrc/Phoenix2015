@@ -30,7 +30,7 @@ Elevator::Elevator(
     printf("in elevator constructor...\n");
     m_homeState = lookingForLowerLimit;
     m_encoder->SetDistancePerPulse(1 / TicksPerInch);
-    m_elevatorControl = new PIDController(0.4, 0.001, 0.0, encoder, this);
+    m_elevatorControl = new PIDController(0.1, 0.001, 0.0, encoder, this);
 }
 
 void Elevator::operateElevator()
