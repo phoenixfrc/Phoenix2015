@@ -175,6 +175,7 @@ void Elevator::controlElevator()
 
 }
 
+
 void Elevator::setElevatorGoalPosition(float position)
 {
 
@@ -212,6 +213,7 @@ void Elevator::PIDWrite(float desiredSpeed)
     else
     {
         m_brake->Set(m_brake->kForward);
+
     }
 
     // set the motor speed
@@ -219,6 +221,7 @@ void Elevator::PIDWrite(float desiredSpeed)
     m_motor2->Set(-actualSpeed);
 
 }
+
 
 
 Elevator::~Elevator(){}

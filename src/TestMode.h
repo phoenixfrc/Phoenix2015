@@ -2,13 +2,17 @@
 #define TESTMODE_H
 
 #include "WPILib.h"
+#include "EncoderTracker.h"
 #include "Team2342Joystick.h"
 
 
 enum testModes{testElevator, testJoystick, testTalon, testEncoder, testGyro, testLimitSwitch};
 
 class TestMode
+
 {
+
+
 
 public:
 
@@ -18,6 +22,7 @@ public:
     ~TestMode();
 private:
     bool m_buttonWasPressed;
+
 };
 
 #endif

@@ -14,8 +14,11 @@
 //Set limitSwitch port on init
 TestMode::TestMode(): m_buttonWasPressed(false){}
 
+    std::ostringstream trackerMessageBuilderX;
+    std::ostringstream trackerMessageBuilderY;
 
 void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick,  Talon * motor1,
+
         Talon * motor2,  RobotDrive * driveTrain,
         Relay * ElevatorBrake){
 
@@ -41,9 +44,6 @@ void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick,  Tal
             ElevatorBrake->Set(ElevatorBrake->kOff);
         }
     }
-
-
-
 }
 
 TestMode::~TestMode(){

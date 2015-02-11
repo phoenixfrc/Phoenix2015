@@ -1,13 +1,21 @@
+
 #include "WPILib.h"
 #include "Constants.h"
 #include "TestMode.h"
 #include "Team2342Joystick.h"
 #include "Elevator.h"
 #include "Dragger.h"
+#include "EncoderTracker.h"
+#include "PIDInterface.h"
 #include <sstream>
 /**
  * This is a demo program showing how to use Mecanum control with the RobotDrive class.
  */
+
+enum AutoMode {
+    complex,
+    simple
+}autoMode;
 
 class Robot: public SampleRobot
 {
@@ -17,7 +25,6 @@ class Robot: public SampleRobot
     Talon m_elevatorMotor2;
 
     Talon m_draggerMotor;
-
     Elevator* m_elevator;
     Dragger m_dragger;
     // tba Brake
@@ -50,13 +57,13 @@ class Robot: public SampleRobot
 
     Gyro m_gyro;
 
+
     Team2342Joystick m_stick;                 // only joystick
     Joystick m_gamepad;       // the gamepad
 
 
-
 public:
-    Robot() :
+    Robot():
         m_robotDrive(PortAssign::FrontLeftChannel, PortAssign::RearLeftChannel,
         PortAssign::FrontRightChannel, PortAssign::RearRightChannel),	// these must be initialized in the same order
 
@@ -64,6 +71,7 @@ public:
         m_elevatorMotor2(PortAssign::ElevatorMotor2),
 
         m_draggerMotor(PortAssign::DraggerMotorPort),
+
 
         m_dragger(),
 
@@ -98,9 +106,8 @@ public:
         m_stick(PortAssign::JoystickChannel),
         m_gamepad(PortAssign::GamepadChannel)
 
-
-
 // as they are declared above.
+
 {
         printf("In robot constructor..\n");
         m_elevator = new Elevator(&m_elevatorMotor1,
@@ -112,6 +119,8 @@ public:
                 &m_gamepad,
                 &m_brake);
 
+
+
         m_robotDrive.SetExpiration(0.1);
         m_robotDrive.SetInvertedMotor(RobotDrive::kFrontRightMotor, true);	// invert the right side motors
         m_robotDrive.SetInvertedMotor(RobotDrive::kRearRightMotor, true);	// you may need to change or remove this to match your robot
@@ -120,6 +129,7 @@ public:
         m_elevatorEncoder.SetReverseDirection(true);
         SmartDashboard::init();
 }
+
 
     /**
      * Runs the motors with Mecanum drive.
@@ -166,6 +176,7 @@ public:
         }
     }
     void DisplayInfo(){
+
         std::ostringstream gyroBuilder, eb, eb2, elevatorBuilder, elevatorEncoderBuilder, elevatorBuilder3;
 
         //Prints out the values for gyro:

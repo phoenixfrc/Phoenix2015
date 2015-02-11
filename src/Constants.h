@@ -23,9 +23,11 @@ struct PortAssign
     static const uint32_t ElevatorMotor1 = 4;
     static const uint32_t ElevatorMotor2 = 5;
 
+
     // relay ports
     //Dragger Ports:
     static const uint32_t DraggerMotorPort = 6;
+
 
     //Elevator Ports:
     static const uint32_t ElevatorBrakeChannel = 1;//placeholder value.
@@ -64,8 +66,23 @@ struct PortAssign
     //Joystick Ports:
     static const uint32_t JoystickChannel = 0;
     static const uint32_t GamepadChannel  = 1;
+};
+
+struct FieldDistances
+{
+    //Distance between the crates we have to pick up during auto
+    static const int autoCrateDiff = 57; //This number comes from the manual but may be a little off
+    //Distance from start to the auto zone
+    static const int intoAutoDiff = 24;//128; //This number comes from the manual but may be a little off
+};
 
 
+struct ObjectSizes
+{
+    //Height of an individual tote
+    static const int toteHeight = 2; //This is a filler number
+    //Height of an individual barrel
+    static const int barrelHeight = 4; //This is a filler number
 };
 
 #endif /* SRC_CONSTANTS_H_ */
