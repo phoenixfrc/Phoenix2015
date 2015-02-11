@@ -215,8 +215,8 @@ void Elevator::PIDWrite(float desiredSpeed)
     }
 
     // set the motor speed
-    m_motor1->Set(actualSpeed);
-    m_motor2->Set(actualSpeed);
+    m_motor1->Set(-actualSpeed);
+    m_motor2->Set(-actualSpeed);
 
 }
 

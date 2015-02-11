@@ -26,8 +26,8 @@ void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick,  Tal
     //Move elevator:
     float thumbstick = -gamePad->GetY()/4;
     thumbstick = fabs(thumbstick) < 0.0125 ? 0 : thumbstick;
-    motor1->Set(thumbstick);
-    motor2->Set(thumbstick);
+    motor1->Set(-thumbstick);
+    motor2->Set(-thumbstick);
 
     //Toggle Brake:
     bool buttonState = gamePad->GetRawButton(5);
