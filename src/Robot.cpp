@@ -155,7 +155,7 @@ public:
 
 		//m_robotDrive.SetSafetyEnabled(false); this may be needed
 	    //This is the mode it's going to use
-	    AutoMode autoMode = complex;
+	    AutoMode autoMode = simple;
 
 	    switch(autoMode)
 	    {
@@ -179,7 +179,7 @@ public:
 			while(IsAutonomous() && IsEnabled() && (!m_autoPID.PastGoal(-FieldDistances::autoCrateDiff,0) && !m_elevator->elevatorIsAt(kElevatorHook1Lifted)))
 			{
 				DisplayInfo();
-				Wait(0.005);q
+				Wait(0.005);
 			}
 
 	    	// move right
