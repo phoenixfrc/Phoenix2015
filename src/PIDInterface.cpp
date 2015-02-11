@@ -7,18 +7,30 @@ PIDInterface::PIDInterface(RobotDrive * robotDrive, Encoder * frontLeft, Encoder
     xPID(0.1, 0.001, 0.0, this, this), //PID values will need to be tuned for both of these
     yPID(0.1, 0.001, 0.0, this, this) // Old values were 100.0, 0.0, 2.0
 {
-    //xPID.Disable();
-    //yPID.Disable();
+	if(xPID.IsEnabled())
+	{
+		xPID.Disable();
+	}
+	if(yPID.IsEnabled())
+	{
+		yPID.Disable();
+	}
     m_robotDrive = robotDrive;
-    m_currentAxis = right;
+    m_currentAxis = stop;
     m_gyro = gyro;
 }
 
 void PIDInterface::Reset()
 {
     m_tracker.ResetPosition();
-    xPID.Disable();
-    yPID.Disable();
+    if(xPID.IsEnabled())
+	{
+    	xPID.Disable();
+	}
+	if(yPID.IsEnabled())
+	{
+		yPID.Disable();
+	}
 }
 
 void PIDInterface::SetGoal(double xGoalDistance, double yGoalDistance)
@@ -143,5 +155,7 @@ void PIDInterface::PIDWrite(float output)
     case forward:
         m_robotDrive->MecanumDrive_Cartesian(0.0, -output, 0.0, m_gyro->GetAngle());
         break;
+    case stop:
+    	Reset();
     }
 }

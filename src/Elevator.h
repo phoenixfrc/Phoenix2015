@@ -9,9 +9,10 @@
 #ifndef SRC_ELEVATOR_H_
 #define SRC_ELEVATOR_H_
 
-static const float MotorSpeed = 1.0;
+static const float MAX_MOTOR_SPEED = .5;
 static const float HomeSpeed = 0.25;
-static const int Ticks = 2048;
+//static const int Ticks = 2048; //old robot
+static const int Ticks = 384; //ticks per revolution on new robot
 static const float TicksPerInch = Ticks / 8.17;
 
 
@@ -77,6 +78,8 @@ public:
     #define kElevatorHook4Lifted  (kElevatorHook4Ready + kLiftDelta)
 
     void setElevatorGoalPosition(float position); // use consts above
+    float getElevatorGoalPosition();
+
 
     ~Elevator();
 

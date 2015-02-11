@@ -58,6 +58,7 @@ bool Elevator::elevatorIsAt(float position)
 }
 
 
+
 void Elevator::find_home()
 {
     double speed = 0.0;
@@ -102,10 +103,10 @@ void Elevator::controlElevator()
     std::ostringstream ElevatorJoystickbuilder2;
 
     //buttons
-    bool xPressed = m_gamePad->GetRawButton(1);
+    //bool xPressed = m_gamePad->GetRawButton(1);
     bool aPressed = m_gamePad->GetRawButton(2);
     bool bPressed = m_gamePad->GetRawButton(3);
-    bool yPressed = m_gamePad->GetRawButton(4);
+    //bool yPressed = m_gamePad->GetRawButton(4);
     bool rbPressed = m_gamePad->GetRawButton(6);
     bool rtPressed = m_gamePad->GetRawButton(8);
 
@@ -182,6 +183,11 @@ void Elevator::setElevatorGoalPosition(float position)
 
     m_elevatorControl->SetSetpoint(position);
 }
+float Elevator::getElevatorGoalPosition()
+{
+    return  m_elevatorControl->GetSetpoint();
+
+}
 
 /*
  * This function is responsible for enforcing limit switches, the brake and provides the call back for the PIDController
@@ -189,6 +195,14 @@ void Elevator::setElevatorGoalPosition(float position)
  */
 void Elevator::PIDWrite(float desiredSpeed)
 {
+	if (desiredSpeed > MAX_MOTOR_SPEED){
+		desiredSpeed = MAX_MOTOR_SPEED;
+
+	}
+
+	else if (desiredSpeed < -MAX_MOTOR_SPEED){
+		desiredSpeed = -MAX_MOTOR_SPEED;
+	}
     bool atUpperLimit = m_upperLimit->Get();
     bool atLowerLimit = m_lowerLimit->Get();
     float actualSpeed = desiredSpeed;
@@ -217,8 +231,9 @@ void Elevator::PIDWrite(float desiredSpeed)
     }
 
     // set the motor speed
-    m_motor1->Set(actualSpeed);
-    m_motor2->Set(actualSpeed);
+    //inverted motor speeds because main robot has oposite wiring from test robot
+    m_motor1->Set(-actualSpeed);
+    m_motor2->Set(-actualSpeed);
 }
 
 
