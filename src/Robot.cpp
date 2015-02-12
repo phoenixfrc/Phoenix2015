@@ -66,7 +66,7 @@ public:
 
         m_draggerMotor(PortAssign::DraggerMotorPort),
 
-        m_dragger(),
+        m_dragger(1, 0.25),
 
         m_brake(PortAssign::ElevatorBrakeChannel),
 
