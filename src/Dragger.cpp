@@ -13,7 +13,7 @@
  */
 
 Dragger::Dragger(int liftTime, float speed):
-m_timer(0),
+m_timer(2147483647),//max value for ints
 m_liftDuration(liftTime),
 m_speed(speed)
 {}
