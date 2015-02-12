@@ -11,8 +11,12 @@
 
 static const float MAX_MOTOR_SPEED = .5;
 static const float HomeSpeed = 0.25;
+<<<<<<< HEAD
 //static const int Ticks = 2048; //old robot
 static const int Ticks = 384; //ticks per revolution on new robot
+=======
+static const int Ticks = 384;
+>>>>>>> refs/heads/master
 static const float TicksPerInch = Ticks / 8.17;
 
 

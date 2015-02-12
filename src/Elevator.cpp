@@ -231,9 +231,9 @@ void Elevator::PIDWrite(float desiredSpeed)
     }
 
     // set the motor speed
-    //inverted motor speeds because main robot has oposite wiring from test robot
     m_motor1->Set(-actualSpeed);
     m_motor2->Set(-actualSpeed);
+
 }
 
 

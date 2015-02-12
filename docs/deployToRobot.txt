@@ -1,0 +1,16 @@
+
+make sure your team number is configure correctly.
+alpha 2342
+beta  2348
+test board 42
+
+Eclipse->Preferences->WPILib preferences
+( On a windows os Window->Prefereences->WPILib preferences )
+
+oebugging
+verify connectivity
+ping roborio-2342.local
+
+ssh to robot 
+
+ssh lvuser@roborio-2342.local
