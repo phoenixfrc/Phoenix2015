@@ -79,7 +79,7 @@ float EncoderTracker::GetDeltaX () {
     float BRChange = m_BRTicks - m_OldBRTicks;
 
     //Algorithm for X movement (needs work):
-    return (FRChange - FLChange - BRChange + BLChange)/(4 * ticksToInchesX);
+    return (FRChange - FLChange - BRChange + BLChange)/(-4 * ticksToInchesX);
 }
 
 float EncoderTracker::GetDeltaY () {

@@ -71,9 +71,9 @@ struct PortAssign
 struct FieldDistances
 {
     //Distance between the crates we have to pick up during auto
-    static const int autoCrateDiff = 12; // 57 This number comes from the manual but may be a little off
+    static const int autoCrateDiff = 6; // 57 This number comes from the manual but may be a little off
     //Distance from start to the auto zone
-    static const int intoAutoDiff = 72;//128; //This number comes from the manual but may be a little off
+    static const int intoAutoDiff = 24;//128; //This number comes from the manual but may be a little off
 };
 
 
