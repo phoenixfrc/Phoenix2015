@@ -27,6 +27,7 @@ class Robot: public SampleRobot
     Talon m_draggerMotor;
     Elevator* m_elevator;
     Dragger m_dragger;
+    TestMode m_tester;
     // tba Brake
 
     Relay m_brake;
@@ -75,6 +76,8 @@ public:
 
 
         m_dragger(1, 0.25),
+
+		m_tester(),
 
         m_brake(PortAssign::ElevatorBrakeChannel),
 
@@ -159,7 +162,6 @@ public:
     }
     void Test()
     {
-        TestMode tester;
         m_leftRearDriveEncoder.Reset();
         m_leftFrontDriveEncoder.Reset();
         m_rightRearDriveEncoder.Reset();
@@ -170,7 +172,7 @@ public:
 
         while (IsTest() && IsEnabled())
         {
-            tester.PerformTesting(&m_gamepad, &m_stick,
+            m_tester.PerformTesting(&m_gamepad, &m_stick,
                     &m_elevatorMotor1, &m_elevatorMotor2, &m_robotDrive, &m_brake, &m_draggerMotor);
             DisplayInfo();
 
