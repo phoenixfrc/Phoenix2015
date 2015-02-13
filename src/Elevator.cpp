@@ -29,8 +29,9 @@ Elevator::Elevator(
 {
     printf("in elevator constructor...\n");
     m_homeState = lookingForLowerLimit;
+    m_speedMultiplier = kNormalMultiplier;
     m_encoder->SetDistancePerPulse(1 / TicksPerInch);
-    m_elevatorControl = new PIDController(0.1, 0.001, 0.0, encoder, this);
+    m_elevatorControl = new PIDController(0.1, 0.0, 0.0, encoder, this);
 }
 
 void Elevator::operateElevator()
@@ -60,6 +61,10 @@ bool Elevator::elevatorIsAt(float position)
 void Elevator::find_home()
 {
     double speed = 0.0;
+    if(m_elevatorControl->IsEnabled())
+    {
+        m_elevatorControl->Disable();
+    }
     if (m_homeState == lookingForLowerLimit)
     {
         if(m_lowerLimit->Get())
@@ -78,7 +83,7 @@ void Elevator::find_home()
         {
             m_homeState = homingComplete;
             m_encoder->Reset();
-            setElevatorGoalPosition(0.0);
+            setElevatorGoalPosition(0.0, 1.0);
             m_elevatorControl->Enable();
 
         }
@@ -100,6 +105,8 @@ void Elevator::controlElevator()
     std::ostringstream ElevatorJoystickbuilder;
     std::ostringstream ElevatorJoystickbuilder2;
 
+    float speedMult;
+
     //buttons
     bool xPressed = m_gamePad->GetRawButton(1);
     bool aPressed = m_gamePad->GetRawButton(2);
@@ -118,6 +125,7 @@ void Elevator::controlElevator()
     // button computing
     if(rbPressed && !m_rbWasPressed)
     {
+        speedMult = kShortLiftMultiplier;
         goalPosition += kLiftDelta;
         m_rbWasPressed = true;
     }
@@ -128,6 +136,7 @@ void Elevator::controlElevator()
 
     if(rtPressed && !m_rtWasPressed)
     {
+        speedMult = kNormalMultiplier;
         goalPosition -= kLiftDelta;
         m_rtWasPressed = true;
     }
@@ -140,15 +149,18 @@ void Elevator::controlElevator()
     // TODO limit offset from joystick
     if(!(joystick > -0.05 && joystick < 0.05))
     {
+        speedMult = kNormalMultiplier;
         goalPosition += (joystick / 5);
     }
 
     if(aPressed)
     {
+        speedMult = kNormalMultiplier;
         goalPosition = kElevatorHook1Ready;
     }
     if(bPressed)
     {
+        speedMult = kNormalMultiplier;
         goalPosition = kElevatorHook2Ready;
     }
 
@@ -171,14 +183,14 @@ void Elevator::controlElevator()
     ElevatorJoystickbuilder2 << (m_encoder->Get() / TicksPerInch);
     SmartDashboard::PutString("DB/String 1", ElevatorJoystickbuilder2.str());
 
-    setElevatorGoalPosition(goalPosition);
+    setElevatorGoalPosition(goalPosition, speedMult);
 
 }
 
 
-void Elevator::setElevatorGoalPosition(float position)
+void Elevator::setElevatorGoalPosition(float position, float SpeedMultiplier)
 {
-
+    m_speedMultiplier = SpeedMultiplier;
     m_elevatorControl->SetSetpoint(position);
 }
 
@@ -217,9 +229,9 @@ void Elevator::PIDWrite(float desiredSpeed)
     }
 
     // set the motor speed
-    m_motor1->Set(-actualSpeed);
-    m_motor2->Set(-actualSpeed);
 
+        m_motor1->Set(-actualSpeed * m_speedMultiplier);
+        m_motor2->Set(-actualSpeed * m_speedMultiplier);
 }
 
 

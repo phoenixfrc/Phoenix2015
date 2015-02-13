@@ -10,7 +10,7 @@
 #define SRC_ELEVATOR_H_
 
 static const float MotorSpeed = 1.0;
-static const float HomeSpeed = 0.25;
+static const float HomeSpeed = 0.40;
 static const int Ticks = 384;
 static const float TicksPerInch = Ticks / 8.17;
 
@@ -19,6 +19,7 @@ class Elevator  : public PIDOutput
 
     bool m_rbWasPressed;
     bool m_rtWasPressed;
+    float m_speedMultiplier;
 
     // initialized at class constructions then constant
     Talon* m_motor1;
@@ -61,6 +62,10 @@ public:
     bool elevatorIsAt(float position);
 
 
+    // speed Multipliers
+    #define kNormalMultiplier (1.0)
+    //Must be less then 1
+    #define kShortLiftMultiplier (0.75)
 
     // for use in setElevatorGoalPosition call
     #define kSoftLowerLimit       (0.5)
@@ -77,7 +82,7 @@ public:
     #define kElevatorHook4Ready   (kElevatorHook3Ready + kToteDelta)
     #define kElevatorHook4Lifted  (kElevatorHook4Ready + kLiftDelta)
 
-    void setElevatorGoalPosition(float position); // use consts above
+    void setElevatorGoalPosition(float position , float SpeedMultiplier); // use consts above
 
     ~Elevator();
 
