@@ -20,7 +20,7 @@ TestMode::TestMode(): m_buttonWasPressed(false){}
 void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick,  Talon * motor1,
 
         Talon * motor2,  RobotDrive * driveTrain,
-        Relay * ElevatorBrake){
+        Relay * ElevatorBrake, Talon * draggerMotor){
 
 
     //Move robot:
@@ -31,6 +31,10 @@ void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick,  Tal
     thumbstick = fabs(thumbstick) < 0.0125 ? 0 : thumbstick;
     motor1->Set(-thumbstick);
     motor2->Set(-thumbstick);
+
+    //Move dragger using other thumb stick
+    float leftThumbstick = gamePad->GetY(Joystick::kLeftHand)/4;// slows down motor
+    draggerMotor->Set(leftThumbstick);
 
     //Toggle Brake:
     bool buttonState = gamePad->GetRawButton(5);

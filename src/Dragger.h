@@ -11,10 +11,18 @@
 
 
 class Dragger {
-    public:
-        Dragger();
-        void operateDragger(Joystick * button, DigitalInput * limitSwitchDown, DigitalInput * limitSwitchUp, Talon * motor);
-        ~Dragger();
+public:
+    Dragger(int liftTime, float liftSpeed);
+
+    void operateDragger(Joystick * button, DigitalInput * limitSwitchDown, DigitalInput * limitSwitchUp, Talon * motor);
+
+    ~Dragger();
+
+
+private:
+    int m_timer;
+    const int m_liftDuration;
+    const float m_speed;
 
 
 };
