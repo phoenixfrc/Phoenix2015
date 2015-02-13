@@ -61,10 +61,6 @@ bool Elevator::elevatorIsAt(float position)
 void Elevator::find_home()
 {
     double speed = 0.0;
-    if(m_elevatorControl->IsEnabled())
-    {
-        m_elevatorControl->Disable();
-    }
     if (m_homeState == lookingForLowerLimit)
     {
         if(m_lowerLimit->Get())

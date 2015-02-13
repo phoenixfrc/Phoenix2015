@@ -68,7 +68,7 @@ public:
     #define kShortLiftMultiplier (0.75)
 
     // for use in setElevatorGoalPosition call
-    #define kSoftLowerLimit       (0.5)
+    #define kSoftLowerLimit       (0.0)
     #define kSoftUpperLimit       (63)
     #define kLiftDelta            (8)
     #define kToteDelta            (14.5)

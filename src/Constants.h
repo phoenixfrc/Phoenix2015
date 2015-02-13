@@ -30,7 +30,7 @@ struct PortAssign
 
 
     //Elevator Ports:
-    static const uint32_t ElevatorBrakeChannel = 1;//placeholder value.
+    static const uint32_t ElevatorBrakeChannel = 1;
 
     //DIO ports
     static const uint32_t LeftRearDriveEncoderChannelA = 0;

@@ -166,7 +166,7 @@ public:
         m_rightFrontDriveEncoder.Reset();
 
         m_elevatorEncoder.Reset();
-        m_elevator->m_elevatorControl->Enable();
+        //m_elevator->m_elevatorControl->Enable();
 
         while (IsTest() && IsEnabled())
         {
