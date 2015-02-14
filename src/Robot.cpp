@@ -155,6 +155,7 @@ void ClearDisplay()
     void Autonomous()
     {
         m_robotDrive.SetSafetyEnabled(false);
+        m_gyro.Reset();
 
         ClearDisplay();
 
@@ -187,10 +188,10 @@ void ClearDisplay()
             // move left + move up over container
             SmartDashboard::PutString("DB/String 0", "Pick Up and Move 1");
 
-            m_autoPID.SetGoal(-FieldDistances::autoCrateDiff,0);
+            m_autoPID.SetGoal(FieldDistances::autoCrateDiff,0);
             m_elevator->setElevatorGoalPosition(kElevatorHook3Lifted,1);
             while(IsAutonomous() && IsEnabled() &&
-                        (!m_autoPID.PastGoal(-FieldDistances::autoCrateDiff,0) || !m_elevator->elevatorIsAt(kElevatorHook3Lifted)))
+                        (!m_autoPID.PastGoal(FieldDistances::autoCrateDiff,0) || !m_elevator->elevatorIsAt(kElevatorHook3Lifted)))
             {
                 DisplayInfo();
                 Wait(0.005);
@@ -217,10 +218,10 @@ void ClearDisplay()
 
             //up left
             SmartDashboard::PutString("DB/String 0", "Move Pickup 2");
-            m_autoPID.SetGoal(-FieldDistances::autoCrateDiff,0);
+            m_autoPID.SetGoal(FieldDistances::autoCrateDiff,0);
             m_elevator->setElevatorGoalPosition(kElevatorHook4Lifted,1);
             while(IsAutonomous() && IsEnabled() &&
-                    (!m_autoPID.PastGoal(-FieldDistances::autoCrateDiff,0) || !m_elevator->elevatorIsAt(kElevatorHook4Lifted)))
+                    (!m_autoPID.PastGoal(FieldDistances::autoCrateDiff,0) || !m_elevator->elevatorIsAt(kElevatorHook4Lifted)))
             {
                 DisplayInfo();
                 Wait(0.005);
@@ -230,8 +231,8 @@ void ClearDisplay()
 
             SmartDashboard::PutString("DB/String 0", "Move Right 2");
 
-            m_autoPID.SetGoal(-FieldDistances::autoCrateDiff,0);
-            while(IsAutonomous()  && IsEnabled() && !m_autoPID.PastGoal(-FieldDistances::autoCrateDiff,0))
+            m_autoPID.SetGoal(FieldDistances::autoCrateDiff,0);
+            while(IsAutonomous()  && IsEnabled() && !m_autoPID.PastGoal(FieldDistances::autoCrateDiff,0))
             {
                 Wait(0.005);
             }
@@ -260,8 +261,8 @@ void ClearDisplay()
             SmartDashboard::PutString("DB/String 0", "Backoff totes");
 
             //move forward
-            m_autoPID.SetGoal(0,FieldDistances::intoAutoDiff);
-            while(IsAutonomous() && IsEnabled() && !m_autoPID.PastGoal(0,FieldDistances::intoAutoDiff))
+            m_autoPID.SetGoal(0,-FieldDistances::intoAutoDiff);
+            while(IsAutonomous() && IsEnabled() && !m_autoPID.PastGoal(0,-FieldDistances::intoAutoDiff))
             {
                 Wait(0.005);
             }
