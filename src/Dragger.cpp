@@ -7,12 +7,17 @@
 #include "Constants.h"
 #include "Dragger.h"
 #include "WPILib.h"
+#include <sstream>
 
 /* Dragger constructor
  * Call the constructors of the motor and limit switches, using port numbers from the Constants.h file.
  */
 
-Dragger::Dragger()
+
+Dragger::Dragger(int liftTime, float speed):
+m_timer(liftTime * 200),//max value for ints
+m_liftDuration(liftTime),
+m_speed(speed)
 {}
 
 /* Dragger operateDragger method:
@@ -23,15 +28,17 @@ Dragger::Dragger()
  * To-do: get the button number from Constants.h
  */
 
-void Dragger::operateDragger(Joystick * button, DigitalInput * limitSwitchDown, DigitalInput * limitSwitchUp, Talon * motor){
+
+void Dragger::operateDragger(Joystick * button, DigitalInput * limitSwitchDown, Talon * motor){
+
     bool buttonPressed = button->GetRawButton(1); //Gets button state, 1 is a placeholder value
 
-    bool isUp = limitSwitchUp->Get(); //Is the up limit switch triggered?
+    m_timer++;
+    bool isUp = m_timer >= (m_liftDuration*200);//m_liftDuration is in seconds, and needs to converted to 200ths of seconds
     bool isDown = limitSwitchDown->Get(); //Is the down limit switch triggered?
-
-    float motorSpeed = 0.25; //Sets the motor speed, 0.25 is a placeholder value
-    float motorSpeedUp = motorSpeed;
-    float motorSpeedDown = -motorSpeed;
+    std::ostringstream bob;
+    bob << isUp;
+    SmartDashboard::PutString("DB/String 8", bob.str());
 
 
     /* Sets the motor speed to up, down or stopped depending on the button press and limit switches:
@@ -42,8 +49,26 @@ void Dragger::operateDragger(Joystick * button, DigitalInput * limitSwitchDown, 
      */
 
 
-    if (isUp || isDown)
-        motor->Set(buttonPressed && (isUp != isDown) ? (isUp ? motorSpeedDown : motorSpeedUp) : 0);
+    if (isUp || isDown){
+        if (buttonPressed && (isUp != isDown)){
+            if (isUp){
+                motor->Set(-m_speed);
+            } else {
+                m_timer = 0;
+                motor->Set(m_speed);
+            }
+        } else {
+            motor->Set(0);
+        }
+
+    }
+
+
+
+
+
+    //if (isUp || isDown)
+    //    motor->Set(buttonPressed && (isUp != isDown) ? (isUp ? motorSpeedDown : motorSpeedUp) : 0);
 
 
 
