@@ -4,6 +4,23 @@
 
 using std::string;
 
+enum configTypes { configFloat, configInt, configString, endOfList };
+
+struct ourConfiguration_t {
+    const char * key;
+    const char * humanName;
+    enum configTypes type;
+    const char * defaultValue;
+};
+
+struct ourConfiguration_t ourConfiguration [] =
+{
+        {"foo", "this is foo", configFloat, "12.34"},
+        {"bar", "this is bar", configString, "this is string bar"},
+        //Add new entries above here
+        {"0", "0", endOfList, "0"}//Keep this here ALWAYS!
+};
+
 Configuration * Configuration::_instance = 0; // pointer to our only instance of the Configuration class
 
 Configuration::Configuration()
