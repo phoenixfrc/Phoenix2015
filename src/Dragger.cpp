@@ -14,7 +14,7 @@
 
 
 Dragger::Dragger(int liftTime, float speed):
-m_timer(2147483647),//max value for ints
+m_timer(liftTime * 200),//max value for ints
 m_liftDuration(liftTime),
 m_speed(speed)
 {}
@@ -28,7 +28,7 @@ m_speed(speed)
  */
 
 
-void Dragger::operateDragger(Joystick * button, DigitalInput * limitSwitchDown, DigitalInput * limitSwitchUp, Talon * motor){
+void Dragger::operateDragger(Joystick * button, DigitalInput * limitSwitchDown, Talon * motor){
 
     bool buttonPressed = button->GetRawButton(1); //Gets button state, 1 is a placeholder value
 
