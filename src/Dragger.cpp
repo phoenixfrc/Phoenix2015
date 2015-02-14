@@ -38,7 +38,7 @@ void Dragger::operateDragger(Joystick * button, DigitalInput * limitSwitchDown, 
     bool isDown = limitSwitchDown->Get(); //Is the down limit switch triggered?
     std::ostringstream bob;
     bob << isUp;
-    SmartDashboard::PutString("DB/String 7", bob.str());
+    SmartDashboard::PutString("DB/String 8", bob.str());
 
 
     /* Sets the motor speed to up, down or stopped depending on the button press and limit switches:
