@@ -8,11 +8,12 @@
 #ifndef SRC_DRAGGER_H_
 #define SRC_DRAGGER_H_
 #include "WPILib.h"
-
+#define kDraggerReverseTime 1.0
+#define kDraggerMotorSpeed 0.25
 
 class Dragger {
 public:
-    Dragger(int liftTime, float liftSpeed);
+    Dragger();
 
     void operateDragger(Joystick * button, DigitalInput * limitSwitchDown, Talon * motor);
     ~Dragger();
@@ -20,7 +21,7 @@ public:
 
 private:
     int m_timer;
-    const int m_liftDuration;
+    const float m_liftDuration;
     const float m_speed;
 
 

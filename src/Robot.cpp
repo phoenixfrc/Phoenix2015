@@ -75,7 +75,7 @@ public:
         m_draggerMotor(PortAssign::DraggerMotorPort),
 
 
-        m_dragger(1, 0.25),
+        m_dragger(),
 
 		m_tester(),
 

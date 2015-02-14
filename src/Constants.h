@@ -22,13 +22,12 @@ struct PortAssign
     //Elevator Motor Ports
     static const uint32_t ElevatorMotor1 = 4;
     static const uint32_t ElevatorMotor2 = 5;
-
-
-    // relay ports
     //Dragger Ports:
     static const uint32_t DraggerMotorPort = 6;
 
 
+    // relay ports
+    // relay port 0 is unused
     //Elevator Ports:
     static const uint32_t ElevatorBrakeChannel = 1;
 
