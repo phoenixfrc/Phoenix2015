@@ -177,8 +177,8 @@ void Elevator::controlElevator()
 
     }
 
-    ElevatorJoystickbuilder << "GoalPosition: ";
-    ElevatorJoystickbuilder << goalPosition;
+    ElevatorJoystickbuilder << "POV"; //"GoalPosition: ";
+    ElevatorJoystickbuilder << m_joystick->GetPOV(); //goalPosition;
     SmartDashboard::PutString("DB/String 0", ElevatorJoystickbuilder.str());
     ElevatorJoystickbuilder2 << "position: ";
     ElevatorJoystickbuilder2 << (m_encoder->Get() / TicksPerInch);
