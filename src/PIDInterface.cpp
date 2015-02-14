@@ -75,32 +75,46 @@ bool PIDInterface::ReachedGoal()
 }
 
 bool PIDInterface::PastGoal(double xGoalDistance, double yGoalDistance) {
-	switch(m_currentAxis)
-	{
-	case forward:
-		if(yGoalDistance < 0)
-		{
-			return m_tracker.GetY() < yGoalDistance;
-		}
-		else
-		{
-			return m_tracker.GetY() > yGoalDistance;
-		}
-		break;
-	case right:
-		if(xGoalDistance < 0)
-		{
-			return m_tracker.GetX() < xGoalDistance;
-		}
-		else
-		{
-			return m_tracker.GetX() > xGoalDistance;
-		}
-		break;
-	case stop:
-		return false;
-		break;
-	}
+    float y = m_tracker.GetY();
+    float py = y - m_tracker.GetDeltaY();
+    float x = m_tracker.GetX();
+    float px = x - m_tracker.GetDeltaX();
+    switch(m_currentAxis)
+        {
+        case forward:
+            /*
+            if(yGoalDistance < 0)
+            {
+                return m_tracker.GetY() < yGoalDistance;
+            }
+            else
+            {
+                return m_tracker.GetY() > yGoalDistance;
+            }
+            */
+
+
+            return (y > yGoalDistance) != (py > yGoalDistance);
+            break;
+        case right:
+            /*
+            if(xGoalDistance < 0)
+            {
+                return m_tracker.GetX() < xGoalDistance;
+            }
+            else
+            {
+                return m_tracker.GetX() > xGoalDistance;
+            }
+            */
+
+
+            return (x > xGoalDistance) != (px > xGoalDistance);
+            break;
+        case stop:
+            return false;
+            break;
+        }
 }
 
 bool PIDInterface::BeforeGoal(double xGoalDistance, double yGoalDistance) {
@@ -137,13 +151,9 @@ double PIDInterface::PIDGet()
 	switch(m_currentAxis)
 	{
 	case right:
-		State << "Pos_X: " << m_tracker.GetX();
-		SmartDashboard::PutString("DB/String 0", State.str());
 		return m_tracker.GetX();
 		break;
 	case forward:
-		State << "Pos_Y: " << m_tracker.GetY();
-		SmartDashboard::PutString("DB/String 0", State.str());
 		return m_tracker.GetY();
 		break;
 	default:
@@ -161,7 +171,7 @@ void PIDInterface::PIDWrite(float output)
 		m_robotDrive->MecanumDrive_Cartesian(output, 0.0, 0.0, m_gyro->GetAngle());
 		break;
 	case forward:
-		output /= 2;
+		output /= -2;
 		m_robotDrive->MecanumDrive_Cartesian(0.0, output, 0.0, m_gyro->GetAngle());
 		break;
 	case stop:

@@ -27,7 +27,6 @@ class Elevator  : public PIDOutput
     Talon* m_motor2;
     DigitalInput* m_lowerLimit;
     DigitalInput* m_upperLimit;
-    DigitalInput* m_homeSwitch;
     Encoder* m_encoder;
     Joystick* m_gamePad;
     Team2342Joystick* m_joystick;
@@ -52,7 +51,6 @@ public:
             Talon* motor2,
             DigitalInput* lowerLimit,
             DigitalInput* upperLimit,
-            DigitalInput* homeSwitch,
             Encoder* encoder,
             Joystick* gamePad,
             Team2342Joystick* joytick,
