@@ -83,6 +83,7 @@ public:
     #define kElevatorHook4Lifted  (kElevatorHook4Ready + kLiftDelta)
 
     void setElevatorGoalPosition(float position , float SpeedMultiplier); // use consts above
+    float getElevatorGoalPosition();
 
     ~Elevator();
 

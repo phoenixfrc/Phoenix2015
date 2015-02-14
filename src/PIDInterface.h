@@ -5,13 +5,14 @@
 
 enum AxisOfMotion {
     right,
-    forward
+    forward,
+	stop
 };
 
 //Only supports L-shaped motion along the x and y axis (one axis at a time)
 class PIDInterface : public PIDOutput, public PIDSource {
 public:
-    PIDInterface(RobotDrive * robotDrive, Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight);
+    PIDInterface(RobotDrive * robotDrive, Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight, Gyro * gyro);
 
     //Required by PIDOutput; This function sends the output to the robotDrive
     virtual void PIDWrite(float output);
@@ -25,6 +26,11 @@ public:
 
     bool ReachedGoal();
 
+    bool PastGoal(double xGoalDistance, double yGoalDistance);
+    bool BeforeGoal(double xGoalDistance, double yGoalDistance);
+
+    void TestEnable();
+
     virtual ~PIDInterface(){};
 
 private:
@@ -32,6 +38,7 @@ private:
     RobotDrive * m_robotDrive;
     PIDController xPID;
     PIDController yPID;
+    Gyro  * m_gyro;
     AxisOfMotion m_currentAxis;
 };
 

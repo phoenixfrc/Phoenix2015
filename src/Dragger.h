@@ -15,7 +15,6 @@ public:
     Dragger(int liftTime, float liftSpeed);
 
     void operateDragger(Joystick * button, DigitalInput * limitSwitchDown, Talon * motor);
-
     ~Dragger();
 
 

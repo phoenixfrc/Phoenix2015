@@ -190,6 +190,11 @@ void Elevator::setElevatorGoalPosition(float position, float SpeedMultiplier)
     m_elevatorControl->SetSetpoint(position);
 }
 
+float Elevator::getElevatorGoalPosition()
+{
+    return  m_elevatorControl->GetSetpoint();
+}
+
 /*
  * This function is responsible for enforcing limit switches, the brake and provides the call back for the PIDController
  * when it wants to move the motors.
