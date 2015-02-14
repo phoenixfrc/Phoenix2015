@@ -75,6 +75,10 @@ bool PIDInterface::ReachedGoal()
 }
 
 bool PIDInterface::PastGoal(double xGoalDistance, double yGoalDistance) {
+    float y = m_tracker.GetY();
+    float py = y - m_tracker.GetDeltaY();
+    float x = m_tracker.GetX();
+    float px = x - m_tracker.GetDeltaX();
     switch(m_currentAxis)
         {
         case forward:
@@ -88,8 +92,7 @@ bool PIDInterface::PastGoal(double xGoalDistance, double yGoalDistance) {
                 return m_tracker.GetY() > yGoalDistance;
             }
             */
-            float y = m_tracker.GetY();
-            float py = y - m_tracker.GetDeltaY();
+
 
             return (y > yGoalDistance) != (py > yGoalDistance);
             break;
@@ -104,8 +107,7 @@ bool PIDInterface::PastGoal(double xGoalDistance, double yGoalDistance) {
                 return m_tracker.GetX() > xGoalDistance;
             }
             */
-            float x = m_tracker.GetX();
-            float px = x - m_tracker.GetDeltaX();
+
 
             return (x > xGoalDistance) != (px > xGoalDistance);
             break;
