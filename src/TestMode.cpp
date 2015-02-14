@@ -29,6 +29,8 @@ void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick,  Tal
     //Move elevator:
     float thumbstick = -gamePad->GetY()/4;
     thumbstick = fabs(thumbstick) < 0.0125 ? 0 : thumbstick;
+
+    //inverted motor speeds because main robot has oposite wiring from test robot
     motor1->Set(-thumbstick);
     motor2->Set(-thumbstick);
 

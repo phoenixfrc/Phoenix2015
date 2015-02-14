@@ -8,7 +8,11 @@
 #include "EncoderTracker.h"
 #include "WPILib.h"
 
+static const float ticksToInchesY = 20.5697;
+static const float ticksToInchesX = 24.51875;
+
 EncoderTracker::EncoderTracker (Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight){
+
     m_xPos = 0;
     m_yPos = 0;
 
@@ -75,7 +79,7 @@ float EncoderTracker::GetDeltaX () {
     float BRChange = m_BRTicks - m_OldBRTicks;
 
     //Algorithm for X movement (needs work):
-    return (FRChange - FLChange - BRChange + BLChange)/4 * ticksToInchesX;
+    return (FRChange - FLChange - BRChange + BLChange)/(-4 * ticksToInchesX);
 }
 
 float EncoderTracker::GetDeltaY () {
@@ -86,7 +90,7 @@ float EncoderTracker::GetDeltaY () {
     float BRChange = m_BRTicks - m_OldBRTicks;
 
     //Algorithm for Y movement (needs work):
-    return (FLChange + FRChange + BLChange + BRChange)/4 * ticksToInchesY;
+    return (FLChange + FRChange + BLChange + BRChange)/(4 * ticksToInchesY);
 }
 
 
