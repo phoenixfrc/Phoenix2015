@@ -48,7 +48,6 @@ class Robot: public SampleRobot
 //    DigitalInput m_DIO16;
 //    DigitalInput m_DIO17;
     DigitalInput m_draggerLowerLimit;
-    DigitalInput m_draggerUpperLimit;
     DigitalInput m_DIO20;
     DigitalInput m_DIO21;
     DigitalInput m_DIO22;
@@ -98,7 +97,6 @@ public:
         //m_DIO16(PortAssign::DIO16Channel),
         //m_DIO17(PortAssign::DIO17Channel),
         m_draggerLowerLimit(PortAssign::DraggerActivatedLimitChannel),
-        m_draggerUpperLimit(PortAssign::DraggerReservedLimitChannel),
         m_DIO20(PortAssign::DIO20Channel),
         m_DIO21(PortAssign::DIO21Channel),
         m_DIO22(PortAssign::DIO22Channel),
@@ -135,6 +133,9 @@ public:
         m_rightFrontDriveEncoder.SetReverseDirection(true);
         m_elevatorEncoder.SetReverseDirection(true);
         SmartDashboard::init();
+        //reserved for config
+        //reserved for config
+        //reserved for config
 }
 
 void ClearDisplay()
@@ -372,7 +373,7 @@ void ClearDisplay()
             m_elevator->operateElevator();
 
 
-            m_dragger.operateDragger(&m_gamepad, &m_draggerLowerLimit, &m_draggerUpperLimit, &m_draggerMotor);
+            m_dragger.operateDragger(&m_gamepad, &m_draggerLowerLimit, &m_draggerMotor);
 
             DisplayInfo();
 
@@ -396,6 +397,9 @@ void ClearDisplay()
         {
             m_tester.PerformTesting(&m_gamepad, &m_stick,
                     &m_elevatorMotor1, &m_elevatorMotor2, &m_robotDrive, &m_brake, &m_draggerMotor);
+            //reserved for config
+            //reserved for config
+            //reserved for config
             DisplayInfo();
 
             Wait(0.005);
@@ -442,7 +446,6 @@ void ClearDisplay()
                 //m_DIO16.Get() <<
                 //m_DIO17.Get() <<
                 m_draggerLowerLimit.Get() <<
-                m_draggerUpperLimit.Get() <<
                 m_DIO20.Get() <<
                 m_DIO21.Get() <<
                 m_DIO22.Get() <<
