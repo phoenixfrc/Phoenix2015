@@ -139,7 +139,7 @@ public:
         //reserved for config
 }
 
-void ClearDisplay()
+    void ClearDisplay()
     {
         SmartDashboard::PutString("DB/String 0", " ");
         SmartDashboard::PutString("DB/String 1", " ");
