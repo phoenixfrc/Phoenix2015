@@ -137,13 +137,9 @@ double PIDInterface::PIDGet()
 	switch(m_currentAxis)
 	{
 	case right:
-		State << "Pos_X: " << m_tracker.GetX();
-		SmartDashboard::PutString("DB/String 0", State.str());
 		return m_tracker.GetX();
 		break;
 	case forward:
-		State << "Pos_Y: " << m_tracker.GetY();
-		SmartDashboard::PutString("DB/String 0", State.str());
 		return m_tracker.GetY();
 		break;
 	default:
@@ -161,7 +157,7 @@ void PIDInterface::PIDWrite(float output)
 		m_robotDrive->MecanumDrive_Cartesian(output, 0.0, 0.0, m_gyro->GetAngle());
 		break;
 	case forward:
-		output /= 2;
+		output /= -2;
 		m_robotDrive->MecanumDrive_Cartesian(0.0, output, 0.0, m_gyro->GetAngle());
 		break;
 	case stop:
