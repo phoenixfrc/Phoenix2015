@@ -282,7 +282,7 @@ void ClearDisplay()
             SmartDashboard::PutString("DB/String 0", "Backoff totes");
 
             //move forward
-            m_autoPID.SetGoal(0,-FieldDistances::autoCrateDiff);
+            m_autoPID.SetGoal(0,FieldDistances::intoAutoDiff);
             while(IsAutonomous()  && IsEnabled() && !m_autoPID.PastGoal(0,FieldDistances::intoAutoDiff))
             {
                 Wait(0.005);
