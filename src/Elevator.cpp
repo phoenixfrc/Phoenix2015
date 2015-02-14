@@ -34,7 +34,7 @@ Elevator::Elevator(
     m_homeState = lookingForLowerLimit;
     m_speedMultiplier = kNormalMultiplier;
     m_encoder->SetDistancePerPulse(1 / TicksPerInch);
-    m_elevatorControl = new PIDController(0.1, 0.0, 0.0, encoder, this);
+    m_elevatorControl = new PIDController(0.15, 0.0, 0.0, encoder, this);
 }
 
 void Elevator::operateElevator()
@@ -112,8 +112,8 @@ void Elevator::controlElevator()
     bool bPressed = m_gamePad->GetRawButton(3);
     bool yPressed = m_gamePad->GetRawButton(4);
     bool rbPressed = (m_gamePad->GetRawButton(6) || m_joystick->GetRawButton(1));
-    bool rtPressed = (m_gamePad->GetRawButton(8) || m_joystick->GetRawButton(3));
-
+    bool rtPressed = (m_gamePad->GetRawButton(8) || m_joystick->GetRawButton(2));
+    int POV = m_joystick->GetPOV();
 
 
 
@@ -127,7 +127,7 @@ void Elevator::controlElevator()
     if(rbPressed && !m_rbWasPressed)
     {
         speedMult = kShortLiftMultiplier;
-        goalPosition += kLiftDelta;
+        goalPosition += kButtonLift;
         m_rbWasPressed = true;
     }
     else if(!rbPressed && m_rbWasPressed)
@@ -137,8 +137,8 @@ void Elevator::controlElevator()
 
     if(rtPressed && !m_rtWasPressed)
     {
-        speedMult = kNormalMultiplier;
-        goalPosition -= kLiftDelta;
+        speedMult = kShortLiftMultiplier;
+        goalPosition -= kButtonLift;
         m_rtWasPressed = true;
     }
     else if(!rtPressed && m_rtWasPressed)
@@ -152,6 +152,18 @@ void Elevator::controlElevator()
     {
         speedMult = kNormalMultiplier;
         goalPosition += (joystick / 4);
+    }
+
+    if(POV == 0 || POV == 45 || POV == 315)
+    {
+        speedMult = kNormalMultiplier;
+        goalPosition += (0.15);
+    }
+
+    if(POV == 180 || POV == 225 || POV == 135)
+    {
+        speedMult = kNormalMultiplier;
+        goalPosition -= (0.15);
     }
 
     if(aPressed)
@@ -177,8 +189,8 @@ void Elevator::controlElevator()
 
     }
 
-    ElevatorJoystickbuilder << "POV"; //"GoalPosition: ";
-    ElevatorJoystickbuilder << m_joystick->GetPOV(); //goalPosition;
+    ElevatorJoystickbuilder << "GoalPosition: ";
+    ElevatorJoystickbuilder << goalPosition;
     SmartDashboard::PutString("DB/String 0", ElevatorJoystickbuilder.str());
     ElevatorJoystickbuilder2 << "position: ";
     ElevatorJoystickbuilder2 << (m_encoder->Get() / TicksPerInch);
