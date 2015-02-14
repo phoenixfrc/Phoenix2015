@@ -6,6 +6,7 @@
  *      Author: Developer
  */
 #include "WPILib.h"
+#include "Team2342Joystick.h"
 #ifndef SRC_ELEVATOR_H_
 #define SRC_ELEVATOR_H_
 
@@ -29,6 +30,7 @@ class Elevator  : public PIDOutput
     DigitalInput* m_homeSwitch;
     Encoder* m_encoder;
     Joystick* m_gamePad;
+    Team2342Joystick* m_joystick;
     Relay* m_brake;
 
 
@@ -53,6 +55,7 @@ public:
             DigitalInput* homeSwitch,
             Encoder* encoder,
             Joystick* gamePad,
+            Team2342Joystick* joytick,
             Relay* ElevatorBrake);
     //Ecpected usage in teleop loop while(!elevatorIsHomed()) {operateElevator();}
     // after that call setElevatorGoalPosition using the const below.
@@ -65,11 +68,11 @@ public:
     // speed Multipliers
     #define kNormalMultiplier (1.0)
     //Must be less then 1
-    #define kShortLiftMultiplier (0.75)
+    #define kShortLiftMultiplier (0.6)
 
     // for use in setElevatorGoalPosition call
-    #define kSoftLowerLimit       (0.0)
-    #define kSoftUpperLimit       (63)
+    #define kSoftLowerLimit       (1.0)
+    #define kSoftUpperLimit       (66)
     #define kLiftDelta            (8)
     #define kToteDelta            (18.5)
     #define kElevatorHome         (kSoftLowerLimit)
