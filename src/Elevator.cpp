@@ -101,7 +101,7 @@ void Elevator::controlElevator()
     std::ostringstream ElevatorJoystickbuilder;
     std::ostringstream ElevatorJoystickbuilder2;
 
-    float speedMult;
+    float speedMult = m_speedMultiplier;
 
     //buttons
     bool xPressed = m_gamePad->GetRawButton(1);
@@ -198,7 +198,12 @@ void Elevator::PIDWrite(float desiredSpeed)
 {
     bool atUpperLimit = m_upperLimit->Get();
     bool atLowerLimit = m_lowerLimit->Get();
-    float actualSpeed = desiredSpeed;
+    float actualSpeed = desiredSpeed * m_speedMultiplier;
+
+  //  std::ostringstream out;
+  //  out.precision(2);
+    //out << "EV: " << desiredSpeed << " " << m_speedMultiplier;
+  //  SmartDashboard::PutString("DB/String 8", out.str());
 
     if(actualSpeed >= -0.1 && actualSpeed <= 0.1)
     {
@@ -213,6 +218,11 @@ void Elevator::PIDWrite(float desiredSpeed)
         actualSpeed = 0.0; // don't move past lower limit
     }
 
+  //  std::ostringstream out2;
+  //  out2.precision(2);
+  //  out2 << "ACT: " << actualSpeed;
+  //  SmartDashboard::PutString("DB/String 9", out2.str());
+
     //turn off the brake before moving
     if(actualSpeed != 0.0)
     {
@@ -226,8 +236,8 @@ void Elevator::PIDWrite(float desiredSpeed)
 
     // set the motor speed
 
-        m_motor1->Set(-actualSpeed * m_speedMultiplier);
-        m_motor2->Set(-actualSpeed * m_speedMultiplier);
+        m_motor1->Set(-actualSpeed);
+        m_motor2->Set(-actualSpeed);
 }
 
 
