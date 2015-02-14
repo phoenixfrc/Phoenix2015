@@ -121,6 +121,7 @@ public:
                 &m_elevatorHomeSwitch,
                 &m_elevatorEncoder,
                 &m_gamepad,
+                &m_stick,
                 &m_brake);
 
 

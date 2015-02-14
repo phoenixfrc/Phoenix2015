@@ -14,7 +14,9 @@ Elevator::Elevator(
         DigitalInput* homeSwitch,
         Encoder* encoder,
         Joystick* gamePad,
+        Team2342Joystick* joystick,
         Relay* ElevatorBrake):
+
         m_rbWasPressed(false),
         m_rtWasPressed(false),
         m_motor1(motor1),
@@ -24,6 +26,7 @@ Elevator::Elevator(
         m_homeSwitch(homeSwitch),
         m_encoder(encoder),
         m_gamePad(gamePad),
+        m_joystick(joystick),
         m_brake(ElevatorBrake),
         m_homeState(lookingForLowerLimit)
 {
@@ -108,8 +111,9 @@ void Elevator::controlElevator()
     bool aPressed = m_gamePad->GetRawButton(2);
     bool bPressed = m_gamePad->GetRawButton(3);
     bool yPressed = m_gamePad->GetRawButton(4);
-    bool rbPressed = m_gamePad->GetRawButton(6);
-    bool rtPressed = m_gamePad->GetRawButton(8);
+    bool rbPressed = (m_gamePad->GetRawButton(6) || m_joystick->GetRawButton(1));
+    bool rtPressed = (m_gamePad->GetRawButton(8) || m_joystick->GetRawButton(3));
+
 
 
 
@@ -117,6 +121,7 @@ void Elevator::controlElevator()
     double joystick = -m_gamePad->GetY(); // right Joystick, negative because up is negative
 
     float goalPosition = m_elevatorControl->GetSetpoint();
+
 
     // button computing
     if(rbPressed && !m_rbWasPressed)
@@ -146,7 +151,7 @@ void Elevator::controlElevator()
     if(!(joystick > -0.05 && joystick < 0.05))
     {
         speedMult = kNormalMultiplier;
-        goalPosition += (joystick / 5);
+        goalPosition += (joystick / 4);
     }
 
     if(aPressed)
