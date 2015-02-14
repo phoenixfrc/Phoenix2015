@@ -73,6 +73,8 @@ void Configuration::ReadValues()
     while(ourConfiguration[currentConfigEntry].type != endOfList)
     {
         printf("%s\n", ourConfiguration[currentConfigEntry].humanName);
+        currentConfigEntry++;
+        Wait(0.05);
     }
     fflush(stdout);
 }
