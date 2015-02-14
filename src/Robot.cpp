@@ -159,11 +159,10 @@ void ClearDisplay()
         ClearDisplay();
 
         SmartDashboard::PutString("DB/String 0", "Initial Homeing");
-        /*
         while(!m_elevator->elevatorIsHomed())
         {
             m_elevator->operateElevator();
-        } */
+        }
 
         //m_robotDrive.SetSafetyEnabled(false); this may be needed
         //This is the mode it's going to use
