@@ -43,16 +43,17 @@ struct PortAssign
     static const uint32_t ElevatorEncoderChannelA = 8;
     static const uint32_t ElevatorEncoderChannelB = 9;
     static const uint32_t ElevatorLowerLimitChannel = 10;
-    static const uint32_t ElevatorHomeSwitchChannel = 11; //Does not exist
+    static const uint32_t DIO11Channel = 11; //Does not exist
     static const uint32_t ElevatorUpperLimitChannel = 12;
-    static const uint32_t OpticalSensorChannel = 13;
+    static const uint32_t DraggerActivatedLimitChannel = 13;
+
     //MXP Breakout board doesn't expose ports: 14-17
     static const uint32_t DIO14Channel = 14;
     static const uint32_t DIO15Channel = 15;
     static const uint32_t DIO16Channel = 16;
     static const uint32_t DIO17Channel = 17;
-    static const uint32_t DraggerActivatedLimitChannel = 18;
-    static const uint32_t DraggerReservedLimitChannel = 19; //Does not exist
+    static const uint32_t DIO18Channel = 18;
+    static const uint32_t DIO19Channel = 19;
     static const uint32_t DIO20Channel = 20;
     static const uint32_t DIO21Channel = 21;
     static const uint32_t DIO22Channel = 22;

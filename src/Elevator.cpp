@@ -11,7 +11,6 @@ Elevator::Elevator(
         Talon* motor2,
         DigitalInput* lowerLimit,
         DigitalInput* upperLimit,
-        DigitalInput* homeSwitch,
         Encoder* encoder,
         Joystick* gamePad,
         Team2342Joystick* joystick,
@@ -23,7 +22,6 @@ Elevator::Elevator(
         m_motor2(motor2),
         m_lowerLimit(lowerLimit),
         m_upperLimit(upperLimit),
-        m_homeSwitch(homeSwitch),
         m_encoder(encoder),
         m_gamePad(gamePad),
         m_joystick(joystick),
@@ -78,7 +76,7 @@ void Elevator::find_home()
 
     if (m_homeState == goingUpToHome)
     {
-        if(m_lowerLimit->Get()) //if(m_homeSwitch->Get())
+        if(m_lowerLimit->Get())
         {
             m_homeState = homingComplete;
             m_encoder->Reset();
@@ -107,10 +105,10 @@ void Elevator::controlElevator()
     float speedMult = m_speedMultiplier;
 
     //buttons
-    bool xPressed = m_gamePad->GetRawButton(1);
+    //bool xPressed = m_gamePad->GetRawButton(1);
     bool aPressed = m_gamePad->GetRawButton(2);
     bool bPressed = m_gamePad->GetRawButton(3);
-    bool yPressed = m_gamePad->GetRawButton(4);
+    //bool yPressed = m_gamePad->GetRawButton(4);
     bool rbPressed = (m_gamePad->GetRawButton(6) || m_joystick->GetRawButton(1));
     bool rtPressed = (m_gamePad->GetRawButton(8) || m_joystick->GetRawButton(3));
 

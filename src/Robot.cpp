@@ -39,15 +39,16 @@ class Robot: public SampleRobot
     Encoder m_elevatorEncoder;
 
     DigitalInput m_elevatorLowerLimit;
+    DigitalInput m_DIO11;
     DigitalInput m_elevatorUpperLimit;
-    DigitalInput m_elevatorHomeSwitch;
-    DigitalInput m_opticalSensor;
+    DigitalInput m_draggerLowerLimit;
     //MXP Breakout board doesn't expose ports: 14-17
 //    DigitalInput m_DIO14;
 //    DigitalInput m_DIO15;
 //    DigitalInput m_DIO16;
 //    DigitalInput m_DIO17;
-    DigitalInput m_draggerLowerLimit;
+    DigitalInput m_DIO18;
+    DigitalInput m_DIO19;
     DigitalInput m_DIO20;
     DigitalInput m_DIO21;
     DigitalInput m_DIO22;
@@ -88,15 +89,16 @@ public:
         m_elevatorEncoder(PortAssign::ElevatorEncoderChannelA, PortAssign::ElevatorEncoderChannelB),
 
         m_elevatorLowerLimit(PortAssign::ElevatorLowerLimitChannel),
+        m_DIO11(PortAssign::DIO11Channel),
         m_elevatorUpperLimit(PortAssign::ElevatorUpperLimitChannel),
-        m_elevatorHomeSwitch(PortAssign::ElevatorHomeSwitchChannel),
+        m_draggerLowerLimit(PortAssign::DraggerActivatedLimitChannel),
 
-        m_opticalSensor(PortAssign::OpticalSensorChannel),
         //m_DIO14(PortAssign::DIO14Channel),
         //m_DIO15(PortAssign::DIO15Channel),
         //m_DIO16(PortAssign::DIO16Channel),
         //m_DIO17(PortAssign::DIO17Channel),
-        m_draggerLowerLimit(PortAssign::DraggerActivatedLimitChannel),
+        m_DIO18(PortAssign::DIO18Channel),
+        m_DIO19(PortAssign::DIO19Channel),
         m_DIO20(PortAssign::DIO20Channel),
         m_DIO21(PortAssign::DIO21Channel),
         m_DIO22(PortAssign::DIO22Channel),
@@ -118,7 +120,6 @@ public:
                 &m_elevatorMotor2,
                 &m_elevatorLowerLimit,
                 &m_elevatorUpperLimit,
-                &m_elevatorHomeSwitch,
                 &m_elevatorEncoder,
                 &m_gamepad,
                 &m_stick,
@@ -436,17 +437,18 @@ void ClearDisplay()
 
         //Prints out the elevator limit switches
         limitSwitches << //"ElL,U,H;O;DL,U*: "<<
-                m_elevatorLowerLimit.Get() <<
-                m_elevatorUpperLimit.Get() <<
-                m_elevatorHomeSwitch.Get() <<
-                m_opticalSensor.Get() <<
+                m_elevatorLowerLimit.Get() <<  // 10
+                m_elevatorUpperLimit.Get() <<  // 12
+				m_draggerLowerLimit.Get() <<   // 13
                 "-" <<
                 //m_DIO14.Get() <<
                 //m_DIO15.Get() <<
                 //m_DIO16.Get() <<
                 //m_DIO17.Get() <<
-                m_draggerLowerLimit.Get() <<
-                m_DIO20.Get() <<
+                m_DIO11.Get() <<
+				m_DIO18.Get() <<
+				m_DIO19.Get() <<
+				m_DIO20.Get() <<
                 m_DIO21.Get() <<
                 m_DIO22.Get() <<
                 m_DIO23.Get() <<
