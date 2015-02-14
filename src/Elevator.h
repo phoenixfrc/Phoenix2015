@@ -9,18 +9,17 @@
 #ifndef SRC_ELEVATOR_H_
 #define SRC_ELEVATOR_H_
 
-static const float MAX_MOTOR_SPEED = .5;
-static const float HomeSpeed = 0.25;
-//static const int Ticks = 2048; //old robot
-static const int Ticks = 384; //ticks per revolution on new robot
+static const float MotorSpeed = 1.0;
+static const float HomeSpeed = 0.40;
+static const int Ticks = 384;
 static const float TicksPerInch = Ticks / 8.17;
-
 
 class Elevator  : public PIDOutput
 {
 
     bool m_rbWasPressed;
     bool m_rtWasPressed;
+    float m_speedMultiplier;
 
     // initialized at class constructions then constant
     Talon* m_motor1;
@@ -63,12 +62,18 @@ public:
     bool elevatorIsAt(float position);
 
 
+    // speed Multipliers
+    #define kNormalMultiplier (1.0)
+    //Must be less then 1
+    #define kShortLiftMultiplier (1.0)
 
     // for use in setElevatorGoalPosition call
+    #define kSoftLowerLimit       (0.0)
+    #define kSoftUpperLimit       (63)
     #define kLiftDelta            (8)
-    #define kToteDelta            (14.5)
-    #define kElevatorHome         (0)
-    #define kElevatorHook1Ready   (0)
+    #define kToteDelta            (18.5)
+    #define kElevatorHome         (kSoftLowerLimit)
+    #define kElevatorHook1Ready   (kSoftLowerLimit)
     #define kElevatorHook1Lifted  (kElevatorHook1Ready + kLiftDelta)
     #define kElevatorHook2Ready   (kElevatorHook1Ready + kToteDelta)
     #define kElevatorHook2Lifted  (kElevatorHook2Ready + kLiftDelta)
@@ -77,9 +82,8 @@ public:
     #define kElevatorHook4Ready   (kElevatorHook3Ready + kToteDelta)
     #define kElevatorHook4Lifted  (kElevatorHook4Ready + kLiftDelta)
 
-    void setElevatorGoalPosition(float position); // use consts above
+    void setElevatorGoalPosition(float position , float SpeedMultiplier); // use consts above
     float getElevatorGoalPosition();
-
 
     ~Elevator();
 

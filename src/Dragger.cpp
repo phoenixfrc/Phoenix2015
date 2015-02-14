@@ -62,6 +62,7 @@ void Dragger::operateDragger(Joystick * button, DigitalInput * limitSwitchDown, 
 
 
 
+
     //if (isUp || isDown)
     //    motor->Set(buttonPressed && (isUp != isDown) ? (isUp ? motorSpeedDown : motorSpeedUp) : 0);
 

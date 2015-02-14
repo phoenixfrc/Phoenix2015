@@ -18,6 +18,7 @@ public:
 
     ~Dragger();
 
+
 private:
     int m_timer;
     const int m_liftDuration;
