@@ -13,6 +13,17 @@ struct ourConfiguration_t {
     const char * defaultValue;
 };
 
+/*
+ * This structure defines what parameters we save on the roborio flash disk
+ *
+ * The first column, that appears in the file, must not contain spaces or symbols
+ *
+ * The second column, the human readable name, appears in driver station
+ *
+ * The third column is the type
+ *
+ * The fourth column is the default value (if not found in the roborio config upon starting)
+ */
 struct ourConfiguration_t ourConfiguration [] =
 {
         {"foo", "this is foo", configFloat, "12.34"},
@@ -28,6 +39,9 @@ Configuration::Configuration()
 
 }
 
+/*
+ * This function creates the Singleton instance, if not already done
+ */
 void Configuration::configurationInit()
 {
     if (_instance != 0)
