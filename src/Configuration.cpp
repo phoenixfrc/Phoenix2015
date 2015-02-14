@@ -73,8 +73,19 @@ void Configuration::ReadValues()
     while(ourConfiguration[currentConfigEntry].type != endOfList)
     {
         printf("%s\n", ourConfiguration[currentConfigEntry].humanName);
+        if(ourConfiguration[currentConfigEntry].type == configFloat)
+        {
+            printf("Found a float %s", ourConfiguration[currentConfigEntry].humanName);
+        }
+        else if(ourConfiguration[currentConfigEntry].type == configInt)
+        {
+            printf("Found an int %s", ourConfiguration[currentConfigEntry].humanName);
+        }
+        else if(ourConfiguration[currentConfigEntry].type == configString)
+        {
+            printf("Found a string %s", ourConfiguration[currentConfigEntry].humanName);
+        }
         currentConfigEntry++;
-        Wait(0.05);
     }
     fflush(stdout);
 }
