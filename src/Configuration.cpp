@@ -46,9 +46,10 @@ void Configuration::configurationInit()
 {
     if (_instance != 0)
     {
-        return;
+        return; // Don't do anything, because the instance already exists
     }
     _instance = new Configuration();
+    _instance->ReadValues();
 }
 
 /*
@@ -61,6 +62,19 @@ Configuration * Configuration::getInstance()
         configurationInit();
     }
     return _instance;
+}
+
+/*
+ * Read the values and create defaults, if they do not already exist
+ */
+void Configuration::ReadValues()
+{
+    int currentConfigEntry = 0;
+    while(ourConfiguration[currentConfigEntry].type != endOfList)
+    {
+        printf("%s\n", ourConfiguration[currentConfigEntry].humanName);
+    }
+    fflush(stdout);
 }
 
 void Configuration::PutConfigInt(const char * key, int value)

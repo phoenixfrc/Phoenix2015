@@ -9,6 +9,7 @@ private:
     Configuration();
     static Configuration *_instance;
     ~Configuration();
+    void ReadValues();
 
 
 public:

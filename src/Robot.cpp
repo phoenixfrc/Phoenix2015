@@ -135,7 +135,7 @@ public:
         m_elevatorEncoder.SetReverseDirection(true);
         SmartDashboard::init();
         //reserved for config
-        //reserved for config
+        Configuration* configObject = Configuration::getInstance();
         //reserved for config
 }
 
