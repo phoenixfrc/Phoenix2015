@@ -8,8 +8,10 @@
 #ifndef SRC_DRAGGER_H_
 #define SRC_DRAGGER_H_
 #include "WPILib.h"
-#define kDraggerReverseTime 1.0
-#define kDraggerMotorSpeed 0.25
+#define kDraggerReverseTime 2.0
+#define kDraggerMotorDownSpeed 0.75
+#define kDraggerMotorUpSpeed 0.25
+
 
 class Dragger {
 public:
@@ -22,8 +24,8 @@ public:
 private:
     int m_timer;
     const float m_liftDuration;
-    const float m_speed;
-
+    const float m_downSpeed;
+    const float m_upSpeed;
 
 };
 
