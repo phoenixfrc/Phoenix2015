@@ -133,6 +133,9 @@ public:
         m_rightFrontDriveEncoder.SetReverseDirection(true);
         m_elevatorEncoder.SetReverseDirection(true);
         SmartDashboard::init();
+        //reserved for config
+        //reserved for config
+        //reserved for config
 }
 
 void ClearDisplay()
@@ -394,6 +397,9 @@ void ClearDisplay()
         {
             m_tester.PerformTesting(&m_gamepad, &m_stick,
                     &m_elevatorMotor1, &m_elevatorMotor2, &m_robotDrive, &m_brake, &m_draggerMotor);
+            //reserved for config
+            //reserved for config
+            //reserved for config
             DisplayInfo();
 
             Wait(0.005);
