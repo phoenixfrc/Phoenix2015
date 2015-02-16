@@ -50,6 +50,8 @@ void Configuration::configurationInit()
     }
     _instance = new Configuration();
     _instance->ReadValues();
+    _instance->Save();
+    Wait(0.25);
 }
 
 /*
@@ -75,12 +77,15 @@ void Configuration::ReadValues()
         if (ContainsKey(ourConfiguration[currentConfigEntry].key)){
             printf("Already have key %s\n", ourConfiguration[currentConfigEntry].key);
             currentConfigEntry++;
-            continue;
+            continue; //Already have value from file so we're all set, go to the next part.
         }
+
         printf("%s\n", ourConfiguration[currentConfigEntry].humanName);
         if(ourConfiguration[currentConfigEntry].type == configFloat)
         {
             printf("Found a float %s\n", ourConfiguration[currentConfigEntry].humanName);
+            float valueToSave = std::stof("123.456");
+            PutFloat(ourConfiguration[currentConfigEntry].key, valueToSave);
         }
         else if(ourConfiguration[currentConfigEntry].type == configInt)
         {
