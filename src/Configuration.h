@@ -7,7 +7,7 @@ class Configuration : public Preferences
 {
 private:
     Configuration();
-    static Configuration *_instance;
+    static Configuration *_configInstance;
     ~Configuration();
     void ReadValues();
 

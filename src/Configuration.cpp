@@ -1,6 +1,7 @@
 #include "Configuration.h"
 #include "WPILib.h"
 #include <string>
+#include <stdio.h>
 
 using std::string;
 
@@ -26,13 +27,13 @@ struct ourConfiguration_t {
  */
 struct ourConfiguration_t ourConfiguration [] =
 {
-        {"foo", "this is foo", configFloat, "12.34"},
+        {"b", "this is b", configFloat, "12.34"},
         {"bar", "this is bar", configString, "this is string bar"},
         //Add new entries above here
         {"0", "0", endOfList, "0"}//Keep this here ALWAYS!
 };
 
-Configuration * Configuration::_instance = 0; // pointer to our only instance of the Configuration class
+Configuration * Configuration::_configInstance = 0; // pointer to our only instance of the Configuration class
 
 Configuration::Configuration()
 {
@@ -44,14 +45,17 @@ Configuration::Configuration()
  */
 void Configuration::configurationInit()
 {
-    if (_instance != 0)
+    if (_configInstance != 0)
     {
         return; // Don't do anything, because the instance already exists
     }
-    _instance = new Configuration();
-    _instance->ReadValues();
-    _instance->Save();
+    _configInstance = new Configuration();
+    _configInstance->ReadValues();
+    fflush(stdout);
     Wait(0.25);
+    _configInstance->Save();
+    Wait(0.25);
+    fflush(stdout);
 }
 
 /*
@@ -59,11 +63,11 @@ void Configuration::configurationInit()
  */
 Configuration * Configuration::getInstance()
 {
-    if (_instance == 0)
+    if (_configInstance == 0)
     {
         configurationInit();
     }
-    return _instance;
+    return _configInstance;
 }
 
 /*
@@ -83,13 +87,18 @@ void Configuration::ReadValues()
         printf("%s\n", ourConfiguration[currentConfigEntry].humanName);
         if(ourConfiguration[currentConfigEntry].type == configFloat)
         {
-            printf("Found a float %s\n", ourConfiguration[currentConfigEntry].humanName);
-            float valueToSave = std::stof("123.456");
-            PutFloat(ourConfiguration[currentConfigEntry].key, valueToSave);
+      //      PutFloat("f", 15.23F);
+              PutFloat(ourConfiguration[currentConfigEntry].key, 15.23F);
+
+           // printf("Found a float %s\n", ourConfiguration[currentConfigEntry].humanName);
+           // float valueToSave = 123.456;// std::stof("123.456");
+           // _configInstance->PutFloat(ourConfiguration[currentConfigEntry].key, valueToSave);
         }
         else if(ourConfiguration[currentConfigEntry].type == configInt)
         {
-            printf("Found an int %s\n", ourConfiguration[currentConfigEntry].humanName);
+//            printf("Found an int %s\n", ourConfiguration[currentConfigEntry].humanName);
+            PutInt("abc", currentConfigEntry + 100);
+// ourConfiguration[currentConfigEntry].key,
         }
         else if(ourConfiguration[currentConfigEntry].type == configString)
         {
@@ -97,6 +106,9 @@ void Configuration::ReadValues()
         }
         currentConfigEntry++;
     }
+   // PutFloat("f", 15.53F);
+    PutInt("d", 555);
+    PutString("e", "this is string e");
     fflush(stdout);
 }
 
