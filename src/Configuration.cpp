@@ -72,18 +72,23 @@ void Configuration::ReadValues()
     int currentConfigEntry = 0;
     while(ourConfiguration[currentConfigEntry].type != endOfList)
     {
+        if (ContainsKey(ourConfiguration[currentConfigEntry].key)){
+            printf("Already have key %s\n", ourConfiguration[currentConfigEntry].key);
+            currentConfigEntry++;
+            continue;
+        }
         printf("%s\n", ourConfiguration[currentConfigEntry].humanName);
         if(ourConfiguration[currentConfigEntry].type == configFloat)
         {
-            printf("Found a float %s", ourConfiguration[currentConfigEntry].humanName);
+            printf("Found a float %s\n", ourConfiguration[currentConfigEntry].humanName);
         }
         else if(ourConfiguration[currentConfigEntry].type == configInt)
         {
-            printf("Found an int %s", ourConfiguration[currentConfigEntry].humanName);
+            printf("Found an int %s\n", ourConfiguration[currentConfigEntry].humanName);
         }
         else if(ourConfiguration[currentConfigEntry].type == configString)
         {
-            printf("Found a string %s", ourConfiguration[currentConfigEntry].humanName);
+            printf("Found a string %s\n", ourConfiguration[currentConfigEntry].humanName);
         }
         currentConfigEntry++;
     }
