@@ -314,6 +314,8 @@ void ClearDisplay()
                 Wait(0.005);
             }
 
+            Wait(1.0);
+
             SmartDashboard::PutString("DB/String 0", "Moving Forward");
 
             m_autoPID.SetGoal(0,FieldDistances::intoAutoDiff);
@@ -323,6 +325,8 @@ void ClearDisplay()
                 Wait(0.005);
             }
 
+            Wait(1.0);
+
             SmartDashboard::PutString("DB/String 0", "Dropping");
 
             m_elevator->setElevatorGoalPosition(kElevatorHook1Ready, 0.5);
@@ -331,6 +335,8 @@ void ClearDisplay()
                 DisplayInfo();
                 Wait(0.005);
             }
+
+            Wait(1.0);
 
             SmartDashboard::PutString("DB/String 0", "Moving Back");
 
