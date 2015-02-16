@@ -17,7 +17,8 @@
 Dragger::Dragger():
 m_timer(kDraggerReverseTime * 200),//max value for ints
 m_liftDuration(kDraggerReverseTime),
-m_speed(kDraggerMotorSpeed)
+m_downSpeed(kDraggerMotorDownSpeed),
+m_upSpeed(kDraggerMotorUpSpeed)
 {}
 
 /* Dragger operateDragger method:
@@ -33,9 +34,13 @@ void Dragger::operateDragger(Joystick * button, DigitalInput * limitSwitchDown, 
 
     bool buttonPressed = button->GetRawButton(1); //Gets button state, 1 is a placeholder value
 
-    m_timer++;
     bool isUp = m_timer >= (m_liftDuration*200);//m_liftDuration is in seconds, and needs to converted to 200ths of seconds
     bool isDown = limitSwitchDown->Get(); //Is the down limit switch triggered?
+    if(isDown){
+        m_timer = 0;
+    }else{
+    	m_timer++;
+    }
     std::ostringstream bob;
     bob << isUp << buttonPressed;
     SmartDashboard::PutString("DB/String 8", bob.str());
@@ -52,17 +57,16 @@ void Dragger::operateDragger(Joystick * button, DigitalInput * limitSwitchDown, 
     if (isUp || isDown){
         if (buttonPressed && (isUp != isDown)){
             if (isUp){
-                motor->Set(-m_speed);
-            } else {
-                m_timer = 0;   // MrG: this needs to be moved before the if
-                motor->Set(m_speed);
+                motor->Set(-m_downSpeed);
+                m_timer = 0;
+            } else if(isDown){
+                motor->Set(m_upSpeed);
             }
         } else {
             motor->Set(0);
         }
 
     }
-
 }
 Dragger::~Dragger(){
 
