@@ -2,7 +2,7 @@
 #include "WPILib.h"
 #include <sstream>
 
-PIDInterface::PIDInterface(RobotDrive * robotDrive, Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight, Gyro * gyro):
+PIDInterface::PIDInterface(RobotDrive * robotDrive, Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight, Gyro * gyro, DriveStabilize * driveStabilize):
 m_tracker(frontLeft, frontRight, backLeft, backRight),
 xPID(0.025, 0.02, 0.001, this, this), //PID values will need to be tuned for both of these
 yPID(0.01, 0.001, 0.0, this, this)
@@ -18,6 +18,7 @@ yPID(0.01, 0.001, 0.0, this, this)
 	m_robotDrive = robotDrive;
 	m_currentAxis = stop;
 	m_gyro = gyro;
+	m_driveStabilize = driveStabilize;
 }
 
 void PIDInterface::Reset()
@@ -115,6 +116,7 @@ bool PIDInterface::PastGoal(double xGoalDistance, double yGoalDistance) {
             return false;
             break;
         }
+    return false;
 }
 
 bool PIDInterface::BeforeGoal(double xGoalDistance, double yGoalDistance) {
@@ -130,6 +132,7 @@ bool PIDInterface::BeforeGoal(double xGoalDistance, double yGoalDistance) {
 		return false;
 		break;
 	}
+	return false;
 }
 
 
@@ -168,11 +171,11 @@ void PIDInterface::PIDWrite(float output)
 	switch(m_currentAxis)
 	{
 	case right:
-		m_robotDrive->MecanumDrive_Cartesian(output, 0.0, 0.0, m_gyro->GetAngle());
+		m_robotDrive->MecanumDrive_Cartesian(output, 0.0, m_driveStabilize->GetCorrectionAngle(), m_gyro->GetAngle());
 		break;
 	case forward:
 		output /= -2;
-		m_robotDrive->MecanumDrive_Cartesian(0.0, output, 0.0, m_gyro->GetAngle());
+		m_robotDrive->MecanumDrive_Cartesian(0.0, output, m_driveStabilize->GetCorrectionAngle(), m_gyro->GetAngle());
 		break;
 	case stop:
 		Reset();
