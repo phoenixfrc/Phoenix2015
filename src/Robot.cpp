@@ -29,7 +29,7 @@ class Robot: public SampleRobot
     Dragger m_dragger;
     TestMode m_tester;
     // tba Brake
-
+    DriveStabilize m_driveStabilize;
     Relay m_brake;
 
     Encoder m_leftRearDriveEncoder;
@@ -80,6 +80,8 @@ public:
 
 		m_tester(),
 
+		m_driveStabilize(&m_gyro, &m_stick, 0.0, 0.0, 0.05),
+
         m_brake(PortAssign::ElevatorBrakeChannel),
 
         m_leftRearDriveEncoder(PortAssign::LeftRearDriveEncoderChannelA, PortAssign::LeftRearDriveEncoderChannelB),
@@ -110,7 +112,7 @@ public:
 
         m_stick(PortAssign::JoystickChannel),
         m_gamepad(PortAssign::GamepadChannel),
-        m_autoPID(&m_robotDrive, &m_leftFrontDriveEncoder, &m_rightFrontDriveEncoder, &m_leftRearDriveEncoder, &m_rightRearDriveEncoder, &m_gyro)
+        m_autoPID(&m_robotDrive, &m_leftFrontDriveEncoder, &m_rightFrontDriveEncoder, &m_leftRearDriveEncoder, &m_rightRearDriveEncoder, &m_gyro, &m_driveStabilize)
 
 // as they are declared above.
 

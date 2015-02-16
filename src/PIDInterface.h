@@ -2,6 +2,7 @@
 #define PID_INTERFACE_H
 #include "WPILib.h"
 #include "EncoderTracker.h"
+#include "DriveStabilize.h"
 
 enum AxisOfMotion {
     right,
@@ -12,7 +13,7 @@ enum AxisOfMotion {
 //Only supports L-shaped motion along the x and y axis (one axis at a time)
 class PIDInterface : public PIDOutput, public PIDSource {
 public:
-    PIDInterface(RobotDrive * robotDrive, Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight, Gyro * gyro);
+    PIDInterface(RobotDrive * robotDrive, Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight, Gyro * gyro, DriveStabilize * driveStabilize);
 
     //Required by PIDOutput; This function sends the output to the robotDrive
     virtual void PIDWrite(float output);
@@ -40,6 +41,7 @@ private:
     PIDController yPID;
     Gyro  * m_gyro;
     AxisOfMotion m_currentAxis;
+    DriveStabilize * m_driveStabilize;
 };
 
 #endif
