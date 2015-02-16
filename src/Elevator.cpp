@@ -32,7 +32,7 @@ Elevator::Elevator(
     m_homeState = lookingForLowerLimit;
     m_speedMultiplier = kNormalMultiplier;
     m_encoder->SetDistancePerPulse(1 / TicksPerInch);
-    m_elevatorControl = new PIDController(0.15, 0.0, 0.0, encoder, this);
+    m_elevatorControl = new PIDController(0.14, 0.019, 0.00, encoder, this);
 }
 
 void Elevator::operateElevator()
@@ -80,7 +80,7 @@ void Elevator::find_home()
         {
             m_homeState = homingComplete;
             m_encoder->Reset();
-            setElevatorGoalPosition(0.0, 1.0);
+            setElevatorGoalPosition(0.0, 0.75);
             m_elevatorControl->Enable();
 
         }
@@ -248,10 +248,9 @@ void Elevator::PIDWrite(float desiredSpeed)
     {
         m_brake->Set(m_brake->kOff);
     }
-    else
+    else if (m_brake->Get() == m_brake->kOff)
     {
         m_brake->Set(m_brake->kForward);
-
     }
 
     // set the motor speed

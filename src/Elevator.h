@@ -64,7 +64,7 @@ public:
 
 
     // speed Multipliers
-    #define kNormalMultiplier (1.0)
+    #define kNormalMultiplier (0.75)
     //Must be less then 1
     #define kShortLiftMultiplier (0.6)
 
@@ -75,9 +75,9 @@ public:
     #define kLiftDelta            (8)
     #define kToteDelta            (18.5)
     #define kElevatorHome         (kSoftLowerLimit)
-    #define kElevatorHook1Ready   (kSoftLowerLimit)
+    #define kElevatorHook1Ready   (3.0) // 2.5
     #define kElevatorHook1Lifted  (kElevatorHook1Ready + kLiftDelta)
-    #define kElevatorHook2Ready   (kElevatorHook1Ready + kToteDelta)
+    #define kElevatorHook2Ready   (21.5) //22
     #define kElevatorHook2Lifted  (kElevatorHook2Ready + kLiftDelta)
     #define kElevatorHook3Ready   (kElevatorHook2Ready + kToteDelta)
     #define kElevatorHook3Lifted  (kElevatorHook3Ready + kLiftDelta)
