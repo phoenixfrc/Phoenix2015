@@ -32,7 +32,7 @@ Elevator::Elevator(
     m_homeState = lookingForLowerLimit;
     m_speedMultiplier = kNormalMultiplier;
     m_encoder->SetDistancePerPulse(1 / TicksPerInch);
-    m_elevatorControl = new PIDController(0.1, 0.0, 0.0, encoder, this);
+    m_elevatorControl = new PIDController(0.14, 0.019, 0.0, encoder, this);
 }
 
 void Elevator::operateElevator()

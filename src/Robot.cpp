@@ -169,7 +169,7 @@ void ClearDisplay()
 
         //m_robotDrive.SetSafetyEnabled(false); this may be needed
         //This is the mode it's going to use
-        AutoMode autoMode = complex;
+        AutoMode autoMode = simple;
 
         Wait(1.0);
 
