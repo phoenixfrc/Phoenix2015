@@ -32,7 +32,7 @@ m_upSpeed(kDraggerMotorUpSpeed)
 
 void Dragger::operateDragger(Joystick * button, DigitalInput * limitSwitchDown, Talon * motor){
 
-    bool buttonPressed = button->GetRawButton(1); //Gets button state, 1 is a placeholder value
+    bool buttonPressed = button->GetRawButton(5); //Gets button state, 1 is a placeholder value
 
     bool isUp = m_timer >= (m_liftDuration*200);//m_liftDuration is in seconds, and needs to converted to 200ths of seconds
     bool isDown = limitSwitchDown->Get(); //Is the down limit switch triggered?

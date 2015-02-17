@@ -30,6 +30,7 @@ Elevator::Elevator(
 {
     printf("in elevator constructor...\n");
     m_homeState = lookingForLowerLimit;
+    m_oldEncoder = 0;
     m_speedMultiplier = kNormalMultiplier;
     m_encoder->SetDistancePerPulse(1 / TicksPerInch);
     m_elevatorControl = new PIDController(0.14, 0.019, 0.00, encoder, this);
@@ -105,10 +106,10 @@ void Elevator::controlElevator()
     float speedMult = m_speedMultiplier;
 
     //buttons
-    //bool xPressed = m_gamePad->GetRawButton(1);
+    bool xPressed = m_gamePad->GetRawButton(1);
     bool aPressed = m_gamePad->GetRawButton(2);
     bool bPressed = m_gamePad->GetRawButton(3);
-    //bool yPressed = m_gamePad->GetRawButton(4);
+    bool yPressed = m_gamePad->GetRawButton(4);
     bool rbPressed = (m_gamePad->GetRawButton(6) || m_joystick->GetRawButton(1));
     bool rtPressed = (m_gamePad->GetRawButton(8) || m_joystick->GetRawButton(2));
     int POV = m_joystick->GetPOV();
@@ -144,6 +145,7 @@ void Elevator::controlElevator()
         m_rtWasPressed = false;
     }
 
+
     //Joystick computing
     // TODO limit offset from joystick
     if(!(joystick > -0.05 && joystick < 0.05))
@@ -173,6 +175,16 @@ void Elevator::controlElevator()
     {
         speedMult = kNormalMultiplier;
         goalPosition = kElevatorHook2Ready;
+    }
+    if(yPressed)
+    {
+        speedMult = kNormalMultiplier;
+        goalPosition = kElevatorHook3Ready;
+    }
+    if(xPressed)
+    {
+        speedMult = kNormalMultiplier;
+        goalPosition = kElevatorHook4Ready;
     }
 
     if (goalPosition > kSoftUpperLimit)
@@ -218,12 +230,17 @@ void Elevator::PIDWrite(float desiredSpeed)
 {
     bool atUpperLimit = m_upperLimit->Get();
     bool atLowerLimit = m_lowerLimit->Get();
+
+    calculateSpeedMutiplier();
+
     float actualSpeed = desiredSpeed * m_speedMultiplier;
 
   //  std::ostringstream out;
   //  out.precision(2);
     //out << "EV: " << desiredSpeed << " " << m_speedMultiplier;
   //  SmartDashboard::PutString("DB/String 8", out.str());
+
+
 
     if(actualSpeed >= -0.1 && actualSpeed <= 0.1)
     {
@@ -259,6 +276,21 @@ void Elevator::PIDWrite(float desiredSpeed)
         m_motor2->Set(-actualSpeed);
 }
 
+void Elevator::calculateSpeedMutiplier()
+{
+    int deltaEncoder = abs(int(m_oldEncoder - m_encoder->Get()));
+
+    if((deltaEncoder > goalDeltaEncoder) && m_speedMultiplier > 0.5)
+    {
+        m_speedMultiplier -= 0.01;
+    }
+    else if((deltaEncoder < goalDeltaEncoder) && (m_speedMultiplier < 0.75))
+    {
+        m_speedMultiplier += 0.01;
+    }
+    m_oldEncoder = m_encoder->Get();
+
+}
 
 
 Elevator::~Elevator(){}
