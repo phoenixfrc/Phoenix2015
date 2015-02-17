@@ -167,9 +167,11 @@ void ClearDisplay()
             m_elevator->operateElevator();
         }
 
+        int MovePickup2Height = 60;
+
         //m_robotDrive.SetSafetyEnabled(false); this may be needed
         //This is the mode it's going to use
-        AutoMode autoMode = simple;
+        AutoMode autoMode = complex;
 
         Wait(1.0);
 
@@ -197,11 +199,13 @@ void ClearDisplay()
             m_autoPID.SetGoal(FieldDistances::autoCrateDiff,0);
             m_elevator->setElevatorGoalPosition(kElevatorHook3Lifted, 0.5);
             while(IsAutonomous() && IsEnabled() &&
-                        (!m_autoPID.PastGoal(FieldDistances::autoCrateDiff,0) || !m_elevator->elevatorIsAt(kElevatorHook3Lifted)))
+                        (!m_autoPID.isPastGoal || !m_elevator->elevatorIsAt(kElevatorHook3Lifted)))
             {
                 DisplayInfo();
                 Wait(0.005);
             }
+
+            /*
 
             Wait(1.0);
 
@@ -228,12 +232,13 @@ void ClearDisplay()
 
             Wait(1.0);
 
+
             //up right
             SmartDashboard::PutString("DB/String 0", "Move Pickup 2");
             m_autoPID.SetGoal(FieldDistances::autoCrateDiff,0);
-            m_elevator->setElevatorGoalPosition(kElevatorHook4Lifted, 0.5);
+            m_elevator->setElevatorGoalPosition(MovePickup2Height, 0.5);
             while(IsAutonomous() && IsEnabled() &&
-                    (!m_autoPID.PastGoal(FieldDistances::autoCrateDiff,0) || !m_elevator->elevatorIsAt(kElevatorHook4Lifted)))
+                    (!m_autoPID.isPastGoal || !m_elevator->elevatorIsAt(MovePickup2Height)))
             {
                 DisplayInfo();
                 Wait(0.005);
@@ -246,7 +251,7 @@ void ClearDisplay()
             SmartDashboard::PutString("DB/String 0", "Move Right 2");
 
             m_autoPID.SetGoal(FieldDistances::autoCrateDiff,0);
-            while(IsAutonomous()  && IsEnabled() && !m_autoPID.PastGoal(FieldDistances::autoCrateDiff,0))
+            while(IsAutonomous()  && IsEnabled() && !m_autoPID.isPastGoal)
             {
                 Wait(0.005);
             }
@@ -281,7 +286,7 @@ void ClearDisplay()
 
             //move forward
             m_autoPID.SetGoal(0,-FieldDistances::intoAutoDiff);
-            while(IsAutonomous() && IsEnabled() && !m_autoPID.PastGoal(0,-FieldDistances::intoAutoDiff))
+            while(IsAutonomous() && IsEnabled() && !m_autoPID.isPastGoal)
             {
                 Wait(0.005);
             }
@@ -297,6 +302,8 @@ void ClearDisplay()
                 DisplayInfo();
                 Wait(0.005);
              }
+
+             */
 
             m_autoPID.Reset();
             break;
@@ -319,7 +326,7 @@ void ClearDisplay()
             SmartDashboard::PutString("DB/String 0", "Moving Forward");
 
             m_autoPID.SetGoal(0,FieldDistances::intoAutoDiff);
-            while(IsAutonomous() && IsEnabled() && !m_autoPID.PastGoal(0,FieldDistances::intoAutoDiff))
+            while(IsAutonomous() && IsEnabled() && !m_autoPID.isPastGoal)
             {
                 DisplayInfo();
                 Wait(0.005);

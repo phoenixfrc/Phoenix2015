@@ -4,7 +4,7 @@
 
 PIDInterface::PIDInterface(RobotDrive * robotDrive, Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight, Gyro * gyro, DriveStabilize * driveStabilize):
 m_tracker(frontLeft, frontRight, backLeft, backRight),
-xPID(0.025, 0.02, 0.001, this, this), //PID values will need to be tuned for both of these
+xPID(0.08, 0.0, 0.0, this, this), //PID values will need to be tuned for both of these
 yPID(0.16, 0.0, 0.0, this, this)
 {
 	if(xPID.IsEnabled())
@@ -19,11 +19,15 @@ yPID(0.16, 0.0, 0.0, this, this)
 	m_currentAxis = stop;
 	m_gyro = gyro;
 	m_driveStabilize = driveStabilize;
+	isPastGoal = false;
+	m_xGoalDistance = 0;
+	m_yGoalDistance = 0;
 }
 
 void PIDInterface::Reset()
 {
 	m_tracker.ResetPosition();
+	isPastGoal = false;
 	if(xPID.IsEnabled())
 	{
 		xPID.Disable();
@@ -45,7 +49,7 @@ void PIDInterface::SetGoal(double xGoalDistance, double yGoalDistance)
 		xPID.Enable();
 	}
 	xPID.SetSetpoint(xGoalDistance);
-
+	m_xGoalDistance = xGoalDistance;
 	//Now to do the same for forward-backward
 	if(yGoalDistance != 0)
 	{
@@ -53,6 +57,7 @@ void PIDInterface::SetGoal(double xGoalDistance, double yGoalDistance)
 		yPID.Enable();
 	}
 	yPID.SetSetpoint(yGoalDistance);
+	m_yGoalDistance = yGoalDistance;
 	Goal << "Goal: (" << xGoalDistance << "," << yGoalDistance << ")";
 	SmartDashboard::PutString("DB/String 1", Goal.str());
 }
@@ -75,7 +80,7 @@ bool PIDInterface::ReachedGoal()
 	}
 }
 
-bool PIDInterface::PastGoal(double xGoalDistance, double yGoalDistance) {
+bool PIDInterface::PastGoal() {
     float y = m_tracker.GetY();
     float py = y - m_tracker.GetDeltaY();
     float x = m_tracker.GetX();
@@ -95,7 +100,7 @@ bool PIDInterface::PastGoal(double xGoalDistance, double yGoalDistance) {
             */
 
 
-            return (y > yGoalDistance) != (py > yGoalDistance);
+            return (y > m_yGoalDistance) != (py > m_yGoalDistance);
             break;
         case right:
             /*
@@ -110,7 +115,7 @@ bool PIDInterface::PastGoal(double xGoalDistance, double yGoalDistance) {
             */
 
 
-            return (x > xGoalDistance) != (px > xGoalDistance);
+            return (x > m_xGoalDistance) != (px > m_xGoalDistance);
             break;
         case stop:
             return false;
@@ -167,7 +172,10 @@ double PIDInterface::PIDGet()
 void PIDInterface::PIDWrite(float output)
 {
 	//Output to the motors so they drive and move along the current axis
-
+    if(PastGoal())
+    {
+        isPastGoal = true;
+    }
 	switch(m_currentAxis)
 	{
 	case right:

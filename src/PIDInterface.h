@@ -27,12 +27,14 @@ public:
 
     bool ReachedGoal();
 
-    bool PastGoal(double xGoalDistance, double yGoalDistance);
+    bool PastGoal();
     bool BeforeGoal(double xGoalDistance, double yGoalDistance);
 
     void TestEnable();
 
     virtual ~PIDInterface(){};
+
+    bool isPastGoal;
 
 private:
     EncoderTracker m_tracker;
@@ -42,6 +44,8 @@ private:
     Gyro  * m_gyro;
     AxisOfMotion m_currentAxis;
     DriveStabilize * m_driveStabilize;
+    double m_xGoalDistance;
+    double m_yGoalDistance;
 };
 
 #endif

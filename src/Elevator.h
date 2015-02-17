@@ -70,7 +70,7 @@ public:
 
     // for use in setElevatorGoalPosition call
     #define kSoftLowerLimit       (0.0)
-    #define kSoftUpperLimit       (65)
+    #define kSoftUpperLimit       (63)
     #define kButtonLift           (4)
     #define kLiftDelta            (8)
     #define kToteDelta            (18.5)
