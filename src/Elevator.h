@@ -14,6 +14,7 @@ static const float MotorSpeed = 1.0;
 static const float HomeSpeed = 0.40;
 static const int Ticks = 384;
 static const float TicksPerInch = Ticks / 8.17;
+static const int goalDeltaEncoder = 29;
 
 class Elevator  : public PIDOutput
 {
@@ -21,6 +22,7 @@ class Elevator  : public PIDOutput
     bool m_rbWasPressed;
     bool m_rtWasPressed;
     float m_speedMultiplier;
+    int m_oldEncoder;
 
     // initialized at class constructions then constant
     Talon* m_motor1;
@@ -37,6 +39,7 @@ class Elevator  : public PIDOutput
     void find_home();
     void controlElevator();
     void moveElevator();
+    void calculateSpeedMutiplier();
 
 public:
     enum homingStates
@@ -64,23 +67,27 @@ public:
 
 
     // speed Multipliers
-    #define kNormalMultiplier (0.75)
+    #define kNormalMultiplier (0.70)
     //Must be less then 1
     #define kShortLiftMultiplier (0.6)
 
     // for use in setElevatorGoalPosition call
     #define kSoftLowerLimit       (0.0)
-    #define kSoftUpperLimit       (65)
+    #define kSoftUpperLimit       (64)
     #define kButtonLift           (4)
-    #define kLiftDelta            (8)
-    #define kToteDelta            (18.5)
+    #define kLiftDelta            (6)
+    #define kToteDelta            (18)
     #define kElevatorHome         (kSoftLowerLimit)
-    #define kElevatorHook1Ready   (3.0) // 2.5
+    // 3
+    #define kElevatorHook1Ready   (4)
     #define kElevatorHook1Lifted  (kElevatorHook1Ready + kLiftDelta)
-    #define kElevatorHook2Ready   (21.5) //22
+    //22
+    #define kElevatorHook2Ready   (kElevatorHook1Ready + kToteDelta)
     #define kElevatorHook2Lifted  (kElevatorHook2Ready + kLiftDelta)
+    //40
     #define kElevatorHook3Ready   (kElevatorHook2Ready + kToteDelta)
     #define kElevatorHook3Lifted  (kElevatorHook3Ready + kLiftDelta)
+    //58
     #define kElevatorHook4Ready   (kElevatorHook3Ready + kToteDelta)
     #define kElevatorHook4Lifted  (kElevatorHook4Ready + kLiftDelta)
 
