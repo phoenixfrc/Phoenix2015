@@ -67,9 +67,11 @@ public:
 
 
     // speed Multipliers
+
     #define kNormalMultiplier (0.70)
+
     //Must be less then 1
-    #define kShortLiftMultiplier (0.6)
+    #define kShortLiftMultiplier (0.5)
 
     // for use in setElevatorGoalPosition call
     #define kSoftLowerLimit       (0.0)

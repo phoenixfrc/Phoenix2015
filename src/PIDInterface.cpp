@@ -5,7 +5,7 @@
 PIDInterface::PIDInterface(RobotDrive * robotDrive, Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight, Gyro * gyro, DriveStabilize * driveStabilize):
 m_tracker(frontLeft, frontRight, backLeft, backRight),
 xPID(0.025, 0.02, 0.001, this, this), //PID values will need to be tuned for both of these
-yPID(0.01, 0.001, 0.008, this, this)
+yPID(0.16, 0.0, 0.0, this, this)
 {
 	if(xPID.IsEnabled())
 	{
