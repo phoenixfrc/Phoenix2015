@@ -83,6 +83,9 @@ void Elevator::find_home()
             m_encoder->Reset();
             setElevatorGoalPosition(0.0, 0.75);
             m_elevatorControl->Enable();
+            m_currentSetPoint = 0;
+            m_desiredSetPoint = 0;
+
 
         }
         else
@@ -280,17 +283,78 @@ void Elevator::calculateSpeedMutiplier()
 {
     int deltaEncoder = abs(int(m_oldEncoder - m_encoder->Get()));
 
-    if((deltaEncoder > goalDeltaEncoder) && m_speedMultiplier > 0.5)
+    if((deltaEncoder > GoalDeltaEncoder) && m_speedMultiplier > 0.5)
     {
         m_speedMultiplier -= 0.01;
     }
-    else if((deltaEncoder < goalDeltaEncoder) && (m_speedMultiplier < 0.75))
+    else if((deltaEncoder < GoalDeltaEncoder) && (m_speedMultiplier < 0.75))
     {
         m_speedMultiplier += 0.01;
     }
     m_oldEncoder = m_encoder->Get();
 
 }
+
+bool Elevator::elevatorIsDeccelerating()
+{
+    // this estimate with a constant deceleration if it needs to slow down.
+    return (fabs(m_desiredSetPoint - m_currentSetPoint) < ((m_currentVelocity * m_currentVelocity) / (2.0f * Accel)));
+}
+
+
+/*
+ * computes the movement profile based on current and desired speeds and volcities
+ * may result in a triangle or a trapizoidal pattern.
+ */
+float Elevator::accelCurve(int count)
+{
+
+    //if we are close enough
+    if(((m_currentSetPoint - EndPointTolorance) < m_desiredSetPoint) && ((m_currentSetPoint + EndPointTolorance) > m_desiredSetPoint))
+    {
+        m_currentVelocity = 0.0f;
+        m_currentSetPoint = m_desiredSetPoint;
+        return m_currentSetPoint;
+    }
+
+    bool isDeccel = elevatorIsDeccelerating(); // slowing down in either direction????
+
+    bool goingUp = (m_currentSetPoint < m_desiredSetPoint); // are we going up????
+    float acceleration = 0.0f;
+
+    //accelerating in either direction.
+    if(goingUp && m_currentVelocity < MaxVelocity)
+    {
+        acceleration = Accel;
+    }
+    if(!(goingUp) && m_currentVelocity > -MaxVelocity)
+    {
+        acceleration = -Accel;
+    }
+
+    //declerating in either direction
+    if(isDeccel)
+    {
+        acceleration = -Accel;
+        if(!goingUp)
+        {
+            acceleration = Accel;
+        }
+    }
+
+    // update up expected velocity and position
+    m_currentVelocity += acceleration;
+    m_currentSetPoint += m_currentVelocity;
+
+   // printf("%d,Decel:%c, Dpos:%8.3f Cpos:%8.3f Vel:%8.3f Acc:%8.3f\n",
+     //       count, isDeccel?'t':'f', m_desiredSetPoint, m_currentSetPoint, m_currentVelocity, acceleration);
+    //fflush(stdout);
+
+    return m_currentSetPoint;
+
+
+}
+
 
 
 Elevator::~Elevator(){}
