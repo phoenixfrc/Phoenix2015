@@ -231,7 +231,7 @@ void Elevator::PIDWrite(float desiredSpeed)
     bool atUpperLimit = m_upperLimit->Get();
     bool atLowerLimit = m_lowerLimit->Get();
 
-    calculateSpeedMutiplier();
+    //calculateSpeedMutiplier();
 
     float actualSpeed = desiredSpeed * m_speedMultiplier;
 
