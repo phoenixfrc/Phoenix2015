@@ -36,8 +36,9 @@ public:
 
     bool isPastGoal;
 
-private:
     EncoderTracker m_tracker;
+
+private:
     RobotDrive * m_robotDrive;
     PIDController xPID;
     PIDController yPID;

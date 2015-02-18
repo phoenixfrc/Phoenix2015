@@ -29,7 +29,6 @@ class Robot: public SampleRobot
     Dragger m_dragger;
     TestMode m_tester;
     // tba Brake
-    DriveStabilize m_driveStabilize;
     Relay m_brake;
 
     Encoder m_leftRearDriveEncoder;
@@ -63,6 +62,7 @@ class Robot: public SampleRobot
     Joystick m_gamepad;       // the gamepad
 
     PIDInterface m_autoPID;
+    DriveStabilize m_driveStabilize;
 
 public:
     Robot():
@@ -79,8 +79,6 @@ public:
         m_dragger(),
 
 		m_tester(),
-
-		m_driveStabilize(&m_gyro, &m_stick, 0.0, 0.0, 0.05),
 
         m_brake(PortAssign::ElevatorBrakeChannel),
 
@@ -112,7 +110,9 @@ public:
 
         m_stick(PortAssign::JoystickChannel),
         m_gamepad(PortAssign::GamepadChannel),
-        m_autoPID(&m_robotDrive, &m_leftFrontDriveEncoder, &m_rightFrontDriveEncoder, &m_leftRearDriveEncoder, &m_rightRearDriveEncoder, &m_gyro, &m_driveStabilize)
+        m_autoPID(&m_robotDrive, &m_leftFrontDriveEncoder, &m_rightFrontDriveEncoder, &m_leftRearDriveEncoder, &m_rightRearDriveEncoder, &m_gyro, &m_driveStabilize),
+
+        m_driveStabilize(&m_gyro, &(m_autoPID.m_tracker), &m_stick, 0.0, 0.0, 0.05)
 
 // as they are declared above.
 
@@ -171,7 +171,7 @@ void ClearDisplay()
 
         //m_robotDrive.SetSafetyEnabled(false); this may be needed
         //This is the mode it's going to use
-        AutoMode autoMode = complex;
+        AutoMode autoMode = simple;
 
         Wait(1.0);
 
