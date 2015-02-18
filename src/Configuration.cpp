@@ -2,6 +2,7 @@
 #include "WPILib.h"
 #include <string>
 #include <stdio.h>
+#include <fstream>
 
 using std::string;
 
@@ -128,6 +129,23 @@ void Configuration::ReadValues()
     float ffff = 555.1234f;
     _configInstance->PutFloat(keyforFFFF, ffff);
     fflush(stdout);
+}
+
+void Configuration::saveConfig(const char * fname)
+{
+    using std::endl;
+
+    printf("Top of saveConfig\n");
+
+    std::ofstream configFile("/home/lvuser/testConfig.ini");
+    if(!configFile){
+        printf ("Cannot open file for output\n");
+        return;
+    }
+    configFile << "[Preferences]" << endl;
+
+    configFile << std::flush;
+    configFile.close();
 }
 
 void Configuration::PutConfigInt(const char * key, int value)

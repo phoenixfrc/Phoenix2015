@@ -15,6 +15,7 @@ private:
 public:
     static void configurationInit();
     static Configuration *getInstance();
+    void saveConfig(const char * fname);
     void PutConfigInt(const char * key, int value);
     int GetConfigInt (const char * key, int defaultValue = 0);
 };
