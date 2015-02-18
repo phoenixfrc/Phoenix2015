@@ -16,8 +16,8 @@ static const int Ticks = 384;
 static const float TicksPerInch = Ticks / 8.17;
 static const int GoalDeltaEncoder = 29;
 //static const float Accel = 20.0 / 200.0; // 20 is the guess of acceleration, 200 is the cycles per sec, gets us the acceleration in inches/cycle
-static const float Accel = 2.0 / 200.0;
-static const float MaxVelocity = 0.5;
+static const float Accel = 10.0 / 200.0;
+static const float MaxVelocity = 10;
 static const float EndPointTolorance = 0.3;
 
 class Elevator  : public PIDOutput
@@ -27,9 +27,7 @@ class Elevator  : public PIDOutput
     bool m_rtWasPressed;
     float m_speedMultiplier;
     int m_oldEncoder;
-public:
     float m_desiredSetPoint;
-private:
     float m_currentSetPoint;
     float m_currentVelocity;
 
@@ -50,6 +48,8 @@ private:
     void moveElevator();
     void calculateSpeedMutiplier();
     bool elevatorIsDeccelerating();
+    float accelCurve();
+
 
 
 public:
@@ -75,7 +75,8 @@ public:
     void operateElevator(); // for use in teleop
     bool elevatorIsHomed();
     bool elevatorIsAt(float position);
-    float accelCurve(int count);
+    void updateProfile();
+
 
 
     // speed Multipliers

@@ -122,7 +122,7 @@ void Elevator::controlElevator()
     //joystick
     double joystick = -m_gamePad->GetY(); // right Joystick, negative because up is negative
 
-    float goalPosition = m_elevatorControl->GetSetpoint();
+    float goalPosition = m_desiredSetPoint;
 
 
     // button computing
@@ -190,17 +190,7 @@ void Elevator::controlElevator()
         goalPosition = kElevatorHook4Ready;
     }
 
-    if (goalPosition > kSoftUpperLimit)
-    {
 
-        goalPosition = kSoftUpperLimit; //Stop large queues of goal position
-    }
-    if (goalPosition < kSoftLowerLimit)
-    {
-
-        goalPosition = kSoftLowerLimit; //stop large queues of goal position
-
-    }
 
     ElevatorJoystickbuilder << "GoalPosition: ";
     ElevatorJoystickbuilder << goalPosition;
@@ -216,8 +206,27 @@ void Elevator::controlElevator()
 
 void Elevator::setElevatorGoalPosition(float position, float SpeedMultiplier)
 {
+    if (position > kSoftUpperLimit)
+    {
+
+        position = kSoftUpperLimit; //Stop large queues of goal position
+    }
+    if (position < kSoftLowerLimit)
+    {
+
+        position = kSoftLowerLimit; //stop large queues of goal position
+
+    }
+
     m_speedMultiplier = SpeedMultiplier;
-    m_elevatorControl->SetSetpoint(position);
+    //m_elevatorControl->SetSetpoint(position);
+    m_desiredSetPoint = position;
+    updateProfile();
+
+}
+void Elevator::updateProfile()
+{
+    m_elevatorControl->SetSetpoint(accelCurve());
 }
 
 float Elevator::getElevatorGoalPosition()
@@ -306,7 +315,7 @@ bool Elevator::elevatorIsDeccelerating()
  * computes the movement profile based on current and desired speeds and volcities
  * may result in a triangle or a trapizoidal pattern.
  */
-float Elevator::accelCurve(int count)
+float Elevator::accelCurve()
 {
 
     //if we are close enough
