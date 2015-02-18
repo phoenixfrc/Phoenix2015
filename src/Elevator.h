@@ -16,8 +16,8 @@ static const int Ticks = 384;
 static const float TicksPerInch = Ticks / 8.17;
 static const int GoalDeltaEncoder = 29;
 //static const float Accel = 20.0 / 200.0; // 20 is the guess of acceleration, 200 is the cycles per sec, gets us the acceleration in inches/cycle
-static const float Accel = 10.0 / 200.0;
-static const float MaxVelocity = 10;
+static const float Accel = 0.10 / 200.0;
+static const float MaxVelocity = 20;
 static const float EndPointTolorance = 0.3;
 
 class Elevator  : public PIDOutput

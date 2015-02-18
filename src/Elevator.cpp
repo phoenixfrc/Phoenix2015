@@ -243,9 +243,9 @@ void Elevator::PIDWrite(float desiredSpeed)
     bool atUpperLimit = m_upperLimit->Get();
     bool atLowerLimit = m_lowerLimit->Get();
 
-    calculateSpeedMutiplier();
+    //calculateSpeedMutiplier();
 
-    float actualSpeed = desiredSpeed * m_speedMultiplier;
+    float actualSpeed = desiredSpeed; //* m_speedMultiplier;
 
   //  std::ostringstream out;
   //  out.precision(2);
@@ -355,9 +355,9 @@ float Elevator::accelCurve()
     m_currentVelocity += acceleration;
     m_currentSetPoint += m_currentVelocity;
 
-   // printf("%d,Decel:%c, Dpos:%8.3f Cpos:%8.3f Vel:%8.3f Acc:%8.3f\n",
-     //       count, isDeccel?'t':'f', m_desiredSetPoint, m_currentSetPoint, m_currentVelocity, acceleration);
-    //fflush(stdout);
+    printf("Decel:%c, Dpos:%8.3f Cpos:%8.3f Vel:%8.3f Acc:%8.3f\n",
+            isDeccel?'t':'f', m_desiredSetPoint, m_currentSetPoint, m_currentVelocity, acceleration);
+    fflush(stdout);
 
     return m_currentSetPoint;
 
