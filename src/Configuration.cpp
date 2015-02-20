@@ -54,8 +54,8 @@ void Configuration::configurationInit()
     }
     _configInstance = new Configuration();
     _configInstance->ReadValues();
-    _configInstance->Save();
-    Wait(0.25);
+    //_configInstance->Save();
+    //Wait(0.25);
 }
 
 /*
@@ -91,7 +91,7 @@ void Configuration::ReadValues()
              float valueToSave = std::stof(ourConfiguration[currentConfigEntry].defaultValue);
              printf("value for float key %s is %f\n", ourConfiguration[currentConfigEntry].key, valueToSave);
       //      PutFloat("f", 15.23F);
-             _configInstance->PutFloat(ourConfiguration[currentConfigEntry].key, valueToSave);
+            // _configInstance->PutFloat(ourConfiguration[currentConfigEntry].key, valueToSave);
              if (_configInstance->ContainsKey("second")) {
                  printf ("checked for second key and it's there\n");
              }
@@ -108,7 +108,7 @@ void Configuration::ReadValues()
         else if(ourConfiguration[currentConfigEntry].type == configInt)
         {
 //            printf("Found an int %s\n", ourConfiguration[currentConfigEntry].humanName);
-            PutInt("abc", currentConfigEntry + 100);
+          // PutInt("abc", currentConfigEntry + 100);
 // ourConfiguration[currentConfigEntry].key,
         }
         else if(ourConfiguration[currentConfigEntry].type == configString)
@@ -118,17 +118,20 @@ void Configuration::ReadValues()
         currentConfigEntry++;
     }
    // PutFloat("f", 15.53F);
-    PutInt("d", 555);
+   // PutInt("d", 555);
+   if (!ContainsKey("e"))
+   {
     PutString("e", "this is string e");
-    PutString("eas", "this is string e");
-    PutString("edf", "this is string e");
-    PutString("egs", "this is string e");
-    PutString("egt", "this is string e");
+   }
+   // PutString("eas", "this is string e");
+   // PutString("edf", "this is string e");
+   // PutString("egs", "this is string e");
+   // PutString("egt", "this is string e");
     // const char * keyforFFFF = ourConfiguration[1].key;
-    const char * keyforFFFF = "ffff";
-    float ffff = 555.1234f;
-    _configInstance->PutFloat(keyforFFFF, ffff);
-    fflush(stdout);
+   // const char * keyforFFFF = "ffff";
+   // float ffff = 555.1234f;
+   // _configInstance->PutFloat(keyforFFFF, ffff);
+   // fflush(stdout);
 }
 
 void Configuration::saveConfig(const char * fname)
@@ -142,7 +145,26 @@ void Configuration::saveConfig(const char * fname)
         printf ("Cannot open file for output\n");
         return;
     }
-    configFile << "[Preferences]" << endl;
+    configFile << "[Preferences]\n" << endl;
+
+    //loop and print our all parameters
+    int currentConfigEntry = 0;
+//    while(ourConfiguration[currentConfigEntry].type != endOfList)
+//    {
+    std::vector<std::string> theKeys = GetKeys();
+    std::vector<std::string>::iterator it = theKeys.begin();
+    for (; it != theKeys.end(); it++)
+    {
+        std::string key = *it;
+        //need to use Get() instead of std::string value = m_value[key];
+
+
+
+    configFile << key << '=';
+                 configFile << endl;
+    currentConfigEntry++;
+    }
+
 
     configFile << std::flush;
     configFile.close();
