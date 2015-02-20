@@ -37,6 +37,7 @@ class Robot: public SampleRobot
     Encoder m_rightRearDriveEncoder;
     Encoder m_elevatorEncoder;
 
+    EncoderTracker m_tracker;
     DigitalInput m_elevatorLowerLimit;
     DigitalInput m_DIO11;
     DigitalInput m_elevatorUpperLimit;
@@ -69,7 +70,6 @@ public:
         m_robotDrive(PortAssign::FrontLeftChannel, PortAssign::RearLeftChannel,
         PortAssign::FrontRightChannel, PortAssign::RearRightChannel),	// these must be initialized in the same order
 
-
         m_elevatorMotor1(PortAssign::ElevatorMotor1),
         m_elevatorMotor2(PortAssign::ElevatorMotor2),
 
@@ -87,6 +87,8 @@ public:
         m_rightFrontDriveEncoder(PortAssign::RightFrontDriveEncoderChannelA, PortAssign::RightFrontDriveEncoderChannelB),
         m_rightRearDriveEncoder(PortAssign::RightRearDriveEncoderChannelA, PortAssign::RightRearDriveEncoderChannelB),
         m_elevatorEncoder(PortAssign::ElevatorEncoderChannelA, PortAssign::ElevatorEncoderChannelB),
+
+        m_tracker(&m_leftFrontDriveEncoder, &m_rightFrontDriveEncoder, &m_leftRearDriveEncoder, &m_rightRearDriveEncoder),
 
         m_elevatorLowerLimit(PortAssign::ElevatorLowerLimitChannel),
         m_DIO11(PortAssign::DIO11Channel),
@@ -110,9 +112,9 @@ public:
 
         m_stick(PortAssign::JoystickChannel),
         m_gamepad(PortAssign::GamepadChannel),
-        m_autoPID(&m_robotDrive, &m_leftFrontDriveEncoder, &m_rightFrontDriveEncoder, &m_leftRearDriveEncoder, &m_rightRearDriveEncoder, &m_gyro, &m_driveStabilize),
+        m_autoPID(&m_robotDrive, &m_tracker, &m_gyro, &m_driveStabilize),
 
-        m_driveStabilize(&m_gyro, &(m_autoPID.m_tracker), &m_stick, 0.0, 0.0, 0.05)
+        m_driveStabilize(&m_gyro, &m_tracker, &m_stick, 0.0, 0.0, 0.05)
 
 // as they are declared above.
 
@@ -160,7 +162,7 @@ void ClearDisplay()
         m_gyro.Reset();
 
         ClearDisplay();
-
+        m_elevator->ElevatorInit();
         SmartDashboard::PutString("DB/String 0", "Initial Homeing");
         while(!m_elevator->elevatorIsHomed())
         {
@@ -173,7 +175,7 @@ void ClearDisplay()
         //This is the mode it's going to use
         AutoMode autoMode = simple;
 
-        Wait(1.0);
+        Wait(1.0);//debug only
 
         switch(autoMode)
         {
@@ -196,7 +198,7 @@ void ClearDisplay()
             // move right + move up over container
             SmartDashboard::PutString("DB/String 0", "Pick Up and Move 1");
 
-            m_autoPID.SetGoal(FieldDistances::autoCrateDiff,0);
+            //m_autoPID.SetGoal(FieldDistances::autoCrateDiff,0);
             m_elevator->setElevatorGoalPosition(kElevatorHook3Lifted, 0.5);
             while(IsAutonomous() && IsEnabled() &&
                         (!m_autoPID.isPastGoal || !m_elevator->elevatorIsAt(kElevatorHook3Lifted)))
@@ -321,7 +323,7 @@ void ClearDisplay()
                 Wait(0.005);
             }
 
-            Wait(1.0);
+            Wait(1.0);//debug only
 
             SmartDashboard::PutString("DB/String 0", "Moving Forward");
 
@@ -332,7 +334,7 @@ void ClearDisplay()
                 Wait(0.005);
             }
 
-            Wait(1.0);
+            Wait(1.0);//debug only
 
             SmartDashboard::PutString("DB/String 0", "Dropping");
 
@@ -343,7 +345,7 @@ void ClearDisplay()
                 Wait(0.005);
             }
 
-            Wait(1.0);
+            Wait(1.0);//debug only
 
             SmartDashboard::PutString("DB/String 0", "Moving Back");
 
@@ -360,6 +362,8 @@ void ClearDisplay()
 
             m_autoPID.Reset();
         }
+        m_elevator->ElevatorEnd();
+
     }
     /**
      * Runs the motors with Mecanum drive.
@@ -369,7 +373,7 @@ void ClearDisplay()
         ClearDisplay();
 
         m_robotDrive.SetSafetyEnabled(false);
-        m_elevator->m_homeState = m_elevator->lookingForLowerLimit;
+        m_elevator->ElevatorInit();
         while (IsOperatorControl() && IsEnabled())
         {
             // Use the joystick X axis for lateral movement, Y axis for forward movement, and Z axis for rotation.
@@ -386,7 +390,7 @@ void ClearDisplay()
 
             Wait(0.005); // wait 5ms to avoid hogging CPU cycles
         }
-        m_elevator->m_elevatorControl->Disable();
+        m_elevator->ElevatorEnd();
     }
     void Test()
     {

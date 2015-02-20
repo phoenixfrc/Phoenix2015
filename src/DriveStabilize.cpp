@@ -28,7 +28,7 @@ void DriveStabilize::UpdateGoalAngle(){
 
 
 float DriveStabilize::GetCorrectionAngle(){
-    UpdateGoalAngle();
+    //UpdateGoalAngle();
     return (m_goalAngle - m_gyro->GetAngle())*m_correction;
 }
 
@@ -39,11 +39,11 @@ void DriveStabilize::SetGoalAngle(float GoalAngle)
 }
 
 float DriveStabilize::LockX(){
-    return - m_tracker->GetDeltaX()*m_xLock;
+    return - m_tracker->GetX()*m_xLock;
 }
 
 float DriveStabilize::LockY(){
-    return - m_tracker->GetDeltaY()*m_yLock;
+    return - m_tracker->GetY()*m_yLock;//Probably should be negative, but maybe not? (test)
 }
 
 
