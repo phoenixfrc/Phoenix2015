@@ -15,9 +15,9 @@ static const float HomeSpeed = 0.40;
 static const int Ticks = 384;
 static const float TicksPerInch = Ticks / 8.17;
 static const int GoalDeltaEncoder = 29;
-static const float Accel = 5.0f; //inches per second
-static const float MaxVelocity = 1.0f;
-static const float EndPointTolorance = 0.01f;
+static const float Accel = 10.0f; //inches per second
+static const float MaxVelocity = 3.0f;
+static const float EndPointTolorance = 0.1f;
 
 class Elevator  : public PIDOutput
 {
@@ -105,7 +105,7 @@ public:
     #define kElevatorHook4Ready   (kElevatorHook3Ready + kToteDelta)
     #define kElevatorHook4Lifted  (kElevatorHook4Ready + kLiftDelta)
 
-    void setElevatorGoalPosition(float position , float SpeedMultiplier); // use consts above
+    void setElevatorGoalPosition(float position); // use consts above
     float getElevatorGoalPosition();
 
     ~Elevator();

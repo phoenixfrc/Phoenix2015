@@ -204,7 +204,7 @@ void Elevator::controlElevator()
 }
 
 
-void Elevator::setElevatorGoalPosition(float position, float SpeedMultiplier)
+void Elevator::setElevatorGoalPosition(float position)
 {
     if (position > kSoftUpperLimit)
     {
@@ -218,7 +218,7 @@ void Elevator::setElevatorGoalPosition(float position, float SpeedMultiplier)
 
     }
 
-    m_speedMultiplier = SpeedMultiplier;
+
     //m_elevatorControl->SetSetpoint(position);
     m_desiredSetPoint = position;
     updateProfile();
@@ -228,6 +228,7 @@ void Elevator::updateProfile()
 {
     m_elevatorControl->SetSetpoint(accelCurve());
 }
+
 
 float Elevator::getElevatorGoalPosition()
 {
