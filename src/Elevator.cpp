@@ -84,7 +84,7 @@ void Elevator::find_home()
             setElevatorGoalPosition(0.0, 0.75);
             m_elevatorControl->Enable();
             m_currentSetPoint = 0;
-            m_desiredSetPoint = 0;
+            m_desiredSetPoint = 5.0f;
 
 
         }
@@ -317,6 +317,7 @@ bool Elevator::elevatorIsDeccelerating()
  */
 float Elevator::accelCurve()
 {
+    static int count = 0;
 
     //if we are close enough
     if(((m_currentSetPoint - EndPointTolorance) < m_desiredSetPoint) && ((m_currentSetPoint + EndPointTolorance) > m_desiredSetPoint))
@@ -344,21 +345,22 @@ float Elevator::accelCurve()
     //declerating in either direction
     if(isDeccel)
     {
-        acceleration = -Accel;
-        if(!goingUp)
+        acceleration = Accel;
+        if(goingUp)
         {
-            acceleration = Accel;
+            acceleration = -Accel;
         }
+
     }
 
     // update up expected velocity and position
-    m_currentVelocity += acceleration;
-    m_currentSetPoint += m_currentVelocity;
+    m_currentVelocity += (acceleration / 200); //inches per second
+    m_currentSetPoint += (m_currentVelocity / 200); // called 200 times per second
 
-    printf("Decel:%c, Dpos:%8.3f Cpos:%8.3f Vel:%8.3f Acc:%8.3f\n",
-            isDeccel?'t':'f', m_desiredSetPoint, m_currentSetPoint, m_currentVelocity, acceleration);
+    printf("Count:%d, Decel:%c, Dpos:%8.3f Cpos:%12.9f Vel:%8.3f Acc:%8.3f\n",
+            count, isDeccel?'t':'f', m_desiredSetPoint, m_currentSetPoint, m_currentVelocity, acceleration);
     fflush(stdout);
-
+    count++;
     return m_currentSetPoint;
 
 
