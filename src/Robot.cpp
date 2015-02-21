@@ -173,7 +173,9 @@ void ClearDisplay()
 
         //m_robotDrive.SetSafetyEnabled(false); this may be needed
         //This is the mode it's going to use
-        AutoMode autoMode = simple;
+        AutoMode autoMode = complex;
+
+        m_autoPID.Reset();
 
         Wait(1.0);//debug only
 
@@ -198,7 +200,7 @@ void ClearDisplay()
             // move right + move up over container
             SmartDashboard::PutString("DB/String 0", "Pick Up and Move 1");
 
-            //m_autoPID.SetGoal(FieldDistances::autoCrateDiff,0);
+            m_autoPID.SetGoal(FieldDistances::autoCrateDiff,0);
             m_elevator->setElevatorGoalPosition(kElevatorHook3Lifted, 0.5);
             while(IsAutonomous() && IsEnabled() &&
                         (!m_autoPID.isPastGoal || !m_elevator->elevatorIsAt(kElevatorHook3Lifted)))
@@ -206,6 +208,8 @@ void ClearDisplay()
                 DisplayInfo();
                 Wait(0.005);
             }
+
+
 
             /*
 
