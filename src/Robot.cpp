@@ -408,6 +408,8 @@ void ClearDisplay()
         m_elevator->m_elevatorControl->Disable();
         Configuration* configObject = Configuration::getInstance();
         configObject->saveConfig("/home/lvuser/testConfig.ini");
+        configObject->Save();
+
     }
     void DisplayInfo(){
         static int count = 0;

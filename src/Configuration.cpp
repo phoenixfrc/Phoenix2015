@@ -3,6 +3,7 @@
 #include <string>
 #include <stdio.h>
 #include <fstream>
+#include <vector>
 
 using std::string;
 
@@ -67,6 +68,7 @@ Configuration * Configuration::getInstance()
     {
         configurationInit();
     }
+    printf("GetInstance() size = %d config ptr = %d\n", sizeof(_configInstance), _configInstance);
     return _configInstance;
 }
 
@@ -121,8 +123,11 @@ void Configuration::ReadValues()
    // PutInt("d", 555);
    if (!ContainsKey("e"))
    {
-    PutString("e", "this is string e");
+       _configInstance->PutString("e", "this is string e");
    }
+   GetKeys().push_back("e");
+   std::string theTakenString = _configInstance->GetString("e");
+   printf("Got string e = %s\n", theTakenString.c_str());
    // PutString("eas", "this is string e");
    // PutString("edf", "this is string e");
    // PutString("egs", "this is string e");
@@ -152,13 +157,26 @@ void Configuration::saveConfig(const char * fname)
 //    while(ourConfiguration[currentConfigEntry].type != endOfList)
 //    {
     std::vector<std::string> theKeys = GetKeys();
-    std::vector<std::string>::iterator it = theKeys.begin();
+
+
+    std::string theTakenString2 = _configInstance->GetString("e");
+    printf("Got string e = %s\n", theTakenString2.c_str());
+    if (ContainsKey("e"))
+       {
+       std::string theTakenString = _configInstance->GetString("e");
+       printf("Got string e = %s\n", theTakenString.c_str());
+       }
+    else{
+        printf("Did not get e\n");
+    }
+    printf("vectorSize  %d\n", theKeys.size());
+    std::vector<std::string>::iterator it = GetKeys().begin();
     for (; it != theKeys.end(); it++)
     {
         std::string key = *it;
         //need to use Get() instead of std::string value = m_value[key];
 
-
+        printf("Config count = %d, key = %s\n", currentConfigEntry, key.c_str());
 
     configFile << key << '=';
                  configFile << endl;
