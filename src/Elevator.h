@@ -16,7 +16,7 @@ static const int Ticks = 384;
 static const float TicksPerInch = Ticks / 8.17;
 static const int GoalDeltaEncoder = 29;
 static const float Accel = 10.0f; //inches per second
-static const float MaxVelocity = 3.0f;
+static const float MaxVelocity = 6.0f;
 static const float EndPointTolorance = 0.1f;
 
 class Elevator  : public PIDOutput

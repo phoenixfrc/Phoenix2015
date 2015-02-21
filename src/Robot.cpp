@@ -197,7 +197,7 @@ void ClearDisplay()
             SmartDashboard::PutString("DB/String 0", "Pick Up and Move 1");
 
             m_autoPID.SetGoal(FieldDistances::autoCrateDiff,0);
-            m_elevator->setElevatorGoalPosition(kElevatorHook3Lifted, 0.5);
+            m_elevator->setElevatorGoalPosition(kElevatorHook3Lifted);
             while(IsAutonomous() && IsEnabled() &&
                         (!m_autoPID.isPastGoal || !m_elevator->elevatorIsAt(kElevatorHook3Lifted)))
             {
@@ -314,7 +314,7 @@ void ClearDisplay()
             //Pick up tote here
             SmartDashboard::PutString("DB/String 0", "Initial Pick-up");
 
-            m_elevator->setElevatorGoalPosition(kElevatorHook1Lifted, 0.5);
+            m_elevator->setElevatorGoalPosition(kElevatorHook1Lifted);
             while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook1Lifted))
             {
                 DisplayInfo();
@@ -336,7 +336,7 @@ void ClearDisplay()
 
             SmartDashboard::PutString("DB/String 0", "Dropping");
 
-            m_elevator->setElevatorGoalPosition(kElevatorHook1Ready, 0.5);
+            m_elevator->setElevatorGoalPosition(kElevatorHook1Ready);
             while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook1Ready))
             {
                 DisplayInfo();
@@ -379,6 +379,7 @@ void ClearDisplay()
 
             m_elevator->operateElevator();
 
+            m_elevator->updateProfile();
 
             m_dragger.operateDragger(&m_gamepad, &m_draggerLowerLimit, &m_draggerMotor);
 
