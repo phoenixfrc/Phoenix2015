@@ -114,7 +114,7 @@ public:
         m_gamepad(PortAssign::GamepadChannel),
         m_autoPID(&m_robotDrive, &m_tracker, &m_gyro, &m_driveStabilize),
 
-        m_driveStabilize(&m_gyro, &m_tracker, &m_stick, 0.0, 0.0, 0.05)
+        m_driveStabilize(&m_gyro, &m_tracker, &m_stick, 0.0, 0.0, 0.08, 0.25, 0.5)
 
 // as they are declared above.
 

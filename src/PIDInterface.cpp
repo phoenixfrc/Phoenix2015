@@ -6,6 +6,9 @@ PIDInterface::PIDInterface(RobotDrive * robotDrive, EncoderTracker * tracker, Gy
 xPID(0.08, 0.0, 0.0, this, this), //PID values will need to be tuned for both of these
 yPID(0.16, 0.0, 0.0, this, this)
 {
+    xPID.SetOutputRange(-0.5, 0.5);
+    yPID.SetOutputRange(-0.5, 0.5);
+
 	if(xPID.IsEnabled())
 	{
 		xPID.Disable();
@@ -178,12 +181,16 @@ void PIDInterface::PIDWrite(float output)
     {
         isPastGoal = true;
     }
+
+    std::ostringstream bobTheStringBuilder;
+
 	switch(m_currentAxis)
 	{
 	case right:
 		m_robotDrive->MecanumDrive_Cartesian(output, m_driveStabilize->LockY(), m_driveStabilize->GetCorrectionAngle(), m_gyro->GetAngle());
 
-
+		bobTheStringBuilder << "LockY: " << m_driveStabilize->LockY();
+		SmartDashboard::PutString("DB/String 9", bobTheStringBuilder.str());
 
 
 		break;
