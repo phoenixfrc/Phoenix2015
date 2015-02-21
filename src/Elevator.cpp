@@ -81,10 +81,10 @@ void Elevator::find_home()
         {
             m_homeState = homingComplete;
             m_encoder->Reset();
-            setElevatorGoalPosition(0.0, 0.75);
+            setElevatorGoalPosition(0.0);//, 0.75
             m_elevatorControl->Enable();
             m_currentSetPoint = 0;
-            m_desiredSetPoint = 5.0f;
+            m_desiredSetPoint = 0.0;//Changed from 5.0f to 0.0
 
 
         }
@@ -199,7 +199,7 @@ void Elevator::controlElevator()
     ElevatorJoystickbuilder2 << (m_encoder->Get() / TicksPerInch);
     SmartDashboard::PutString("DB/String 1", ElevatorJoystickbuilder2.str());
 
-    setElevatorGoalPosition(goalPosition, speedMult);
+    setElevatorGoalPosition(goalPosition);//used to have "speedMult" as a second parameter (it was causing build errors)
 
 }
 
