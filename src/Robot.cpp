@@ -183,7 +183,7 @@ void ClearDisplay()
             //Pick up tote  6 inch
                 SmartDashboard::PutString("DB/String 0", "Initial Pick up");
 
-            m_elevator->setElevatorGoalPosition(kElevatorHook1Lifted, 0.5);
+            m_elevator->setElevatorGoalPosition(kElevatorHook1Lifted);
 
             while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook1Lifted))
             {

@@ -154,7 +154,7 @@ void Elevator::controlElevator()
     if(!(joystick > -0.05 && joystick < 0.05))
     {
         speedMult = kNormalMultiplier;
-        goalPosition += (joystick / 4);
+        goalPosition += (joystick / 5);
     }
 
     if(POV == 0 || POV == 45 || POV == 315)
