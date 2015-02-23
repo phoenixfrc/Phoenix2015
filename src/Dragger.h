@@ -26,6 +26,7 @@ private:
     const float m_liftDuration;
     const float m_downSpeed;
     const float m_upSpeed;
+    bool m_draggerDirection; //True means up, False means down
 
 };
 

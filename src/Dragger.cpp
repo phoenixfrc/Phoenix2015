@@ -18,7 +18,8 @@ Dragger::Dragger():
 m_timer(kDraggerReverseTime * 200),//max value for ints
 m_liftDuration(kDraggerReverseTime),
 m_downSpeed(kDraggerMotorDownSpeed),
-m_upSpeed(kDraggerMotorUpSpeed)
+m_upSpeed(kDraggerMotorUpSpeed),
+m_draggerDirection(true)
 {}
 
 /* Dragger operateDragger method:
@@ -41,7 +42,7 @@ void Dragger::operateDragger(Joystick * button, DigitalInput * limitSwitchDown, 
     }else{
     	m_timer++;
     }
-    std::ostringstream bob;
+    std::ostringstream bob, topLevel, midLevel, bottomLevel;
     bob << isUp << buttonPressed;
     SmartDashboard::PutString("DB/String 8", bob.str());
 
@@ -52,20 +53,44 @@ void Dragger::operateDragger(Joystick * button, DigitalInput * limitSwitchDown, 
      *    If both limits are somehow tripped (???): stop the motor, to prevent the robot from breaking anything.
      *    If neither limit is tripped: do nothing, the motor will continue to move in its old direction.
      */
+    //Read the button then toggle the variable
+
+    if (buttonPressed){
+    	if(m_draggerDirection){
+    		m_draggerDirection = false;
+    	}else{
+    		m_draggerDirection = true;
+    	}
+
+    }
 
 
     if (isUp || isDown){
-        if (buttonPressed && (isUp != isDown)){
-            if (isUp){
-                motor->Set(-m_downSpeed);
-                m_timer = 0;
-            } else if(isDown){
-                motor->Set(m_upSpeed);
-            }
-        } else {
-            motor->Set(0);
-        }
+    	topLevel << "Top Level";
+    	SmartDashboard::PutString("DB/String 1", topLevel.str());
+    	if(isUp != isDown){
+			if (m_draggerDirection){
+				midLevel << "Mid Level";
+				SmartDashboard::PutString("DB/String 2", midLevel.str());
+				if (isUp){
+					bottomLevel << "Bottom Level";
+					SmartDashboard::PutString("DB/String 9", bottomLevel.str());
+					motor->Set(0);
+				} else if(isDown){
+					m_timer = 0;
+					motor->Set(-m_upSpeed);
+				}
+			} else if((m_draggerDirection == false)){
+					if(isUp){
+						motor->Set(m_downSpeed);
+					}else if(isDown){
+						motor->Set(0);
+					}
+			}
 
+    	}else{
+    		motor->Set(0);
+    	}
     }
 }
 Dragger::~Dragger(){
