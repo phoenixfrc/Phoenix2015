@@ -57,9 +57,7 @@ void Configuration::configurationInit()
         return; // Don't do anything, because the instance already exists
     }
     _configInstance = new Configuration();
-   // _configInstance->ReadValues();
-    //_configInstance->Save();
-    //Wait(0.25);
+    _configInstance->readConfig("/home/lvuser/inConfig.ini");
 }
 
 /*
@@ -162,7 +160,48 @@ void Configuration::saveConfig(const char * fname)
 
 void Configuration::readConfig(const char * fname)
 {
+    printf("Top of readConfig\n");
 
+    std::ifstream inputConfigFile("/home/lvuser/inConfig.ini");
+    if(!inputConfigFile){
+        printf ("Cannot open file for input\n");
+        return;
+    }
+    printf("Have an input file");
+    char line[1000];
+    int lookingforline = 0; // this is the current line of the structure, which we hope to find in the file
+    int filelinenumber = 0; // this is the current line in the input file
+    while(inputConfigFile.getline(line, 999, '\n'))
+    {
+        ++filelinenumber;
+        printf("processingfileline %d\n", filelinenumber);
+        printf("gotline <%s>\n", line);
+
+        const char* key = ourConfiguration[lookingforline].key;
+        int keylength = strlen(key);
+        int linelength = strlen(line);
+
+        if(keylength + 3 > linelength)
+        {
+            printf("line %d too short while looking for %s key\n", linelength, key);
+            continue;
+        }
+        // First, we are comparing the key and the line lengths; then we are looking for the =
+        // and the " within the file; both of these conditions must be met in order for the if
+        // statement to evaluate as true.
+        if (0 == strncmp(key, line, keylength) && 0 == strncmp("=\"", &line[keylength], 2))
+        {
+            printf("found a line with our key");
+        }
+        else
+        {
+            printf("ignoring line %d\n", filelinenumber);
+            continue;
+        };
+    }
+        //TODO actually read stuff here
+
+    inputConfigFile.close();
 }
 
 void Configuration::PutConfigInt(const char * key, int value)
