@@ -15,7 +15,7 @@
 class DriveStabilize {
 public:
     DriveStabilize(Gyro * gyro, EncoderTracker * tracker, Team2342Joystick * stick,
-                   float goalAngle, float turnSpeed, float correction = 1.0, float xLock = 1.0, float yLock = 1.0);
+                   float goalAngle, float turnSpeed, float correction = 1.0, float xLock = 0.25, float yLock = 0.25);
 
     void UpdateGoalAngle();
 
