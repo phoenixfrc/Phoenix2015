@@ -14,6 +14,9 @@ struct ourConfiguration_t {
     const char * humanName;
     enum configTypes type;
     const char * defaultValue;
+    float floatValue;
+    int intValue;
+    char * stringValue;
 };
 
 /*
