@@ -3,7 +3,7 @@
 #ifndef SRC_CONFIGURATION_H_
 #define SRC_CONFIGURATION_H_
 
-class Configuration : public Preferences
+class Configuration
 {
 private:
     Configuration();
@@ -16,6 +16,7 @@ public:
     static void configurationInit();
     static Configuration *getInstance();
     void saveConfig(const char * fname);
+    void readConfig(const char * fname);
     void PutConfigInt(const char * key, int value);
     int GetConfigInt (const char * key, int defaultValue = 0);
 };

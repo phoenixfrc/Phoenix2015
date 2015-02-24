@@ -135,7 +135,7 @@ public:
         m_elevatorEncoder.SetReverseDirection(true);
         SmartDashboard::init();
         //reserved for config
-        Configuration* configObject = Configuration::getInstance();     //Read existing config
+        (void) Configuration::getInstance();     //Read existing config
         //reserved for config
 }
 
@@ -408,7 +408,6 @@ void ClearDisplay()
         m_elevator->m_elevatorControl->Disable();
         Configuration* configObject = Configuration::getInstance();
         configObject->saveConfig("/home/lvuser/testConfig.ini");
-        configObject->Save();
 
     }
     void DisplayInfo(){

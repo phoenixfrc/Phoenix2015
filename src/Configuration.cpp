@@ -54,7 +54,7 @@ void Configuration::configurationInit()
         return; // Don't do anything, because the instance already exists
     }
     _configInstance = new Configuration();
-    _configInstance->ReadValues();
+   // _configInstance->ReadValues();
     //_configInstance->Save();
     //Wait(0.25);
 }
@@ -68,7 +68,6 @@ Configuration * Configuration::getInstance()
     {
         configurationInit();
     }
-    printf("GetInstance() size = %d config ptr = %d\n", sizeof(_configInstance), _configInstance);
     return _configInstance;
 }
 
@@ -80,7 +79,9 @@ void Configuration::ReadValues()
     int currentConfigEntry = 0;
     while(ourConfiguration[currentConfigEntry].type != endOfList)
     {
-        if (ContainsKey(ourConfiguration[currentConfigEntry].key)){
+        //if (ContainsKey(ourConfiguration[currentConfigEntry].key)){
+        if (false)
+        {
             printf("Already have key %s\n", ourConfiguration[currentConfigEntry].key);
             currentConfigEntry++;
             continue; //Already have value from file so we're all set, go to the next part.
@@ -94,14 +95,6 @@ void Configuration::ReadValues()
              printf("value for float key %s is %f\n", ourConfiguration[currentConfigEntry].key, valueToSave);
       //      PutFloat("f", 15.23F);
             // _configInstance->PutFloat(ourConfiguration[currentConfigEntry].key, valueToSave);
-             if (_configInstance->ContainsKey("second")) {
-                 printf ("checked for second key and it's there\n");
-             }
-             else
-             {
-                 printf ("checked for second key and it's NOT THERE\n");
-
-             }
 
            // printf("Found a float %s\n", ourConfiguration[currentConfigEntry].humanName);
            // float valueToSave = 123.456;// std::stof("123.456");
@@ -121,22 +114,6 @@ void Configuration::ReadValues()
     }
    // PutFloat("f", 15.53F);
    // PutInt("d", 555);
-   if (!ContainsKey("e"))
-   {
-       _configInstance->PutString("e", "this is string e");
-   }
-   GetKeys().push_back("e");
-   std::string theTakenString = _configInstance->GetString("e");
-   printf("Got string e = %s\n", theTakenString.c_str());
-   // PutString("eas", "this is string e");
-   // PutString("edf", "this is string e");
-   // PutString("egs", "this is string e");
-   // PutString("egt", "this is string e");
-    // const char * keyforFFFF = ourConfiguration[1].key;
-   // const char * keyforFFFF = "ffff";
-   // float ffff = 555.1234f;
-   // _configInstance->PutFloat(keyforFFFF, ffff);
-   // fflush(stdout);
 }
 
 void Configuration::saveConfig(const char * fname)
@@ -154,31 +131,23 @@ void Configuration::saveConfig(const char * fname)
 
     //loop and print our all parameters
     int currentConfigEntry = 0;
-//    while(ourConfiguration[currentConfigEntry].type != endOfList)
-//    {
-    std::vector<std::string> theKeys = GetKeys();
-
-
-    std::string theTakenString2 = _configInstance->GetString("e");
-    printf("Got string e = %s\n", theTakenString2.c_str());
-    if (ContainsKey("e"))
-       {
-       std::string theTakenString = _configInstance->GetString("e");
-       printf("Got string e = %s\n", theTakenString.c_str());
-       }
-    else{
-        printf("Did not get e\n");
-    }
-    printf("vectorSize  %d\n", theKeys.size());
-    std::vector<std::string>::iterator it = GetKeys().begin();
-    for (; it != theKeys.end(); it++)
+    while(ourConfiguration[currentConfigEntry].type != endOfList)
     {
-        std::string key = *it;
-        //need to use Get() instead of std::string value = m_value[key];
+    //std::vector<std::string> theKeys = GetKeys();
 
-        printf("Config count = %d, key = %s\n", currentConfigEntry, key.c_str());
 
-    configFile << key << '=';
+    //std::string theTakenString2 = _configInstance->GetString("e");
+    //printf("Got string e = %s\n", theTakenString2.c_str());
+    //if (ContainsKey("e"))
+       {
+       //std::string theTakenString = _configInstance->GetString("e");
+       //printf("Got string e = %s\n", theTakenString.c_str());
+       }
+    //else{
+        printf("Did not get e\n");
+    //}
+
+    configFile << ourConfiguration[currentConfigEntry].key << '=';
                  configFile << endl;
     currentConfigEntry++;
     }
@@ -188,23 +157,28 @@ void Configuration::saveConfig(const char * fname)
     configFile.close();
 }
 
+void Configuration::readConfig(const char * fname)
+{
+
+}
+
 void Configuration::PutConfigInt(const char * key, int value)
 {
     string intasstring = std::to_string(value);
-    PutString(key, intasstring.c_str());
+//    PutString(key, intasstring.c_str());
 }
 
 int Configuration::GetConfigInt (const char * key, int defaultValue)
 {
     int theintvalue = 0;
 
-    if (ContainsKey(key))
+//    if (ContainsKey(key))
     {
-        std::string intasstring = GetString(key);
-        theintvalue = stoi(intasstring);
-    }
-    else
-    {
+//        std::string intasstring = GetString(key);
+//        theintvalue = stoi(intasstring);
+//    }
+//    else
+//    {
         theintvalue = defaultValue;
     }
     return theintvalue;
