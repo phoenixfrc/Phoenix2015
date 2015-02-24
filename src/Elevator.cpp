@@ -355,6 +355,14 @@ float Elevator::accelCurve()
     }
 
     // update up expected velocity and position
+    if (m_currentVelocity == 0.0f && !isDeccel){
+    	if(goingUp){
+    		m_currentVelocity = 5.0f;
+    	}else{
+    		m_currentVelocity = -5.0f;
+    	}
+
+    }
     m_currentVelocity += (acceleration / 200); //inches per second
     m_currentSetPoint += (m_currentVelocity / 200); // called 200 times per second
 
