@@ -10,7 +10,7 @@
 #include "WPILib.h"
 #define kDraggerReverseTime 2.0
 #define kDraggerMotorDownSpeed 0.75
-#define kDraggerMotorUpSpeed 0.25
+#define kDraggerMotorUpSpeed -0.25
 
 
 class Dragger {
@@ -26,6 +26,10 @@ private:
     const float m_liftDuration;
     const float m_downSpeed;
     const float m_upSpeed;
+    bool m_draggerDirection;
+    bool isDown;
+    enum draggerStates{defaultState, upState, loweringState, downState, liftingState};
+    int m_mode;
 
 };
 
