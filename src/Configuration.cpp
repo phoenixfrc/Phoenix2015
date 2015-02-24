@@ -36,6 +36,7 @@ static struct ourConfiguration_t ourConfiguration [] =
         {"second", "this is second float", configFloat, "222.34"},
         {"third", "this is third", configFloat, "333.34"},
         {"bar", "this is bar", configString, "this is string bar"},
+        {"teamNumber", "team number", configInt, "2342"},
         //Add new entries above here
         {"0", "0", endOfList, "0"}//Keep this here ALWAYS!
 };
@@ -70,6 +71,13 @@ Configuration * Configuration::getInstance()
     if (_configInstance == 0)
     {
         configurationInit();
+        //TODO remove after ouput testing done
+        ourConfiguration[0].floatValue = 111.111F;
+        ourConfiguration[1].floatValue = 222.222F;
+        ourConfiguration[2].floatValue = 333.333F;
+        ourConfiguration[3].stringValue = "here is new text";
+        ourConfiguration[4].intValue = 42;
+
     }
     return _configInstance;
 }
@@ -136,24 +144,36 @@ void Configuration::saveConfig(const char * fname)
     int currentConfigEntry = 0;
     while(ourConfiguration[currentConfigEntry].type != endOfList)
     {
+        printf("Prossesing key %s\n", ourConfiguration[currentConfigEntry].key);
+        configFile << ourConfiguration[currentConfigEntry].key << '=' << '"';
+        if(ourConfiguration[currentConfigEntry].type == configFloat)
+        {
+            configFile << ourConfiguration[currentConfigEntry].floatValue; //added for testing
+        }
+        else if(ourConfiguration[currentConfigEntry].type == configInt)
+        {
+            configFile << ourConfiguration[currentConfigEntry].intValue; //added for testing
+        }
+        else if(ourConfiguration[currentConfigEntry].type == configString)
+        {
+            configFile << ourConfiguration[currentConfigEntry].stringValue; //added for testing
+        }
+        configFile << '"';
+        configFile << endl;
+        currentConfigEntry++;
+    }
     //std::vector<std::string> theKeys = GetKeys();
 
 
     //std::string theTakenString2 = _configInstance->GetString("e");
     //printf("Got string e = %s\n", theTakenString2.c_str());
     //if (ContainsKey("e"))
-       {
+    //   {
        //std::string theTakenString = _configInstance->GetString("e");
        //printf("Got string e = %s\n", theTakenString.c_str());
-       }
+    //   }
     //else{
-        printf("Did not get e\n");
     //}
-
-    configFile << ourConfiguration[currentConfigEntry].key << '=';
-                 configFile << endl;
-    currentConfigEntry++;
-    }
 
 
     configFile << std::flush;
