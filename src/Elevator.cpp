@@ -33,7 +33,7 @@ Elevator::Elevator(
     m_oldEncoder = 0;
     m_speedMultiplier = kNormalMultiplier;
     m_encoder->SetDistancePerPulse(1 / TicksPerInch);
-    m_elevatorControl = new PIDController(0.14, 0.019, 0.00, encoder, this);
+    m_elevatorControl = new PIDController(0.28, 0.038, 0.00, encoder, this);
 }
 
 void Elevator::operateElevator()
@@ -81,10 +81,10 @@ void Elevator::find_home()
         {
             m_homeState = homingComplete;
             m_encoder->Reset();
-            setElevatorGoalPosition(0.0);//, 0.75
+            setElevatorGoalPosition(0.0);
             m_elevatorControl->Enable();
             m_currentSetPoint = 0;
-            m_desiredSetPoint = 0.0;//Changed from 5.0f to 0.0
+            m_desiredSetPoint = 0.0f;
 
 
         }
@@ -154,7 +154,7 @@ void Elevator::controlElevator()
     if(!(joystick > -0.05 && joystick < 0.05))
     {
         speedMult = kNormalMultiplier;
-        goalPosition += (joystick / 4);
+        goalPosition += (joystick / 5);
     }
 
     if(POV == 0 || POV == 45 || POV == 315)
@@ -199,7 +199,7 @@ void Elevator::controlElevator()
     ElevatorJoystickbuilder2 << (m_encoder->Get() / TicksPerInch);
     SmartDashboard::PutString("DB/String 1", ElevatorJoystickbuilder2.str());
 
-    setElevatorGoalPosition(goalPosition);//used to have "speedMult" as a second parameter (it was causing build errors)
+    setElevatorGoalPosition(goalPosition);
 
 }
 
@@ -355,6 +355,14 @@ float Elevator::accelCurve()
     }
 
     // update up expected velocity and position
+    if (m_currentVelocity == 0.0f && !isDeccel){
+    	if(goingUp){
+    		m_currentVelocity = 5.0f;
+    	}else{
+    		m_currentVelocity = -5.0f;
+    	}
+
+    }
     m_currentVelocity += (acceleration / 200); //inches per second
     m_currentSetPoint += (m_currentVelocity / 200); // called 200 times per second
 
