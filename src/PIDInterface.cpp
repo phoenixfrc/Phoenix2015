@@ -195,7 +195,7 @@ void PIDInterface::PIDWrite(float output)
 
 		break;
 	case forward:
-		output /= -2;
+		output /= -1.2;
 		m_robotDrive->MecanumDrive_Cartesian(0.0, output, m_driveStabilize->GetCorrectionAngle(), m_gyro->GetAngle());
 		break;
 	case stop:

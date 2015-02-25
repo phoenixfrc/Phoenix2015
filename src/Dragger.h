@@ -8,7 +8,7 @@
 #ifndef SRC_DRAGGER_H_
 #define SRC_DRAGGER_H_
 #include "WPILib.h"
-#define kDraggerReverseTime 2.0
+#define kDraggerReverseTime 1.5
 #define kDraggerMotorDownSpeed 0.75
 #define kDraggerMotorUpSpeed -0.25
 

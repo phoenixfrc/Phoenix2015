@@ -14,7 +14,10 @@ static const float MotorSpeed = 1.0;
 static const float HomeSpeed = 0.40;
 static const int Ticks = 384;
 static const float TicksPerInch = Ticks / 8.17;
-static const int goalDeltaEncoder = 29;
+static const int GoalDeltaEncoder = 29;
+static const float Accel = 30.0f; //inches per second
+static const float MaxVelocity = 15.0f; // Accel should allways be double maxVelocity for good performance
+static const float EndPointTolorance = 0.1f;
 
 class Elevator  : public PIDOutput
 {
@@ -23,6 +26,9 @@ class Elevator  : public PIDOutput
     bool m_rtWasPressed;
     float m_speedMultiplier;
     int m_oldEncoder;
+    float m_desiredSetPoint;
+    float m_currentSetPoint;
+    float m_currentVelocity;
 
     // initialized at class constructions then constant
     Talon* m_motor1;
@@ -40,6 +46,10 @@ class Elevator  : public PIDOutput
     void controlElevator();
     void moveElevator();
     void calculateSpeedMutiplier();
+    bool elevatorIsDeccelerating();
+    float accelCurve();
+
+
 
 public:
     enum homingStates
@@ -64,6 +74,8 @@ public:
     void operateElevator(); // for use in teleop
     bool elevatorIsHomed();
     bool elevatorIsAt(float position);
+    void updateProfile();
+
 
 
     // speed Multipliers
@@ -93,7 +105,7 @@ public:
     #define kElevatorHook4Ready   (kElevatorHook3Ready + kToteDelta)
     #define kElevatorHook4Lifted  (kElevatorHook4Ready + kLiftDelta)
 
-    void setElevatorGoalPosition(float position , float SpeedMultiplier); // use consts above
+    void setElevatorGoalPosition(float position); // use consts above
     float getElevatorGoalPosition();
 
     ~Elevator();

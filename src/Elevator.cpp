@@ -33,7 +33,9 @@ Elevator::Elevator(
     m_oldEncoder = 0;
     m_speedMultiplier = kNormalMultiplier;
     m_encoder->SetDistancePerPulse(1 / TicksPerInch);
-    m_elevatorControl = new PIDController(0.14, 0.0095, 0.00, encoder, this);
+    //m_elevatorControl = new PIDController(0.28, 0.038, 0.00, encoder, this);//This worked for new code
+    //m_elevatorControl = new PIDController(0.14, 0.0095, 0.00, encoder, this);//This worked for old code
+    m_elevatorControl = new PIDController(0.28, 0.0095, 0.00, encoder, this);//For testing
 }
 
 void Elevator::operateElevator()
@@ -81,8 +83,11 @@ void Elevator::find_home()
         {
             m_homeState = homingComplete;
             m_encoder->Reset();
-            setElevatorGoalPosition(0.0, 0.75);
+            setElevatorGoalPosition(0.0);
             m_elevatorControl->Enable();
+            m_currentSetPoint = 0;
+            m_desiredSetPoint = 0.0f;
+
 
         }
         else
@@ -119,7 +124,7 @@ void Elevator::controlElevator()
     //joystick
     double joystick = -m_gamePad->GetY(); // right Joystick, negative because up is negative
 
-    float goalPosition = m_elevatorControl->GetSetpoint();
+    float goalPosition = m_desiredSetPoint;
 
 
     // button computing
@@ -151,7 +156,7 @@ void Elevator::controlElevator()
     if(!(joystick > -0.05 && joystick < 0.05))
     {
         speedMult = kNormalMultiplier;
-        goalPosition += (joystick / 4);
+        goalPosition += (joystick / 5);
     }
 
     if(POV == 0 || POV == 45 || POV == 315)
@@ -187,17 +192,7 @@ void Elevator::controlElevator()
         goalPosition = kElevatorHook4Ready;
     }
 
-    if (goalPosition > kSoftUpperLimit)
-    {
 
-        goalPosition = kSoftUpperLimit; //Stop large queues of goal position
-    }
-    if (goalPosition < kSoftLowerLimit)
-    {
-
-        goalPosition = kSoftLowerLimit; //stop large queues of goal position
-
-    }
 
     ElevatorJoystickbuilder << "GoalPosition: ";
     ElevatorJoystickbuilder << goalPosition;
@@ -206,16 +201,36 @@ void Elevator::controlElevator()
     ElevatorJoystickbuilder2 << (m_encoder->Get() / TicksPerInch);
     SmartDashboard::PutString("DB/String 1", ElevatorJoystickbuilder2.str());
 
-    setElevatorGoalPosition(goalPosition, speedMult);
+    setElevatorGoalPosition(goalPosition);
 
 }
 
 
-void Elevator::setElevatorGoalPosition(float position, float SpeedMultiplier)
+void Elevator::setElevatorGoalPosition(float position)
 {
-    m_speedMultiplier = SpeedMultiplier;
-    m_elevatorControl->SetSetpoint(position);
+    if (position > kSoftUpperLimit)
+    {
+
+        position = kSoftUpperLimit; //Stop large queues of goal position
+    }
+    if (position < kSoftLowerLimit)
+    {
+
+        position = kSoftLowerLimit; //stop large queues of goal position
+
+    }
+
+
+    //m_elevatorControl->SetSetpoint(position);
+    m_desiredSetPoint = position;
+    updateProfile();
+
 }
+void Elevator::updateProfile()
+{
+    m_elevatorControl->SetSetpoint(accelCurve());
+}
+
 
 float Elevator::getElevatorGoalPosition()
 {
@@ -233,7 +248,7 @@ void Elevator::PIDWrite(float desiredSpeed)
 
     //calculateSpeedMutiplier();
 
-    float actualSpeed = desiredSpeed * m_speedMultiplier;
+    float actualSpeed = desiredSpeed; //* m_speedMultiplier;
 
   //  std::ostringstream out;
   //  out.precision(2);
@@ -280,17 +295,88 @@ void Elevator::calculateSpeedMutiplier()
 {
     int deltaEncoder = abs(int(m_oldEncoder - m_encoder->Get()));
 
-    if((deltaEncoder > goalDeltaEncoder) && m_speedMultiplier > 0.5)
+    if((deltaEncoder > GoalDeltaEncoder) && m_speedMultiplier > 0.5)
     {
         m_speedMultiplier -= 0.01;
     }
-    else if((deltaEncoder < goalDeltaEncoder) && (m_speedMultiplier < 0.75))
+    else if((deltaEncoder < GoalDeltaEncoder) && (m_speedMultiplier < 0.75))
     {
         m_speedMultiplier += 0.01;
     }
     m_oldEncoder = m_encoder->Get();
 
 }
+
+bool Elevator::elevatorIsDeccelerating()
+{
+    // this estimate with a constant deceleration if it needs to slow down.
+    return (fabs(m_desiredSetPoint - m_currentSetPoint) < ((m_currentVelocity * m_currentVelocity) / (2.0f * Accel)));
+}
+
+
+/*
+ * computes the movement profile based on current and desired speeds and volcities
+ * may result in a triangle or a trapizoidal pattern.
+ */
+float Elevator::accelCurve()
+{
+    static int count = 0;
+
+    //if we are close enough
+    if(((m_currentSetPoint - EndPointTolorance) < m_desiredSetPoint) && ((m_currentSetPoint + EndPointTolorance) > m_desiredSetPoint))
+    {
+        m_currentVelocity = 0.0f;
+        m_currentSetPoint = m_desiredSetPoint;
+        return m_currentSetPoint;
+    }
+
+    bool isDeccel = elevatorIsDeccelerating(); // slowing down in either direction????
+
+    bool goingUp = (m_currentSetPoint < m_desiredSetPoint); // are we going up????
+    float acceleration = 0.0f;
+
+    //accelerating in either direction.
+    if(goingUp && m_currentVelocity < MaxVelocity)
+    {
+        acceleration = Accel;
+    }
+    if(!(goingUp) && m_currentVelocity > -MaxVelocity)
+    {
+        acceleration = -Accel;
+    }
+
+    //declerating in either direction
+    if(isDeccel)
+    {
+        acceleration = Accel;
+        if(goingUp)
+        {
+            acceleration = -Accel;
+        }
+
+    }
+
+    // update up expected velocity and position
+    if (m_currentVelocity == 0.0f && !isDeccel){
+    	if(goingUp){
+    		m_currentVelocity = 5.0f;
+    	}else{
+    		m_currentVelocity = -5.0f;
+    	}
+
+    }
+    m_currentVelocity += (acceleration / 200); //inches per second
+    m_currentSetPoint += (m_currentVelocity / 200); // called 200 times per second
+
+    printf("Count:%d, Decel:%c, Dpos:%8.3f Cpos:%12.9f Vel:%8.3f Acc:%8.3f\n",
+            count, isDeccel?'t':'f', m_desiredSetPoint, m_currentSetPoint, m_currentVelocity, acceleration);
+    fflush(stdout);
+    count++;
+    return m_currentSetPoint;
+
+
+}
+
 
 void Elevator::ElevatorInit()
 {
