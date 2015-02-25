@@ -8,12 +8,18 @@
 #include "DriveStabilize.h"
 
 
-DriveStabilize::DriveStabilize(Gyro * gyro, Team2342Joystick * stick, float goalAngle, float turnSpeed, float correction = 1.0){
+DriveStabilize::DriveStabilize(Gyro * gyro, EncoderTracker * tracker, Team2342Joystick * stick,
+                               float goalAngle, float turnSpeed, float correction, float xLock, float yLock){
     m_gyro = gyro;
     m_stick = stick;
+    m_tracker = tracker;
+
     m_goalAngle = goalAngle;
     m_turnSpeed = turnSpeed;
     m_correction = correction;
+
+    m_xLock = xLock;
+    m_yLock = yLock;
 }
 
 void DriveStabilize::UpdateGoalAngle(){
@@ -22,7 +28,7 @@ void DriveStabilize::UpdateGoalAngle(){
 
 
 float DriveStabilize::GetCorrectionAngle(){
-    UpdateGoalAngle();
+    //UpdateGoalAngle();
     return (m_goalAngle - m_gyro->GetAngle())*m_correction;
 }
 
@@ -30,6 +36,14 @@ float DriveStabilize::GetCorrectionAngle(){
 void DriveStabilize::SetGoalAngle(float GoalAngle)
 {
 	m_goalAngle = GoalAngle;
+}
+
+float DriveStabilize::LockX(){
+    return - m_tracker->GetX()*m_xLock;
+}
+
+float DriveStabilize::LockY(){
+    return m_tracker->GetY()*m_yLock;//Probably should be negative, but maybe not? (test)
 }
 
 

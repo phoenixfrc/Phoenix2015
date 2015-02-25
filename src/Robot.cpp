@@ -29,7 +29,6 @@ class Robot: public SampleRobot
     Dragger m_dragger;
     TestMode m_tester;
     // tba Brake
-    DriveStabilize m_driveStabilize;
     Relay m_brake;
 
     Encoder m_leftRearDriveEncoder;
@@ -38,6 +37,7 @@ class Robot: public SampleRobot
     Encoder m_rightRearDriveEncoder;
     Encoder m_elevatorEncoder;
 
+    EncoderTracker m_tracker;
     DigitalInput m_elevatorLowerLimit;
     DigitalInput m_DIO11;
     DigitalInput m_elevatorUpperLimit;
@@ -63,12 +63,12 @@ class Robot: public SampleRobot
     Joystick m_gamepad;       // the gamepad
 
     PIDInterface m_autoPID;
+    DriveStabilize m_driveStabilize;
 
 public:
     Robot():
         m_robotDrive(PortAssign::FrontLeftChannel, PortAssign::RearLeftChannel,
         PortAssign::FrontRightChannel, PortAssign::RearRightChannel),	// these must be initialized in the same order
-
 
         m_elevatorMotor1(PortAssign::ElevatorMotor1),
         m_elevatorMotor2(PortAssign::ElevatorMotor2),
@@ -80,8 +80,6 @@ public:
 
 		m_tester(),
 
-		m_driveStabilize(&m_gyro, &m_stick, 0.0, 0.0, 0.05),
-
         m_brake(PortAssign::ElevatorBrakeChannel),
 
         m_leftRearDriveEncoder(PortAssign::LeftRearDriveEncoderChannelA, PortAssign::LeftRearDriveEncoderChannelB),
@@ -89,6 +87,8 @@ public:
         m_rightFrontDriveEncoder(PortAssign::RightFrontDriveEncoderChannelA, PortAssign::RightFrontDriveEncoderChannelB),
         m_rightRearDriveEncoder(PortAssign::RightRearDriveEncoderChannelA, PortAssign::RightRearDriveEncoderChannelB),
         m_elevatorEncoder(PortAssign::ElevatorEncoderChannelA, PortAssign::ElevatorEncoderChannelB),
+
+        m_tracker(&m_leftFrontDriveEncoder, &m_rightFrontDriveEncoder, &m_leftRearDriveEncoder, &m_rightRearDriveEncoder),
 
         m_elevatorLowerLimit(PortAssign::ElevatorLowerLimitChannel),
         m_DIO11(PortAssign::DIO11Channel),
@@ -112,7 +112,9 @@ public:
 
         m_stick(PortAssign::JoystickChannel),
         m_gamepad(PortAssign::GamepadChannel),
-        m_autoPID(&m_robotDrive, &m_leftFrontDriveEncoder, &m_rightFrontDriveEncoder, &m_leftRearDriveEncoder, &m_rightRearDriveEncoder, &m_gyro, &m_driveStabilize)
+        m_autoPID(&m_robotDrive, &m_tracker, &m_gyro, &m_driveStabilize),
+
+        m_driveStabilize(&m_gyro, &m_tracker, &m_stick, 0.0, 0.0, 0.008, 0.25, 0.5)
 
 // as they are declared above.
 
@@ -160,7 +162,7 @@ void ClearDisplay()
         m_gyro.Reset();
 
         ClearDisplay();
-
+        m_elevator->ElevatorInit();
         SmartDashboard::PutString("DB/String 0", "Initial Homeing");
         while(!m_elevator->elevatorIsHomed())
         {
@@ -173,7 +175,9 @@ void ClearDisplay()
         //This is the mode it's going to use
         AutoMode autoMode = simple;
 
-        Wait(1.0);
+        m_autoPID.Reset();
+
+        Wait(1.0);//debug only
 
         switch(autoMode)
         {
@@ -205,6 +209,8 @@ void ClearDisplay()
                 DisplayInfo();
                 Wait(0.005);
             }
+
+
 
 
             Wait(1.0);
@@ -321,7 +327,7 @@ void ClearDisplay()
                 Wait(0.005);
             }
 
-            Wait(1.0);
+            Wait(1.0);//debug only
 
             SmartDashboard::PutString("DB/String 0", "Moving Forward");
 
@@ -332,7 +338,7 @@ void ClearDisplay()
                 Wait(0.005);
             }
 
-            Wait(1.0);
+            Wait(1.0);//debug only
 
             SmartDashboard::PutString("DB/String 0", "Dropping");
 
@@ -344,7 +350,7 @@ void ClearDisplay()
                 Wait(0.005);
             }
 
-            Wait(1.0);
+            Wait(1.0);//debug only
 
             SmartDashboard::PutString("DB/String 0", "Moving Back");
 
@@ -361,6 +367,8 @@ void ClearDisplay()
 
             m_autoPID.Reset();
         }
+        m_elevator->ElevatorEnd();
+
     }
     /**
      * Runs the motors with Mecanum drive.
@@ -370,7 +378,7 @@ void ClearDisplay()
         ClearDisplay();
 
         m_robotDrive.SetSafetyEnabled(false);
-        m_elevator->m_homeState = m_elevator->lookingForLowerLimit;
+        m_elevator->ElevatorInit();
         while (IsOperatorControl() && IsEnabled())
         {
             // Use the joystick X axis for lateral movement, Y axis for forward movement, and Z axis for rotation.
@@ -388,7 +396,7 @@ void ClearDisplay()
 
             Wait(0.005); // wait 5ms to avoid hogging CPU cycles
         }
-        m_elevator->m_elevatorControl->Disable();
+        m_elevator->ElevatorEnd();
     }
     void Test()
     {

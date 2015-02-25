@@ -111,6 +111,9 @@ public:
     ~Elevator();
 
     void PIDWrite(float output);
+    void ElevatorInit();
+    void ElevatorEnd();
+
 };
 
 
