@@ -114,7 +114,7 @@ public:
         m_gamepad(PortAssign::GamepadChannel),
         m_autoPID(&m_robotDrive, &m_tracker, &m_gyro, &m_driveStabilize),
 
-        m_driveStabilize(&m_gyro, &m_tracker, &m_stick, 0.0, 0.0, 0.008, 0.25, 0.5)
+        m_driveStabilize(&m_gyro, &m_tracker, &m_stick, 0.0, 0.0, 0.016, 0.25, 0.6)
 
 // as they are declared above.
 
@@ -172,10 +172,11 @@ void ClearDisplay()
         int MovePickup2Height = 60;
 
         const float simpleAutoDelay = 0;
+        const float complexAutoDelay = 0.5;
 
         //m_robotDrive.SetSafetyEnabled(false); this may be needed
         //This is the mode it's going to use
-        AutoMode autoMode = simple;
+        AutoMode autoMode = complex;
 
         m_autoPID.Reset();
 
@@ -194,11 +195,12 @@ void ClearDisplay()
             while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook1Lifted))
             {
             	SmartDashboard::PutString("DB/String 0", "Still in this loop");
+            	m_elevator->updateProfile();
                 DisplayInfo();
                 Wait(0.005);
             }
 
-            Wait(1.0);
+            Wait(complexAutoDelay);
 
             // move right + move up over container
             SmartDashboard::PutString("DB/String 0", "Pick Up and Move 1");
@@ -208,6 +210,7 @@ void ClearDisplay()
             while(IsAutonomous() && IsEnabled() &&
                         (!m_autoPID.isPastGoal || !m_elevator->elevatorIsAt(kElevatorHook3Lifted)))
             {
+                m_elevator->updateProfile();
                 DisplayInfo();
                 Wait(0.005);
             }
@@ -215,7 +218,7 @@ void ClearDisplay()
 
 
 
-            Wait(1.0);
+            Wait(complexAutoDelay);
 
             //move down
             SmartDashboard::PutString("DB/String 0", "Lower Crate 1 ");
@@ -223,22 +226,24 @@ void ClearDisplay()
             m_elevator->setElevatorGoalPosition(kElevatorHook2Ready);
             while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook2Ready))
             {
+                m_elevator->updateProfile();
                 DisplayInfo();
                 Wait(0.005);
             }
 
-            Wait(1.0);
+            Wait(complexAutoDelay);
 
             SmartDashboard::PutString("DB/String 0", "Pick up 2");
 
              m_elevator->setElevatorGoalPosition(kElevatorHook2Lifted);
             while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook2Lifted))
             {
+                m_elevator->updateProfile();
                 DisplayInfo();
                 Wait(0.005);
             }
 
-            Wait(1.0);
+            Wait(complexAutoDelay);
 
 
             //up right
@@ -248,11 +253,12 @@ void ClearDisplay()
             while(IsAutonomous() && IsEnabled() &&
                     (!m_autoPID.isPastGoal || !m_elevator->elevatorIsAt(MovePickup2Height)))
             {
+                m_elevator->updateProfile();
                 DisplayInfo();
                 Wait(0.005);
             }
 
-            Wait(1.0);
+            Wait(complexAutoDelay);
 
             //move right
 
@@ -264,7 +270,7 @@ void ClearDisplay()
                 Wait(0.005);
             }
 
-            Wait(1.0);
+            Wait(complexAutoDelay);
 
             //move down
             SmartDashboard::PutString("DB/String 0", "Put down 2");
@@ -272,11 +278,12 @@ void ClearDisplay()
              m_elevator->setElevatorGoalPosition(kElevatorHook3Ready);
              while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook3Ready))
              {
+                 m_elevator->updateProfile();
                 DisplayInfo();
                 Wait(0.005);
              }
 
-             Wait(1.0);
+             Wait(complexAutoDelay);
 
              //pick up
              SmartDashboard::PutString("DB/String 0", "Pick up 3");
@@ -284,11 +291,12 @@ void ClearDisplay()
              m_elevator->setElevatorGoalPosition(kElevatorHook3Lifted);
              while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook3Lifted))
              {
+                 m_elevator->updateProfile();
                 DisplayInfo();
                 Wait(0.005);
              }
 
-             Wait(1.0);
+             Wait(complexAutoDelay);
 
             SmartDashboard::PutString("DB/String 0", "Backoff totes");
 
@@ -299,7 +307,7 @@ void ClearDisplay()
                 Wait(0.005);
             }
 
-            Wait(1.0);
+            Wait(complexAutoDelay);
 
             //drop totes here
             SmartDashboard::PutString("DB/String 0", "Put down all");
@@ -307,9 +315,11 @@ void ClearDisplay()
             m_elevator->setElevatorGoalPosition(kElevatorHook1Ready);
             while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook1Ready))
              {
+                m_elevator->updateProfile();
                 DisplayInfo();
                 Wait(0.005);
              }
+
 
 
             m_autoPID.Reset();
