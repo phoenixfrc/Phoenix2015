@@ -34,7 +34,8 @@ Elevator::Elevator(
     m_speedMultiplier = kNormalMultiplier;
     m_encoder->SetDistancePerPulse(1 / TicksPerInch);
     //m_elevatorControl = new PIDController(0.28, 0.038, 0.00, encoder, this);//This worked for new code
-    m_elevatorControl = new PIDController(0.14, 0.0095, 0.00, encoder, this);//This worked for old code
+    //m_elevatorControl = new PIDController(0.14, 0.0095, 0.00, encoder, this);//This worked for old code
+    m_elevatorControl = new PIDController(0.28, 0.0095, 0.00, encoder, this);//For testing
 }
 
 void Elevator::operateElevator()

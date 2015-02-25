@@ -171,13 +171,15 @@ void ClearDisplay()
 
         int MovePickup2Height = 60;
 
+        const float simpleAutoDelay = 0;
+
         //m_robotDrive.SetSafetyEnabled(false); this may be needed
         //This is the mode it's going to use
         AutoMode autoMode = simple;
 
         m_autoPID.Reset();
 
-        Wait(1.0);//debug only
+        Wait(simpleAutoDelay);//debug only
 
         switch(autoMode)
         {
@@ -327,7 +329,7 @@ void ClearDisplay()
                 Wait(0.005);
             }
 
-            Wait(1.0);//debug only
+            Wait(simpleAutoDelay);//debug only
 
             SmartDashboard::PutString("DB/String 0", "Moving Forward");
 
@@ -338,7 +340,7 @@ void ClearDisplay()
                 Wait(0.005);
             }
 
-            Wait(1.0);//debug only
+            Wait(simpleAutoDelay);//debug only
 
             SmartDashboard::PutString("DB/String 0", "Dropping");
 
@@ -350,7 +352,7 @@ void ClearDisplay()
                 Wait(0.005);
             }
 
-            Wait(1.0);//debug only
+            Wait(simpleAutoDelay);//debug only
 
             SmartDashboard::PutString("DB/String 0", "Moving Back");
 
