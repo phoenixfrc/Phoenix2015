@@ -45,11 +45,11 @@ struct PortAssign
     static const uint32_t ElevatorLowerLimitChannel = 10;
     static const uint32_t DIO11Channel = 11; //Does not exist
     static const uint32_t ElevatorUpperLimitChannel = 12;
-    static const uint32_t DraggerActivatedLimitChannel = 13;
+    static const uint32_t DraggerActivatedLimitChannel = 14;
     static const uint32_t DraggerUpperLimitChannel = 18;
 
     //MXP Breakout board doesn't expose ports: 14-17
-    static const uint32_t DIO14Channel = 14;
+    static const uint32_t DIO14Channel = 13;
     static const uint32_t DIO15Channel = 15;
     static const uint32_t DIO16Channel = 16;
     static const uint32_t DIO17Channel = 17;

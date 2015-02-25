@@ -76,7 +76,7 @@ void Dragger::operateDragger(Joystick * button, DigitalInput * limitSwitchDown, 
     	case loweringState:
     		draggerState << "Lowering State";
     		SmartDashboard::PutString("DB/String 9", draggerState.str());
-    		motor->Set(m_downSpeed);
+    		motor->Set(-m_downSpeed);
     		m_timer = 0;
 
     		if (limitSwitchDown){
@@ -96,7 +96,7 @@ void Dragger::operateDragger(Joystick * button, DigitalInput * limitSwitchDown, 
     	case liftingState:
     		draggerState << "Lifting State";
     		SmartDashboard::PutString("DB/String 9", draggerState.str());
-    		motor->Set(m_upSpeed);
+    		motor->Set(-m_upSpeed);
     		m_timer ++;
 
     		if (isUp){
