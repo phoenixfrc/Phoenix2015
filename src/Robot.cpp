@@ -171,13 +171,15 @@ void ClearDisplay()
 
         int MovePickup2Height = 60;
 
+        const float simpleAutoDelay = 0;
+
         //m_robotDrive.SetSafetyEnabled(false); this may be needed
         //This is the mode it's going to use
-        AutoMode autoMode = complex;
+        AutoMode autoMode = simple;
 
         m_autoPID.Reset();
 
-        Wait(1.0);//debug only
+        Wait(simpleAutoDelay);//debug only
 
         switch(autoMode)
         {
@@ -187,10 +189,11 @@ void ClearDisplay()
             //Pick up tote  6 inch
                 SmartDashboard::PutString("DB/String 0", "Initial Pick up");
 
-            m_elevator->setElevatorGoalPosition(kElevatorHook1Lifted, 0.5);
+            m_elevator->setElevatorGoalPosition(kElevatorHook1Lifted);
 
             while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook1Lifted))
             {
+            	SmartDashboard::PutString("DB/String 0", "Still in this loop");
                 DisplayInfo();
                 Wait(0.005);
             }
@@ -201,7 +204,7 @@ void ClearDisplay()
             SmartDashboard::PutString("DB/String 0", "Pick Up and Move 1");
 
             m_autoPID.SetGoal(FieldDistances::autoCrateDiff,0);
-            m_elevator->setElevatorGoalPosition(kElevatorHook3Lifted, 0.5);
+            m_elevator->setElevatorGoalPosition(kElevatorHook3Lifted);
             while(IsAutonomous() && IsEnabled() &&
                         (!m_autoPID.isPastGoal || !m_elevator->elevatorIsAt(kElevatorHook3Lifted)))
             {
@@ -211,14 +214,13 @@ void ClearDisplay()
 
 
 
-            /*
 
             Wait(1.0);
 
             //move down
             SmartDashboard::PutString("DB/String 0", "Lower Crate 1 ");
 
-            m_elevator->setElevatorGoalPosition(kElevatorHook2Ready, 0.5);
+            m_elevator->setElevatorGoalPosition(kElevatorHook2Ready);
             while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook2Ready))
             {
                 DisplayInfo();
@@ -229,7 +231,7 @@ void ClearDisplay()
 
             SmartDashboard::PutString("DB/String 0", "Pick up 2");
 
-             m_elevator->setElevatorGoalPosition(kElevatorHook2Lifted, 0.5);
+             m_elevator->setElevatorGoalPosition(kElevatorHook2Lifted);
             while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook2Lifted))
             {
                 DisplayInfo();
@@ -242,7 +244,7 @@ void ClearDisplay()
             //up right
             SmartDashboard::PutString("DB/String 0", "Move Pickup 2");
             m_autoPID.SetGoal(FieldDistances::autoCrateDiff,0);
-            m_elevator->setElevatorGoalPosition(MovePickup2Height, 0.5);
+            m_elevator->setElevatorGoalPosition(MovePickup2Height);
             while(IsAutonomous() && IsEnabled() &&
                     (!m_autoPID.isPastGoal || !m_elevator->elevatorIsAt(MovePickup2Height)))
             {
@@ -267,7 +269,7 @@ void ClearDisplay()
             //move down
             SmartDashboard::PutString("DB/String 0", "Put down 2");
 
-             m_elevator->setElevatorGoalPosition(kElevatorHook3Ready, 0.5);
+             m_elevator->setElevatorGoalPosition(kElevatorHook3Ready);
              while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook3Ready))
              {
                 DisplayInfo();
@@ -279,7 +281,7 @@ void ClearDisplay()
              //pick up
              SmartDashboard::PutString("DB/String 0", "Pick up 3");
 
-             m_elevator->setElevatorGoalPosition(kElevatorHook3Lifted, 0.5);
+             m_elevator->setElevatorGoalPosition(kElevatorHook3Lifted);
              while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook3Lifted))
              {
                 DisplayInfo();
@@ -302,14 +304,13 @@ void ClearDisplay()
             //drop totes here
             SmartDashboard::PutString("DB/String 0", "Put down all");
 
-            m_elevator->setElevatorGoalPosition(kElevatorHook1Ready, 0.5);
+            m_elevator->setElevatorGoalPosition(kElevatorHook1Ready);
             while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook1Ready))
              {
                 DisplayInfo();
                 Wait(0.005);
              }
 
-             */
 
             m_autoPID.Reset();
             break;
@@ -320,14 +321,15 @@ void ClearDisplay()
             //Pick up tote here
             SmartDashboard::PutString("DB/String 0", "Initial Pick-up");
 
-            m_elevator->setElevatorGoalPosition(kElevatorHook1Lifted, 0.5);
+            m_elevator->setElevatorGoalPosition(kElevatorHook1Lifted);
             while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook1Lifted))
             {
+            	m_elevator->updateProfile();
                 DisplayInfo();
                 Wait(0.005);
             }
 
-            Wait(1.0);//debug only
+            Wait(simpleAutoDelay);//debug only
 
             SmartDashboard::PutString("DB/String 0", "Moving Forward");
 
@@ -338,18 +340,19 @@ void ClearDisplay()
                 Wait(0.005);
             }
 
-            Wait(1.0);//debug only
+            Wait(simpleAutoDelay);//debug only
 
             SmartDashboard::PutString("DB/String 0", "Dropping");
 
-            m_elevator->setElevatorGoalPosition(kElevatorHook1Ready, 0.5);
-            while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook1Ready))
+            m_elevator->setElevatorGoalPosition(kElevatorHook1Ready - 2);
+            while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook1Ready - 2))
             {
+            	m_elevator->updateProfile();
                 DisplayInfo();
                 Wait(0.005);
             }
 
-            Wait(1.0);//debug only
+            Wait(simpleAutoDelay);//debug only
 
             SmartDashboard::PutString("DB/String 0", "Moving Back");
 
@@ -387,6 +390,7 @@ void ClearDisplay()
 
             m_elevator->operateElevator();
 
+            m_elevator->updateProfile();
 
             m_dragger.operateDragger(&m_gamepad, &m_draggerLowerLimit, &m_draggerMotor);
 
