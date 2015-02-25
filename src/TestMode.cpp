@@ -14,20 +14,29 @@
 //Set limitSwitch port on init
 TestMode::TestMode(): m_buttonWasPressed(false){}
 
+    std::ostringstream trackerMessageBuilderX;
+    std::ostringstream trackerMessageBuilderY;
 
 void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick,  Talon * motor1,
+
         Talon * motor2,  RobotDrive * driveTrain,
-        Relay * ElevatorBrake){
+        Relay * ElevatorBrake, Talon * draggerMotor){
 
 
     //Move robot:
     driveTrain->MecanumDrive_Cartesian(stick->GetX(), stick->GetY(), stick->GetZWithDeadZone(0.1));
 
     //Move elevator:
-    float thumbstick = -gamePad->GetY()/4;
+    float thumbstick = -gamePad->GetY(Joystick::kLeftHand)/4;
     thumbstick = fabs(thumbstick) < 0.0125 ? 0 : thumbstick;
-    motor1->Set(thumbstick);
-    motor2->Set(thumbstick);
+
+    //inverted motor speeds because main robot has oposite wiring from test robot
+    motor1->Set(-thumbstick);
+    motor2->Set(-thumbstick);
+
+    //Move dragger using other thumb stick
+    float leftThumbstick = gamePad->GetY(Joystick::kRightHand)/4;// slows down motor
+    draggerMotor->Set(leftThumbstick);
 
     //Toggle Brake:
     bool buttonState = gamePad->GetRawButton(5);
@@ -41,9 +50,6 @@ void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick,  Tal
             ElevatorBrake->Set(ElevatorBrake->kOff);
         }
     }
-
-
-
 }
 
 TestMode::~TestMode(){
