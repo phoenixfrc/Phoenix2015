@@ -93,7 +93,7 @@ public:
     #define kToteDelta            (18)
     #define kElevatorHome         (kSoftLowerLimit)
     // 3
-    #define kElevatorHook1Ready   (4)
+    #define kElevatorHook1Ready   (2)
     #define kElevatorHook1Lifted  (kElevatorHook1Ready + kLiftDelta)
     //22
     #define kElevatorHook2Ready   (kElevatorHook1Ready + kToteDelta)

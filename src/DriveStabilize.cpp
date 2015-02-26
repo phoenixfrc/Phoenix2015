@@ -43,7 +43,8 @@ float DriveStabilize::LockX(){
 }
 
 float DriveStabilize::LockY(){
-    return m_tracker->GetY()*m_yLock;//Probably should be negative, but maybe not? (test)
+	//Needs a PID loop.
+    return m_tracker->GetY()*m_yLock;
 }
 
 
