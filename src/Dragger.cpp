@@ -20,7 +20,6 @@ m_liftDuration(kDraggerReverseTime),
 m_downSpeed(kDraggerMotorDownSpeed),
 m_upSpeed(kDraggerMotorUpSpeed),
 m_draggerDirection(true),
-isDown(false),
 m_mode(defaultState)
 {}
 
@@ -35,27 +34,16 @@ m_mode(defaultState)
 
 void Dragger::operateDragger(Joystick * button, DigitalInput * limitSwitchDown, Talon * motor){
 
-    bool buttonPressed = button->GetRawButton(5); //Gets button state, 1 is a placeholder value
     bool button7 = button->GetRawButton(7);
 
     bool isUp = m_timer >= (m_liftDuration*200);//m_liftDuration is in seconds, and needs to converted to 200ths of seconds
     //Is the down limit switch triggered?
-
-    if (limitSwitchDown->Get()){
-    	isDown = true;
-    }
-
+    bool isDown = limitSwitchDown->Get();
 
     std::ostringstream bob, draggerState;
-    bob << isUp << buttonPressed;
+    bob << "up:" << isUp << " dn:" << isDown << " B7:" << button7;
     SmartDashboard::PutString("DB/String 8", bob.str());
 
-    //Read the button then toggle the variable
-     /*   if(m_draggerDirection && (isUp = false)){
-            m_timer++;
-        }else{
-        	m_timer = 0;
-        } */
     /* Sets the motor speed to up, down or stopped depending on the button press and limit switches:
      *    If the upper limit switch is tripped: stop the motor, or, if the button is pressed, move the motor down
      *    If the lower limit switch is tripped: stop the motor, or, if the button is pressed, move the motor up
@@ -64,7 +52,7 @@ void Dragger::operateDragger(Joystick * button, DigitalInput * limitSwitchDown, 
      */
     switch (m_mode){
     	case upState:
-    		draggerState << "Up State";
+    		draggerState << "up";
     		motor->Set(0);
     		m_timer = 0;
 
@@ -73,7 +61,7 @@ void Dragger::operateDragger(Joystick * button, DigitalInput * limitSwitchDown, 
     		}
     		break;
     	case loweringState:
-    		draggerState << "Lowering State";
+    		draggerState << "lowering";
     		motor->Set(m_downSpeed);
     		m_timer = 0;
 
@@ -82,7 +70,7 @@ void Dragger::operateDragger(Joystick * button, DigitalInput * limitSwitchDown, 
     		}
     		break;
     	case downState:
-    		draggerState << "Down State";
+    		draggerState << "down";
     		motor->Set(0);
     		m_timer = 0;
 
@@ -91,7 +79,7 @@ void Dragger::operateDragger(Joystick * button, DigitalInput * limitSwitchDown, 
     		}
     		break;
     	case liftingState:
-    		draggerState << "Lifting State";
+    		draggerState << "lifting";
     		motor->Set(m_upSpeed);
     		m_timer ++;
 
@@ -104,84 +92,9 @@ void Dragger::operateDragger(Joystick * button, DigitalInput * limitSwitchDown, 
     		break;
     }
 
+    draggerState << " tim:" << m_timer;
     SmartDashboard::PutString("DB/String 9", draggerState.str());
 
-    /*    if (buttonPressed){
-    	if(m_draggerDirection){
-    		m_draggerDirection = false;
-    	}else{
-    		m_draggerDirection = true;
-    		if(isDown){
-    		        m_timer = 0;
-    		    }
-=======
-    //Read the button then toggle the variable
-
-    if (buttonPressed){
-    	if(m_draggerDirection){
-    		m_draggerDirection = false;
-    	}else{
-    		m_draggerDirection = true;
->>>>>>> branch 'master' of https://github.com/phoenixfrc/Phoenix2015.git
-    	}
-
-    }
-
-
-<<<<<<< HEAD
-  if (isUp || isDown){
-
-
-        if ((isUp != isDown)){
-        	if (m_draggerDirection){
-
-
-        		if (isUp){
-
-
-                motor->Set(0);
-            } else if(isDown){
-            	m_timer = 0;
-            	motor->Set(-m_upSpeed);
-            }
-        } else if(m_draggerDirection == false){
-        	if(isUp){
-        		motor->Set(m_downSpeed);
-        	}else if(isDown){
-        		motor->Set(0);
-        	}
-
-            }
-        } else {
-            motor->Set(0);
-        }
-=======
-    if (isUp || isDown){
-    	topLevel << "Top Level";
-    	SmartDashboard::PutString("DB/String 1", topLevel.str());
-    	if(isUp != isDown){
-			if (m_draggerDirection){
-				midLevel << "Mid Level";
-				SmartDashboard::PutString("DB/String 2", midLevel.str());
-				if (isUp){
-					bottomLevel << "Bottom Level";
-					SmartDashboard::PutString("DB/String 9", bottomLevel.str());
-					motor->Set(0);
-				} else if(isDown){
-					m_timer = 0;
-					motor->Set(-m_upSpeed);
-				}
-			} else if((m_draggerDirection == false)){
-					if(isUp){
-						motor->Set(m_downSpeed);
-					}else if(isDown){
-						motor->Set(0);
-					}
-			}
->>>>>>> branch 'master' of https://github.com/phoenixfrc/Phoenix2015.git
-
-<<<<<<< HEAD
-    } */
 }
 Dragger::~Dragger(){
 

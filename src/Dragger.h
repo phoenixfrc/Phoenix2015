@@ -27,7 +27,6 @@ private:
     const float m_downSpeed;
     const float m_upSpeed;
     bool m_draggerDirection;
-    bool isDown;
     enum draggerStates{defaultState, upState, loweringState, downState, liftingState};
     int m_mode;
 
