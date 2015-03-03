@@ -14,7 +14,8 @@
 
 enum AutoMode {
     complex,
-    simple
+    simple,
+	simpleShort
 };
 
 class Robot: public SampleRobot
@@ -368,6 +369,61 @@ void ClearDisplay()
 
 
             m_autoPID.Reset();
+            break;
+        case simpleShort:
+        	SmartDashboard::PutString("DB/String 0", "Starting Autonomous");
+			//This expects robot to be placed between tote and drive station facing into the field
+			//Pick up tote here
+			SmartDashboard::PutString("DB/String 0", "Initial Pick-up");
+
+			m_elevator->setElevatorGoalPosition(kElevatorHook1Lifted);
+			while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook1Lifted))
+			{
+				m_elevator->updateProfile();
+				DisplayInfo();
+				Wait(0.005);
+			}
+
+			Wait(simpleAutoDelay);//debug only
+
+			SmartDashboard::PutString("DB/String 0", "Moving Forward");
+
+			m_autoPID.SetGoal(0,FieldDistances::intoAutoDiff);
+			while(IsAutonomous() && IsEnabled() && !m_autoPID.isPastGoal)
+			{
+				DisplayInfo();
+				Wait(0.005);
+			}
+
+			Wait(simpleAutoDelay);//debug only
+
+			SmartDashboard::PutString("DB/String 0", "Dropping");
+
+			m_elevator->setElevatorGoalPosition(kElevatorHook1Ready - 2);
+			while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook1Ready - 2))
+			{
+				m_elevator->updateProfile();
+				DisplayInfo();
+				Wait(0.005);
+			}
+
+			Wait(simpleAutoDelay);//debug only
+
+			SmartDashboard::PutString("DB/String 0", "Moving Back");
+
+
+			m_autoPID.SetGoal(0,-4.0);
+			while(IsAutonomous() && IsEnabled() && !m_autoPID.BeforeGoal(0,-4))
+			{
+				DisplayInfo();
+				Wait(0.005);
+			}
+
+			SmartDashboard::PutString("DB/String 0", "Finished");
+
+
+			m_autoPID.Reset();
+			break;
         }
         m_elevator->ElevatorEnd();
 
