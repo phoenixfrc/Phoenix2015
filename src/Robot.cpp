@@ -42,12 +42,13 @@ class Robot: public SampleRobot
     DigitalInput m_DIO11;
     DigitalInput m_elevatorUpperLimit;
     DigitalInput m_draggerLowerLimit;
+    DigitalInput m_draggerUpperLimit;
     //MXP Breakout board doesn't expose ports: 14-17
 //    DigitalInput m_DIO14;
 //    DigitalInput m_DIO15;
 //    DigitalInput m_DIO16;
 //    DigitalInput m_DIO17;
-    DigitalInput m_DIO18;
+//    DigitalInput m_DIO18;
     DigitalInput m_DIO19;
     DigitalInput m_DIO20;
     DigitalInput m_DIO21;
@@ -94,12 +95,13 @@ public:
         m_DIO11(PortAssign::DIO11Channel),
         m_elevatorUpperLimit(PortAssign::ElevatorUpperLimitChannel),
         m_draggerLowerLimit(PortAssign::DraggerActivatedLimitChannel),
+		m_draggerUpperLimit(PortAssign::DraggerUpperLimitChannel),
 
         //m_DIO14(PortAssign::DIO14Channel),
         //m_DIO15(PortAssign::DIO15Channel),
         //m_DIO16(PortAssign::DIO16Channel),
         //m_DIO17(PortAssign::DIO17Channel),
-        m_DIO18(PortAssign::DIO18Channel),
+        //m_DIO18(PortAssign::DIO18Channel),
         m_DIO19(PortAssign::DIO19Channel),
         m_DIO20(PortAssign::DIO20Channel),
         m_DIO21(PortAssign::DIO21Channel),
@@ -474,7 +476,7 @@ void ClearDisplay()
                 //m_DIO16.Get() <<
                 //m_DIO17.Get() <<
                 m_DIO11.Get() <<
-				m_DIO18.Get() <<
+				//m_DIO18.Get() <<
 				m_DIO19.Get() <<
 				m_DIO20.Get() <<
                 m_DIO21.Get() <<
