@@ -24,6 +24,7 @@ public:
     void Reset(); //Sets current location to 0
     //Never set both x and y to some number at the same time. One must always be 0 or else bad things occur
     void SetGoal(double xGoalDistance, double yGoalDistance);
+    void SetGoal(double xGoalDistance, double yGoalDistance, float speedMultiplier);
 
     bool ReachedGoal();
 
@@ -47,6 +48,7 @@ private:
     EncoderTracker * m_tracker;
     double m_xGoalDistance;
     double m_yGoalDistance;
+    float m_speedMultiplier;
 };
 
 #endif

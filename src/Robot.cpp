@@ -59,6 +59,11 @@ class Robot: public SampleRobot
 
 
     Gyro m_gyro;
+    AnalogInput m_IRLeftInner;
+    AnalogInput m_IRRightInner;
+    AnalogInput m_IRLeftOuter;
+    AnalogInput m_IRRightOuter;
+
 
     Team2342Joystick m_stick;                 // only joystick
     Joystick m_gamepad;       // the gamepad
@@ -110,6 +115,11 @@ public:
         m_DIO25(PortAssign::DIO25Channel),
 
         m_gyro(PortAssign::GyroChannel),
+
+		m_IRLeftInner(PortAssign::IRLeftInnerChannel),
+		m_IRRightInner(PortAssign::IRRightInnerChannel),
+		m_IRLeftOuter(PortAssign::IRLeftOuterChannel),
+		m_IRRightOuter(PortAssign::IRRightOuterChannel),
 
         m_stick(PortAssign::JoystickChannel),
         m_gamepad(PortAssign::GamepadChannel),
@@ -174,8 +184,8 @@ void ClearDisplay()
 
         int MovePickup2Height = 60;
 
-        const float simpleAutoDelay = 0;
-        const float complexAutoDelay = 0.25;
+        const float simpleAutoDelay = 0.0;
+        const float complexAutoDelay = 0.0;
 
         //m_robotDrive.SetSafetyEnabled(false); this may be needed
         //This is the mode it's going to use
@@ -195,33 +205,33 @@ void ClearDisplay()
 
             Lift(kElevatorHook1Lifted, complexAutoDelay, "Lift Tote 1");
 
-            Move(FieldDistances::shiftDiff, 0, complexAutoDelay, "Move Right 1");
+            Move(FieldDistances::shiftDiff, 0, 1 , complexAutoDelay, "Move Right 1");
 
             Lift(kElevatorHook3Lifted, complexAutoDelay, "Lift Over 1");
 
-            Move (0,FieldDistances::backOffDiff, complexAutoDelay,"Move Back 1");
+            //Move (0,FieldDistances::backOffDiff, 1, complexAutoDelay,"Move Back 1");
 
-            Move((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, complexAutoDelay, "Move Left 1");
+            Move((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, 1, complexAutoDelay, "Move Left 1");
 
             Lift(kElevatorHook2Ready, complexAutoDelay, "Lower Tote 1");
 
-            Move(0, FieldDistances::pushDiff, complexAutoDelay, "Move Forward 2");
+            Move(0, FieldDistances::pushDiff, 0.5, complexAutoDelay, "Move Forward 2");
 
             Lift(kElevatorHook2Lifted, complexAutoDelay, "Lift Tote 2");
 
-            Move(FieldDistances::shiftDiff, 0, complexAutoDelay, "Move Right 2");
+            Move(FieldDistances::shiftDiff, 0, 1, complexAutoDelay, "Move Right 2");
 
             Lift(kElevatorHook4Lifted, complexAutoDelay, "Lift Over 1");
 
-            Move (0,FieldDistances::backOffDiff, complexAutoDelay,"Move Back 2");
+            //Move (0,FieldDistances::backOffDiff, 1, complexAutoDelay,"Move Back 2");
 
-            Move((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, complexAutoDelay, "Move Left 2");
+            Move((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, 1, complexAutoDelay, "Move Left 2");
 
-            Move(0, FieldDistances::intoAutoDiff, complexAutoDelay, "Into Autozone");
+            Move(0, FieldDistances::intoAutoDiff, 1, complexAutoDelay, "Into Autozone");
 
             Lift(kSoftLowerLimit, complexAutoDelay, "Put down all");
 
-            Move(0, FieldDistances::backOffDiff, complexAutoDelay, "Backoff totes");
+            Move(0, FieldDistances::backOffDiff, 1, complexAutoDelay, "Backoff totes");
 
             m_autoPID.Reset();
             break;
@@ -346,14 +356,23 @@ void ClearDisplay()
         }
         count = 0;
 
-        std::ostringstream gyroBuilder, eb, eb2, elevatorBuilder, elevatorEncoderBuilder, elevatorBuilder3, IRsensors;
+        std::ostringstream gyroBuilder, eb, eb2, elevatorBuilder, elevatorEncoderBuilder, elevatorBuilder3, IRsensors, IRSensors2;
+        //Print IR Sensor Values
+
+       // IRsensors << "RI: " << m_IRRightInner.GetAverageValue();
+        //IRsensors << "LI: " << m_IRLeftInner.GetAverageValue();
+        //SmartDashboard::PutString("DB/String 0", IRsensors.str());
+
+        IRSensors2 << "LO: " << m_IRLeftOuter.GetAverageValue();
+        IRSensors2 << "RO: " << m_IRRightOuter.GetAverageValue();
+        SmartDashboard::PutString("DB/String 1", IRSensors2.str());
 
         //Prints out the values for gyro:
         gyroBuilder << "Gyro angle: ";
         gyroBuilder << m_gyro.GetAngle();
         SmartDashboard::PutString("DB/String 2", gyroBuilder.str());
 
-        //
+
 
         //Print Encoder values:
         eb << "LR: "<< m_leftRearDriveEncoder.Get();
@@ -402,10 +421,10 @@ void ClearDisplay()
 
     }
 
-    void Move (float x, float y, float waitTime, std::string debugMessage){
+    void Move (float x, float y, float speedMultiplier, float waitTime, std::string debugMessage){
     	SmartDashboard::PutString("DB/String 0", debugMessage);
     	if (x == 0 || y == 0){
-			m_autoPID.SetGoal(x, y);
+			m_autoPID.SetGoal(x, y, speedMultiplier);
 
 			while(IsAutonomous() && IsEnabled() && !m_autoPID.NearGoal())
 			{
