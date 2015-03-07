@@ -7,6 +7,7 @@
 #include "Dragger.h"
 #include "EncoderTracker.h"
 #include "PIDInterface.h"
+#include "DashboardPreferences.h"
 #include <sstream>
 /**
  * This is a demo program showing how to use Mecanum control with the RobotDrive class.
@@ -31,6 +32,8 @@ class Robot: public SampleRobot
     TestMode m_tester;
     // tba Brake
     Relay m_brake;
+
+    DashboardPreferences m_dashboard;
 
     Encoder m_leftRearDriveEncoder;
     Encoder m_leftFrontDriveEncoder;
@@ -82,6 +85,8 @@ public:
 		m_tester(),
 
         m_brake(PortAssign::ElevatorBrakeChannel),
+
+		m_dashboard(),
 
         m_leftRearDriveEncoder(PortAssign::LeftRearDriveEncoderChannelA, PortAssign::LeftRearDriveEncoderChannelB),
         m_leftFrontDriveEncoder(PortAssign::LeftFrontDriveEncoderChannelA, PortAssign::LeftFrontDriveEncoderChannelB),
@@ -162,6 +167,18 @@ void ClearDisplay()
         m_robotDrive.SetSafetyEnabled(false);
         m_gyro.Reset();
 
+        //This is the mode it's going to use
+
+       /* if(m_dashboard.m_button1){
+        	AutoMode autoMode = complex;
+        }
+        if(m_dashboard.m_button2){
+        	AutoMode autoMode = simple;
+        }
+        if(m_dashboard.m_button3){
+        	AutoMode autoMode = simpleShort;
+        } */
+
         ClearDisplay();
         m_elevator->ElevatorInit();
         SmartDashboard::PutString("DB/String 0", "Initial Homeing");
@@ -175,7 +192,7 @@ void ClearDisplay()
         const float simpleAutoDelay = 0;
 
         //m_robotDrive.SetSafetyEnabled(false); this may be needed
-        //This is the mode it's going to use
+
         AutoMode autoMode = simple;
 
         m_autoPID.Reset();
@@ -466,10 +483,17 @@ void ClearDisplay()
         m_rightFrontDriveEncoder.Reset();
 
         m_elevatorEncoder.Reset();
+        int32_t count = 0;
         //m_elevator->m_elevatorControl->Enable();
 
         while (IsTest() && IsEnabled())
         {
+        	 m_dashboard.updateButtons();
+        	 if(m_dashboard.m_button1){
+        	              SmartDashboard::PutString("DB/String 9", "Dashboard Button Works!");
+        	        }
+        	printf("-------------->%6d button value %c\n", count++,  m_dashboard.m_button1? '1': '0');
+
             m_tester.PerformTesting(&m_gamepad, &m_stick,
                     &m_elevatorMotor1, &m_elevatorMotor2, &m_robotDrive, &m_brake, &m_draggerMotor);
             //reserved for config
@@ -477,7 +501,7 @@ void ClearDisplay()
             //reserved for config
             DisplayInfo();
 
-            Wait(0.005);
+            Wait(/*0.005*/0.1);
         }
         m_elevator->m_elevatorControl->Disable();
     }

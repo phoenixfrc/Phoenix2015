@@ -15,7 +15,11 @@ class DashboardPreferences{
 public:
 	DashboardPreferences();
 
-	void customPreferences();
+	void updateButtons();
+	bool m_newName;
+	bool m_button1;
+	bool m_button2;
+	bool m_button3;
 
 	~DashboardPreferences();
 
