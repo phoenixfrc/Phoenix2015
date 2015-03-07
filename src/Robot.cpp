@@ -59,6 +59,11 @@ class Robot: public SampleRobot
 
 
     Gyro m_gyro;
+    AnalogInput m_IRLeftInner;
+    AnalogInput m_IRRightInner;
+    AnalogInput m_IRLeftOuter;
+    AnalogInput m_IRRightOuter;
+
 
     Team2342Joystick m_stick;                 // only joystick
     Joystick m_gamepad;       // the gamepad
@@ -110,6 +115,11 @@ public:
         m_DIO25(PortAssign::DIO25Channel),
 
         m_gyro(PortAssign::GyroChannel),
+
+		m_IRLeftInner(PortAssign::IRLeftInnerChannel),
+		m_IRRightInner(PortAssign::IRRightInnerChannel),
+		m_IRLeftOuter(PortAssign::IRLeftOuterChannel),
+		m_IRRightOuter(PortAssign::IRRightOuterChannel),
 
         m_stick(PortAssign::JoystickChannel),
         m_gamepad(PortAssign::GamepadChannel),
@@ -174,16 +184,14 @@ void ClearDisplay()
 
         int MovePickup2Height = 60;
 
-        const float simpleAutoDelay = 0;
-        const float complexAutoDelay = 0;
+        const float simpleAutoDelay = 0.0;
+        const float complexAutoDelay = 0.0;
 
         //m_robotDrive.SetSafetyEnabled(false); this may be needed
         //This is the mode it's going to use
         AutoMode autoMode = complex;
 
         m_autoPID.Reset();
-
-        Wait(simpleAutoDelay);//debug only
 
         //std::ostringstream strBuilder;
 
@@ -215,21 +223,21 @@ void ClearDisplay()
 
             //Lift(kSoftLowerLimit, complexAutoDelay, "Put down all");
 
-            MoveAndLift(FieldDistances::shiftDiff, 0, kElevatorHook3Lifted,
+            MoveAndLift(FieldDistances::shiftDiff, 0, 1, kElevatorHook3Lifted,
                     complexAutoDelay, "Lift 1 Right");
-            Move(0, FieldDistances::moveBack, complexAutoDelay, "Move Back");
-            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, kElevatorHook2Ready, 49,
+            Move(0, FieldDistances::moveBack, 1, complexAutoDelay, "Move Back");
+            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, 1, kElevatorHook2Ready, 49,
                     complexAutoDelay, "1 Left and Down");
-            Move(0, -FieldDistances::moveBack,
+            Move(0, -FieldDistances::moveBack, 0.5,
                     complexAutoDelay, "Move forwards");
-            MoveAndLift(FieldDistances::shiftDiff, 0, kElevatorHook2Lifted,
+            MoveAndLift(FieldDistances::shiftDiff, 0, 1, kElevatorHook2Lifted,
                     complexAutoDelay, "Lift 2 Right");
-            Move(0, FieldDistances::moveBack, complexAutoDelay, "Move Back");
-            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, kElevatorHook4Lifted, 49,
+            Move(0, FieldDistances::moveBack, 1, complexAutoDelay, "Move Back");
+            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, 1, kElevatorHook4Lifted, 49,
                     complexAutoDelay, "1,2 Left and Down");
-            Move(0, -FieldDistances::moveBack,
+            Move(0, -FieldDistances::moveBack, 0.5,
                     complexAutoDelay, "Move forwards");
-            Move(0, FieldDistances::intoAutoDiff,
+            Move(0, FieldDistances::intoAutoDiff, 1,
                     complexAutoDelay, "Into Autozone");
             Lift(kSoftLowerLimit,
                     complexAutoDelay, "Put down all");
@@ -357,14 +365,23 @@ void ClearDisplay()
         }
         count = 0;
 
-        std::ostringstream gyroBuilder, eb, eb2, elevatorBuilder, elevatorEncoderBuilder, elevatorBuilder3, IRsensors;
+        std::ostringstream gyroBuilder, eb, eb2, elevatorBuilder, elevatorEncoderBuilder, elevatorBuilder3, IRsensors, IRSensors2;
+        //Print IR Sensor Values
+
+       // IRsensors << "RI: " << m_IRRightInner.GetAverageValue();
+        //IRsensors << "LI: " << m_IRLeftInner.GetAverageValue();
+        //SmartDashboard::PutString("DB/String 0", IRsensors.str());
+
+        IRSensors2 << "LO: " << m_IRLeftOuter.GetAverageValue();
+        IRSensors2 << "RO: " << m_IRRightOuter.GetAverageValue();
+        SmartDashboard::PutString("DB/String 1", IRSensors2.str());
 
         //Prints out the values for gyro:
         gyroBuilder << "Gyro angle: ";
         gyroBuilder << m_gyro.GetAngle();
         SmartDashboard::PutString("DB/String 2", gyroBuilder.str());
 
-        //
+
 
         //Print Encoder values:
         eb << "LR: "<< m_leftRearDriveEncoder.Get();
@@ -413,13 +430,12 @@ void ClearDisplay()
 
     }
 
-    void Move (float x, float y, float waitTime, std::string debugMessage){
+    void Move (float x, float y, float speedMultiplier, float waitTime, std::string debugMessage){
         if (!(IsAutonomous() && IsEnabled()))
-                            {return;}
+            {return;}
     	SmartDashboard::PutString("DB/String 0", debugMessage);
     	if (x == 0 || y == 0){
-		m_autoPID.SetGoal(x, y);
-
+		m_autoPID.SetGoal(x, y, speedMultiplier);
 		while(IsAutonomous() && IsEnabled() && !m_autoPID.NearGoal())
 		{
 			DisplayInfo();
@@ -444,12 +460,12 @@ void ClearDisplay()
 		Wait(waitTime);
     }
 
-    void MoveAndLift (float x, float y, float height, float waitTime, std::string debugMessage){
+    void MoveAndLift (float x, float y, float speedMultiplier, float height, float waitTime, std::string debugMessage){
         if (!(IsAutonomous() && IsEnabled()))
             {return;}
         SmartDashboard::PutString("DB/String 0", debugMessage);
         if (x == 0 || y == 0){
-                        m_autoPID.SetGoal(x, y);
+                        m_autoPID.SetGoal(x, y, speedMultiplier);
         }
         m_elevator->setElevatorGoalPosition(height);
         while(IsAutonomous() && IsEnabled() && (!m_autoPID.NearGoal() || !m_elevator->elevatorIsAt(height)))
@@ -460,12 +476,12 @@ void ClearDisplay()
                         }
                         Wait(waitTime);
     }
-    void MoveAndLiftWithDelay (float x, float y, float height, float ElevatorDropDelay, float waitTime, std::string debugMessage){
+    void MoveAndLiftWithDelay (float x, float y, float speedMultiplier, float height, float ElevatorDropDelay, float waitTime, std::string debugMessage){
         if (!(IsAutonomous() && IsEnabled()))
                     {return;}
         SmartDashboard::PutString("DB/String 0", debugMessage);
         if (x == 0 || y == 0){
-                        m_autoPID.SetGoal(x, y);
+                        m_autoPID.SetGoal(x, y, speedMultiplier);
         }
         if (m_tracker.GetX() >= ElevatorDropDelay){
             m_elevator->setElevatorGoalPosition(height);
