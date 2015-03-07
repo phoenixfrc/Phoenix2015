@@ -193,8 +193,6 @@ void ClearDisplay()
 
         m_autoPID.Reset();
 
-        Wait(simpleAutoDelay);//debug only
-
         //std::ostringstream strBuilder;
 
         switch(autoMode)
@@ -223,7 +221,7 @@ void ClearDisplay()
 
             Lift(kElevatorHook4Lifted, complexAutoDelay, "Lift Over 1");
 
-            //Move (0,FieldDistances::backOffDiff, 1, complexAutoDelay,"Move Back 2");
+            Move (0,FieldDistances::backOffDiff, 1, complexAutoDelay,"Move Back 2");
 
             Move((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, 1, complexAutoDelay, "Move Left 2");
 
