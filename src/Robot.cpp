@@ -14,7 +14,8 @@
 
 enum AutoMode {
     complex,
-    simple
+    simple,
+    disabled
 };
 
 class Robot: public SampleRobot
@@ -190,13 +191,15 @@ void ClearDisplay()
         {
         case complex:
 
-            Move(0, FieldDistances::pushDiff, complexAutoDelay, "Move Forward 1");
+            //Move(0, FieldDistances::pushDiff, complexAutoDelay, "Move Forward 1");
 
             Lift(kElevatorHook1Lifted, complexAutoDelay, "Lift Tote 1");
 
             Move(FieldDistances::shiftDiff, 0, complexAutoDelay, "Move Right 1");
 
             Lift(kElevatorHook3Lifted, complexAutoDelay, "Lift Over 1");
+
+            Move (0,FieldDistances::backOffDiff, complexAutoDelay,"Move Back 1");
 
             Move((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, complexAutoDelay, "Move Left 1");
 
@@ -209,6 +212,8 @@ void ClearDisplay()
             Move(FieldDistances::shiftDiff, 0, complexAutoDelay, "Move Right 2");
 
             Lift(kElevatorHook4Lifted, complexAutoDelay, "Lift Over 1");
+
+            Move (0,FieldDistances::backOffDiff, complexAutoDelay,"Move Back 2");
 
             Move((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, complexAutoDelay, "Move Left 2");
 
@@ -274,6 +279,9 @@ void ClearDisplay()
 
 
             m_autoPID.Reset();
+            break;
+        case disabled:
+            break;
         }
         m_elevator->ElevatorEnd();
 
@@ -338,12 +346,14 @@ void ClearDisplay()
         }
         count = 0;
 
-        std::ostringstream gyroBuilder, eb, eb2, elevatorBuilder, elevatorEncoderBuilder, elevatorBuilder3;
+        std::ostringstream gyroBuilder, eb, eb2, elevatorBuilder, elevatorEncoderBuilder, elevatorBuilder3, IRsensors;
 
         //Prints out the values for gyro:
         gyroBuilder << "Gyro angle: ";
         gyroBuilder << m_gyro.GetAngle();
         SmartDashboard::PutString("DB/String 2", gyroBuilder.str());
+
+        //
 
         //Print Encoder values:
         eb << "LR: "<< m_leftRearDriveEncoder.Get();
