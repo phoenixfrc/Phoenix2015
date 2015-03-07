@@ -114,7 +114,7 @@ public:
         m_gamepad(PortAssign::GamepadChannel),
         m_autoPID(&m_robotDrive, &m_tracker, &m_gyro, &m_driveStabilize),
 
-        m_driveStabilize(&m_gyro, &m_tracker, &m_stick, 0.0, 0.0, 0.008, 0.25, 0.5)
+        m_driveStabilize(&m_gyro, &m_tracker, &m_stick, 0.0, 0.0, 0.016)
 
 // as they are declared above.
 
@@ -176,7 +176,7 @@ void ClearDisplay()
 
         //m_robotDrive.SetSafetyEnabled(false); this may be needed
         //This is the mode it's going to use
-        AutoMode autoMode = simple;
+        AutoMode autoMode = complex;
 
         m_autoPID.Reset();
 
@@ -230,6 +230,8 @@ void ClearDisplay()
 
             strBuilder << "Backoff totes";
             Move(0, FieldDistances::backOffDiff, complexAutoDelay, &strBuilder);
+
+
 
 
             m_autoPID.Reset();
