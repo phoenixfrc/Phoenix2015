@@ -396,7 +396,7 @@ void ClearDisplay()
 
             m_dragger.operateDragger(&m_gamepad, &m_draggerLowerLimit, &m_draggerMotor);
 
-            DisplayInfo();
+            //DisplayInfo();
 
             Wait(0.005); // wait 5ms to avoid hogging CPU cycles
         }

@@ -40,11 +40,11 @@ void Dragger::operateDragger(Joystick * button, DigitalInput * limitSwitchDown, 
     //Is the down limit switch triggered?
     bool isDown = limitSwitchDown->Get();
 
-    std::ostringstream bob, draggerState;
+    /*std::ostringstream bob, draggerState;
     bob << "up:" << isUp << " dn:" << isDown << " B7:" << button7;
     SmartDashboard::PutString("DB/String 8", bob.str());
 
-    /* Sets the motor speed to up, down or stopped depending on the button press and limit switches:
+    * Sets the motor speed to up, down or stopped depending on the button press and limit switches:
      *    If the upper limit switch is tripped: stop the motor, or, if the button is pressed, move the motor down
      *    If the lower limit switch is tripped: stop the motor, or, if the button is pressed, move the motor up
      *    If both limits are somehow tripped (???): stop the motor, to prevent the robot from breaking anything.
@@ -52,7 +52,7 @@ void Dragger::operateDragger(Joystick * button, DigitalInput * limitSwitchDown, 
      */
     switch (m_mode){
     	case upState:
-    		draggerState << "up";
+    		//draggerState << "up";
     		motor->Set(0);
     		m_timer = 0;
 
@@ -61,7 +61,7 @@ void Dragger::operateDragger(Joystick * button, DigitalInput * limitSwitchDown, 
     		}
     		break;
     	case loweringState:
-    		draggerState << "lowering";
+    		//draggerState << "lowering";
     		motor->Set(m_downSpeed);
     		m_timer = 0;
 
@@ -70,7 +70,7 @@ void Dragger::operateDragger(Joystick * button, DigitalInput * limitSwitchDown, 
     		}
     		break;
     	case downState:
-    		draggerState << "down";
+    		//draggerState << "down";
     		motor->Set(0);
     		m_timer = 0;
 
@@ -79,7 +79,7 @@ void Dragger::operateDragger(Joystick * button, DigitalInput * limitSwitchDown, 
     		}
     		break;
     	case liftingState:
-    		draggerState << "lifting";
+    		//draggerState << "lifting";
     		motor->Set(m_upSpeed);
     		m_timer ++;
 
@@ -92,8 +92,8 @@ void Dragger::operateDragger(Joystick * button, DigitalInput * limitSwitchDown, 
     		break;
     }
 
-    draggerState << " tim:" << m_timer;
-    SmartDashboard::PutString("DB/String 9", draggerState.str());
+   // draggerState << " tim:" << m_timer;
+    //SmartDashboard::PutString("DB/String 9", draggerState.str());
 
 }
 Dragger::~Dragger(){
