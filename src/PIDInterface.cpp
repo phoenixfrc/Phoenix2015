@@ -1,9 +1,10 @@
 #include "PIDInterface.h"
 #include "WPILib.h"
 #include <sstream>
+#include <math.h>
 
 PIDInterface::PIDInterface(RobotDrive * robotDrive, EncoderTracker * tracker, Gyro * gyro, DriveStabilize * driveStabilize):
-xPID(0.08, 0.0, 0.0, this, this), //PID values will need to be tuned for both of these
+xPID(0.12, 0.0, 0.0, this, this), //PID values will need to be tuned for both of these
 yPID(0.16, 0.0, 0.0, this, this)
 {
     xPID.SetOutputRange(-0.5, 0.5);
@@ -85,6 +86,21 @@ bool PIDInterface::ReachedGoal()
 	}
 }
 
+bool PIDInterface::BeforeGoal() {
+	switch (m_currentAxis){
+	case forward:
+		return m_tracker->GetY() < m_yGoalDistance;
+		break;
+	case right:
+		return m_tracker->GetX() < m_xGoalDistance;
+		break;
+	case stop:
+		return false;
+		break;
+	}
+	return false;
+}
+
 bool PIDInterface::PastGoal() {
     float y = m_tracker->GetY();
     float py = y - m_tracker->GetDeltaY();
@@ -93,33 +109,9 @@ bool PIDInterface::PastGoal() {
     switch(m_currentAxis)
         {
         case forward:
-            /*
-            if(yGoalDistance < 0)
-            {
-                return m_tracker.GetY() < yGoalDistance;
-            }
-            else
-            {
-                return m_tracker.GetY() > yGoalDistance;
-            }
-            */
-
-
             return (y > m_yGoalDistance) != (py > m_yGoalDistance);
             break;
         case right:
-            /*
-            if(xGoalDistance < 0)
-            {
-                return m_tracker.GetX() < xGoalDistance;
-            }
-            else
-            {
-                return m_tracker.GetX() > xGoalDistance;
-            }
-            */
-
-
             return (x > m_xGoalDistance) != (px > m_xGoalDistance);
             break;
         case stop:
@@ -129,19 +121,22 @@ bool PIDInterface::PastGoal() {
     return false;
 }
 
-bool PIDInterface::BeforeGoal(double xGoalDistance, double yGoalDistance) {
+bool PIDInterface::NearGoal() {
+	float xPos = m_tracker->GetX();
+	float yPos = m_tracker->GetY();
+
 	switch(m_currentAxis)
-	{
-	case forward:
-		return m_tracker->GetY() < yGoalDistance;
-		break;
-	case right:
-		return m_tracker->GetX() < xGoalDistance;
-		break;
-	case stop:
-		return false;
-		break;
-	}
+		{
+		case forward:
+			return fabs(m_yGoalDistance-yPos) < 3.0;
+			break;
+		case right:
+			return fabs(m_xGoalDistance-xPos) < 3.0;
+			break;
+		case stop:
+			return false;
+			break;
+		}
 	return false;
 }
 
