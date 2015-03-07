@@ -64,10 +64,10 @@ struct PortAssign
 
     // analog
     static const int32_t GyroChannel = 0;
-    static const uint32_t IRLeftInnerChannel = 1;//tba
-    static const uint32_t IRLeftOuterChannel = 2;//tba
-    static const uint32_t IRRightInnerChannel = 3;//tba
-    static const uint32_t IRRightOuterChannel = 4;//tba
+    static const uint32_t IRLeftInnerChannel = 1;//tbd
+    static const uint32_t IRLeftOuterChannel = 2;//tbd
+    static const uint32_t IRRightInnerChannel = 3;//tbd
+    static const uint32_t IRRightOuterChannel = 4;//tbd
 
 
     //Joystick Ports:
