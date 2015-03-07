@@ -166,20 +166,25 @@ void ClearDisplay()
     {
         m_robotDrive.SetSafetyEnabled(false);
         m_gyro.Reset();
-
-        //This is the mode it's going to use
-
-       /* if(m_dashboard.m_button1){
-        	AutoMode autoMode = complex;
-        }
-        if(m_dashboard.m_button2){
-        	AutoMode autoMode = simple;
-        }
-        if(m_dashboard.m_button3){
-        	AutoMode autoMode = simpleShort;
-        } */
-
         ClearDisplay();
+        AutoMode autoMode = simple;
+
+        if(m_dashboard.m_button1){
+        	autoMode = simple;
+        }
+        else if(m_dashboard.m_button2){
+        	autoMode = complex;
+        }
+        else if(m_dashboard.m_button3){
+        	autoMode = simpleShort;
+        }
+
+        if(!m_dashboard.m_button1 && !m_dashboard.m_button2 && !m_dashboard.m_button3){
+        	autoMode = simple;
+        }
+        else{
+        	autoMode = simple;
+        }
         m_elevator->ElevatorInit();
         SmartDashboard::PutString("DB/String 0", "Initial Homeing");
         while(!m_elevator->elevatorIsHomed())
@@ -193,7 +198,6 @@ void ClearDisplay()
 
         //m_robotDrive.SetSafetyEnabled(false); this may be needed
 
-        AutoMode autoMode = simple;
 
         m_autoPID.Reset();
 
