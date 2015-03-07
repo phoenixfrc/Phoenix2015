@@ -14,7 +14,8 @@
 
 enum AutoMode {
     complex,
-    simple
+    simple,
+    disabled
 };
 
 class Robot: public SampleRobot
@@ -278,6 +279,9 @@ void ClearDisplay()
 
 
             m_autoPID.Reset();
+            break;
+        case disabled:
+            break;
         }
         m_elevator->ElevatorEnd();
 
