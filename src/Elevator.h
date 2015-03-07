@@ -108,7 +108,7 @@ public:
     #define kElevatorHook4Ready   (kElevatorHook3Ready + kToteDelta)
     #define kElevatorHook4Lifted  (kElevatorHook4Ready + kLiftDelta)
 
-    #define kDirectControlMult    (0.5)
+    #define kDirectControlMult    (0.2)
 
     void setElevatorGoalPosition(float position); // use consts above
     float getElevatorGoalPosition();

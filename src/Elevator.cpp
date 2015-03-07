@@ -318,6 +318,10 @@ void Elevator::PIDWrite(float desiredSpeed)
     {
         //Engage direct control of the elevator
         double joystickInput = -m_gamePad->GetY();
+        if(fabs(joystickInput) < 0.05)
+        {
+            joystickInput = 0;
+        }
 
         m_motor1->Set(joystickInput * kDirectControlMult);
         m_motor2->Set(joystickInput * kDirectControlMult);
