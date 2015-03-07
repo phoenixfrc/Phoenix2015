@@ -34,8 +34,8 @@ Elevator::Elevator(
     m_speedMultiplier = kNormalMultiplier;
     m_encoder->SetDistancePerPulse(1 / TicksPerInch);
     //m_elevatorControl = new PIDController(0.28, 0.038, 0.00, encoder, this);//This worked for new code
-    //m_elevatorControl = new PIDController(0.14, 0.0095, 0.00, encoder, this);//This worked for old code
-    m_elevatorControl = new PIDController(0.28, 0.0095, 0.00, encoder, this);//For testing
+    m_elevatorControl = new PIDController(0.21, 0.0095, 0.00, encoder, this);//This worked for old code
+    //m_elevatorControl = new PIDController(0.28, 0.0095, 0.00, encoder, this);//For testing use in comp
 }
 
 void Elevator::operateElevator()
@@ -159,16 +159,16 @@ void Elevator::controlElevator()
         goalPosition += (joystick / 5);
     }
 
-    if(POV == 0 || POV == 45 || POV == 315)
+    else if(POV == 0 || POV == 45 || POV == 315)
     {
         speedMult = kNormalMultiplier;
-        goalPosition += (0.15);
+        goalPosition += (0.2);
     }
 
-    if(POV == 180 || POV == 225 || POV == 135)
+    else if(POV == 180 || POV == 225 || POV == 135)
     {
         speedMult = kNormalMultiplier;
-        goalPosition -= (0.15);
+        goalPosition -= (0.2);
     }
 
     if(aPressed)
@@ -193,14 +193,14 @@ void Elevator::controlElevator()
     }
 
 
-
+    /*
     ElevatorJoystickbuilder << "GoalPosition: ";
     ElevatorJoystickbuilder << goalPosition;
     SmartDashboard::PutString("DB/String 0", ElevatorJoystickbuilder.str());
     ElevatorJoystickbuilder2 << "position: ";
     ElevatorJoystickbuilder2 << (m_encoder->Get() / TicksPerInch);
     SmartDashboard::PutString("DB/String 1", ElevatorJoystickbuilder2.str());
-
+    */
     setElevatorGoalPosition(goalPosition);
 
 }
