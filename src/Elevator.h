@@ -30,6 +30,9 @@ class Elevator  : public PIDOutput
     float m_currentSetPoint;
     float m_currentVelocity;
 
+    float m_slipTimer;
+    bool m_encoderFailure;
+
     // initialized at class constructions then constant
     Talon* m_motor1;
     Talon* m_motor2;
@@ -104,6 +107,8 @@ public:
     //58
     #define kElevatorHook4Ready   (kElevatorHook3Ready + kToteDelta)
     #define kElevatorHook4Lifted  (kElevatorHook4Ready + kLiftDelta)
+
+    #define kDirectControlMult    (0.5)
 
     void setElevatorGoalPosition(float position); // use consts above
     float getElevatorGoalPosition();

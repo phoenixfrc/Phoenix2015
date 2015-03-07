@@ -33,6 +33,8 @@ Elevator::Elevator(
     m_oldEncoder = 0;
     m_speedMultiplier = kNormalMultiplier;
     m_encoder->SetDistancePerPulse(1 / TicksPerInch);
+    m_slipTimer = 0;
+    m_encoderFailure = false;
     //m_elevatorControl = new PIDController(0.28, 0.038, 0.00, encoder, this);//This worked for new code
     //m_elevatorControl = new PIDController(0.14, 0.0095, 0.00, encoder, this);//This worked for old code
     m_elevatorControl = new PIDController(0.28, 0.0095, 0.00, encoder, this);//For testing
@@ -243,52 +245,83 @@ float Elevator::getElevatorGoalPosition()
  */
 void Elevator::PIDWrite(float desiredSpeed)
 {
-    bool atUpperLimit = m_upperLimit->Get();
-    bool atLowerLimit = m_lowerLimit->Get();
-
-    //calculateSpeedMutiplier();
-
-    float actualSpeed = desiredSpeed; //* m_speedMultiplier;
-
-  //  std::ostringstream out;
-  //  out.precision(2);
-    //out << "EV: " << desiredSpeed << " " << m_speedMultiplier;
-  //  SmartDashboard::PutString("DB/String 8", out.str());
-
-
-
-    if(actualSpeed >= -0.1 && actualSpeed <= 0.1)
+    if(!m_encoderFailure)
     {
-        actualSpeed = 0.0;
-    }
-    if (atUpperLimit && (desiredSpeed > 0.0))
-    {
-        actualSpeed = 0.0; // don't move past upper limit
-    }
-    if (atLowerLimit && (desiredSpeed < 0.0))
-    {
-        actualSpeed = 0.0; // don't move past lower limit
-    }
+        bool atUpperLimit = m_upperLimit->Get();
+        bool atLowerLimit = m_lowerLimit->Get();
 
-  //  std::ostringstream out2;
-  //  out2.precision(2);
-  //  out2 << "ACT: " << actualSpeed;
-  //  SmartDashboard::PutString("DB/String 9", out2.str());
+        //calculateSpeedMutiplier();
 
-    //turn off the brake before moving
-    if(actualSpeed != 0.0)
-    {
-        m_brake->Set(m_brake->kOff);
+        float actualSpeed = desiredSpeed; //* m_speedMultiplier;
+
+      //  std::ostringstream out;
+      //  out.precision(2);
+        //out << "EV: " << desiredSpeed << " " << m_speedMultiplier;
+      //  SmartDashboard::PutString("DB/String 8", out.str());
+
+
+
+        if(actualSpeed >= -0.1 && actualSpeed <= 0.1)
+        {
+            actualSpeed = 0.0;
+        }
+        if (atUpperLimit && (desiredSpeed > 0.0))
+        {
+            actualSpeed = 0.0; // don't move past upper limit
+        }
+        if (atLowerLimit && (desiredSpeed < 0.0))
+        {
+            actualSpeed = 0.0; // don't move past lower limit
+        }
+
+      //  std::ostringstream out2;
+      //  out2.precision(2);
+      //  out2 << "ACT: " << actualSpeed;
+      //  SmartDashboard::PutString("DB/String 9", out2.str());
+
+        //turn off the brake before moving
+        if(actualSpeed != 0.0)
+        {
+            m_brake->Set(m_brake->kOff);
+        }
+        else if (m_brake->Get() == m_brake->kOff)
+        {
+            m_brake->Set(m_brake->kForward);
+        }
+
+        //kOff means the brake is disengaged, kForward means the opposite
+
+        if(m_brake->Get() == m_brake->kOff)
+        {
+            int deltaEncoder = m_encoder->Get() - m_oldEncoder;
+            if(deltaEncoder == 0)
+            {
+                m_slipTimer += 1;
+            }
+            //200 should mean 1 second because 5ms x 200 = 1s
+            if(m_slipTimer >= 200)
+            {
+                m_encoderFailure = true;
+            }
+        }
+        else
+        {
+            m_slipTimer = 0;
+        }
+
+        // set the motor speed
+
+            m_motor1->Set(-actualSpeed);
+            m_motor2->Set(-actualSpeed);
     }
-    else if (m_brake->Get() == m_brake->kOff)
+    else
     {
-        m_brake->Set(m_brake->kForward);
+        //Engage direct control of the elevator
+        double joystickInput = -m_gamePad->GetY();
+
+        m_motor1->Set(joystickInput * kDirectControlMult);
+        m_motor2->Set(joystickInput * kDirectControlMult);
     }
-
-    // set the motor speed
-
-        m_motor1->Set(-actualSpeed);
-        m_motor2->Set(-actualSpeed);
 }
 
 void Elevator::calculateSpeedMutiplier()
