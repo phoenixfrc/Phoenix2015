@@ -302,6 +302,7 @@ void Elevator::PIDWrite(float desiredSpeed)
             if(m_slipTimer >= 200)
             {
                 m_encoderFailure = true;
+                SmartDashboard::PutString("DB/String 0", "ENCODER FAILURE");
             }
         }
         else
