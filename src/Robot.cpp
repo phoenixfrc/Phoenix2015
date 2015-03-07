@@ -158,6 +158,8 @@ void ClearDisplay()
     }
     void Autonomous()
     {
+        //Add empty auto enum state
+
         m_robotDrive.SetSafetyEnabled(false);
         m_gyro.Reset();
 
@@ -182,57 +184,39 @@ void ClearDisplay()
 
         Wait(simpleAutoDelay);//debug only
 
-        std::ostringstream strBuilder;
+        //std::ostringstream strBuilder;
 
         switch(autoMode)
         {
         case complex:
-            SmartDashboard::PutString("DB/String 0", "Starting Autonomous");
 
-            strBuilder << "Move Forward 1";
-            Move(0, FieldDistances::pushDiff, complexAutoDelay, &strBuilder);
+            Move(0, FieldDistances::pushDiff, complexAutoDelay, "Move Forward 1");
 
-            strBuilder << "Lift Tote 1";
-            Lift(kElevatorHook1Lifted, complexAutoDelay, &strBuilder);
+            Lift(kElevatorHook1Lifted, complexAutoDelay, "Lift Tote 1");
 
-            strBuilder << "Move Right 1";
-            Move(FieldDistances::shiftDiff, 0, complexAutoDelay, &strBuilder);
+            Move(FieldDistances::shiftDiff, 0, complexAutoDelay, "Move Right 1");
 
-            strBuilder << "Lift Over 1";
-            Lift(kElevatorHook3Lifted, complexAutoDelay, &strBuilder);
+            Lift(kElevatorHook3Lifted, complexAutoDelay, "Lift Over 1");
 
-            strBuilder << "Move Left 1";
-            Move((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, complexAutoDelay, &strBuilder);
+            Move((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, complexAutoDelay, "Move Left 1");
 
-            strBuilder << "Lower Tote 1";
-            Lift(kElevatorHook2Ready, complexAutoDelay, &strBuilder);
+            Lift(kElevatorHook2Ready, complexAutoDelay, "Lower Tote 1");
 
-            strBuilder << "Move Forward 2";
-            Move(0, FieldDistances::pushDiff, complexAutoDelay, &strBuilder);
+            Move(0, FieldDistances::pushDiff, complexAutoDelay, "Move Forward 2");
 
-            strBuilder << "Lift Tote 2";
-            Lift(kElevatorHook2Lifted, complexAutoDelay, &strBuilder);
+            Lift(kElevatorHook2Lifted, complexAutoDelay, "Lift Tote 2");
 
-            strBuilder << "Move Right 2";
-            Move(FieldDistances::shiftDiff, 0, complexAutoDelay, &strBuilder);
+            Move(FieldDistances::shiftDiff, 0, complexAutoDelay, "Move Right 2");
 
-            strBuilder << "Lift Over 1";
-            Lift(kElevatorHook4Lifted, complexAutoDelay, &strBuilder);
+            Lift(kElevatorHook4Lifted, complexAutoDelay, "Lift Over 1");
 
-            strBuilder << "Move Left 2";
-            Move((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, complexAutoDelay, &strBuilder);
+            Move((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, complexAutoDelay, "Move Left 2");
 
-            strBuilder << "Into Autozone";
-            Move(0, FieldDistances::intoAutoDiff, complexAutoDelay, &strBuilder);
+            Move(0, FieldDistances::intoAutoDiff, complexAutoDelay, "Into Autozone");
 
-            strBuilder << "Put down all";
-            Lift(kSoftLowerLimit, complexAutoDelay, &strBuilder);
+            Lift(kSoftLowerLimit, complexAutoDelay, "Put down all");
 
-            strBuilder << "Backoff totes";
-            Move(0, FieldDistances::backOffDiff, complexAutoDelay, &strBuilder);
-
-
-
+            Move(0, FieldDistances::backOffDiff, complexAutoDelay, "Backoff totes");
 
             m_autoPID.Reset();
             break;
@@ -408,8 +392,8 @@ void ClearDisplay()
 
     }
 
-    void Move (float x, float y, float waitTime, std::ostringstream* debugMessage){
-    	SmartDashboard::PutString("DB/String 0", debugMessage->str());
+    void Move (float x, float y, float waitTime, std::string debugMessage){
+    	SmartDashboard::PutString("DB/String 0", debugMessage);
     	if (x == 0 || y == 0){
 			m_autoPID.SetGoal(x, y);
 
@@ -419,12 +403,12 @@ void ClearDisplay()
 				Wait(0.005);
 			}
     	}
-    	debugMessage->str(" ");
+    	//debugMessage->str(" ");
     	Wait(waitTime);
     }
 
-    void Lift (float height, float waitTime, std::ostringstream* debugMessage){
-    	SmartDashboard::PutString("DB/String 0", debugMessage->str());
+    void Lift (float height, float waitTime, std::string debugMessage){
+    	SmartDashboard::PutString("DB/String 0", debugMessage);
 		m_elevator->setElevatorGoalPosition(height);
 		while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(height))
 		{
@@ -432,7 +416,6 @@ void ClearDisplay()
 			DisplayInfo();
 			Wait(0.005);
 		}
-		debugMessage->str(" ");
 		Wait(waitTime);
     }
 
