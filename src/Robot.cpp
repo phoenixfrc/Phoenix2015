@@ -16,7 +16,8 @@
 enum AutoMode {
     complex,
     simple,
-	simpleShort
+	simpleShort,
+    disabled
 };
 
 class Robot: public SampleRobot
@@ -51,7 +52,7 @@ class Robot: public SampleRobot
 //    DigitalInput m_DIO15;
 //    DigitalInput m_DIO16;
 //    DigitalInput m_DIO17;
-    DigitalInput m_DIO18;
+//    DigitalInput m_DIO18;
     DigitalInput m_DIO19;
     DigitalInput m_DIO20;
     DigitalInput m_DIO21;
@@ -105,7 +106,7 @@ public:
         //m_DIO15(PortAssign::DIO15Channel),
         //m_DIO16(PortAssign::DIO16Channel),
         //m_DIO17(PortAssign::DIO17Channel),
-        m_DIO18(PortAssign::DIO18Channel),
+        //m_DIO18(PortAssign::DIO18Channel),
         m_DIO19(PortAssign::DIO19Channel),
         m_DIO20(PortAssign::DIO20Channel),
         m_DIO21(PortAssign::DIO21Channel),
@@ -120,7 +121,7 @@ public:
         m_gamepad(PortAssign::GamepadChannel),
         m_autoPID(&m_robotDrive, &m_tracker, &m_gyro, &m_driveStabilize),
 
-        m_driveStabilize(&m_gyro, &m_tracker, &m_stick, 0.0, 0.0, 0.008, 0.25, 0.5)
+        m_driveStabilize(&m_gyro, &m_tracker, &m_stick, 0.0, 0.0, 0.016)
 
 // as they are declared above.
 
@@ -164,6 +165,8 @@ void ClearDisplay()
     }
     void Autonomous()
     {
+        //Add empty auto enum state
+
         m_robotDrive.SetSafetyEnabled(false);
         m_gyro.Reset();
         ClearDisplay();
@@ -195,144 +198,51 @@ void ClearDisplay()
         int MovePickup2Height = 60;
 
         const float simpleAutoDelay = 0;
+        const float complexAutoDelay = 0.25;
 
         //m_robotDrive.SetSafetyEnabled(false); this may be needed
-
 
         m_autoPID.Reset();
 
         Wait(simpleAutoDelay);//debug only
 
+        //std::ostringstream strBuilder;
+
         switch(autoMode)
         {
         case complex:
-            SmartDashboard::PutString("DB/String 0", "Starting Autonomous");
 
-            //Pick up tote  6 inch
-                SmartDashboard::PutString("DB/String 0", "Initial Pick up");
+            //Move(0, FieldDistances::pushDiff, complexAutoDelay, "Move Forward 1");
 
-            m_elevator->setElevatorGoalPosition(kElevatorHook1Lifted);
+            Lift(kElevatorHook1Lifted, complexAutoDelay, "Lift Tote 1");
 
-            while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook1Lifted))
-            {
-            	SmartDashboard::PutString("DB/String 0", "Still in this loop");
-                DisplayInfo();
-                Wait(0.005);
-            }
+            Move(FieldDistances::shiftDiff, 0, complexAutoDelay, "Move Right 1");
 
-            Wait(1.0);
+            Lift(kElevatorHook3Lifted, complexAutoDelay, "Lift Over 1");
 
-            // move right + move up over container
-            SmartDashboard::PutString("DB/String 0", "Pick Up and Move 1");
+            Move (0,FieldDistances::backOffDiff, complexAutoDelay,"Move Back 1");
 
-            m_autoPID.SetGoal(FieldDistances::autoCrateDiff,0);
-            m_elevator->setElevatorGoalPosition(kElevatorHook3Lifted);
-            while(IsAutonomous() && IsEnabled() &&
-                        (!m_autoPID.isPastGoal || !m_elevator->elevatorIsAt(kElevatorHook3Lifted)))
-            {
-                DisplayInfo();
-                Wait(0.005);
-            }
+            Move((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, complexAutoDelay, "Move Left 1");
 
+            Lift(kElevatorHook2Ready, complexAutoDelay, "Lower Tote 1");
 
+            Move(0, FieldDistances::pushDiff, complexAutoDelay, "Move Forward 2");
 
+            Lift(kElevatorHook2Lifted, complexAutoDelay, "Lift Tote 2");
 
-            Wait(1.0);
+            Move(FieldDistances::shiftDiff, 0, complexAutoDelay, "Move Right 2");
 
-            //move down
-            SmartDashboard::PutString("DB/String 0", "Lower Crate 1 ");
+            Lift(kElevatorHook4Lifted, complexAutoDelay, "Lift Over 1");
 
-            m_elevator->setElevatorGoalPosition(kElevatorHook2Ready);
-            while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook2Ready))
-            {
-                DisplayInfo();
-                Wait(0.005);
-            }
+            Move (0,FieldDistances::backOffDiff, complexAutoDelay,"Move Back 2");
 
-            Wait(1.0);
+            Move((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, complexAutoDelay, "Move Left 2");
 
-            SmartDashboard::PutString("DB/String 0", "Pick up 2");
+            Move(0, FieldDistances::intoAutoDiff, complexAutoDelay, "Into Autozone");
 
-             m_elevator->setElevatorGoalPosition(kElevatorHook2Lifted);
-            while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook2Lifted))
-            {
-                DisplayInfo();
-                Wait(0.005);
-            }
+            Lift(kSoftLowerLimit, complexAutoDelay, "Put down all");
 
-            Wait(1.0);
-
-
-            //up right
-            SmartDashboard::PutString("DB/String 0", "Move Pickup 2");
-            m_autoPID.SetGoal(FieldDistances::autoCrateDiff,0);
-            m_elevator->setElevatorGoalPosition(MovePickup2Height);
-            while(IsAutonomous() && IsEnabled() &&
-                    (!m_autoPID.isPastGoal || !m_elevator->elevatorIsAt(MovePickup2Height)))
-            {
-                DisplayInfo();
-                Wait(0.005);
-            }
-
-            Wait(1.0);
-
-            //move right
-
-            SmartDashboard::PutString("DB/String 0", "Move Right 2");
-
-            m_autoPID.SetGoal(FieldDistances::autoCrateDiff,0);
-            while(IsAutonomous()  && IsEnabled() && !m_autoPID.isPastGoal)
-            {
-                Wait(0.005);
-            }
-
-            Wait(1.0);
-
-            //move down
-            SmartDashboard::PutString("DB/String 0", "Put down 2");
-
-             m_elevator->setElevatorGoalPosition(kElevatorHook3Ready);
-             while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook3Ready))
-             {
-                DisplayInfo();
-                Wait(0.005);
-             }
-
-             Wait(1.0);
-
-             //pick up
-             SmartDashboard::PutString("DB/String 0", "Pick up 3");
-
-             m_elevator->setElevatorGoalPosition(kElevatorHook3Lifted);
-             while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook3Lifted))
-             {
-                DisplayInfo();
-                Wait(0.005);
-             }
-
-             Wait(1.0);
-
-            SmartDashboard::PutString("DB/String 0", "Backoff totes");
-
-            //move forward
-            m_autoPID.SetGoal(0,-FieldDistances::intoAutoDiff);
-            while(IsAutonomous() && IsEnabled() && !m_autoPID.isPastGoal)
-            {
-                Wait(0.005);
-            }
-
-            Wait(1.0);
-
-            //drop totes here
-            SmartDashboard::PutString("DB/String 0", "Put down all");
-
-            m_elevator->setElevatorGoalPosition(kElevatorHook1Ready);
-            while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook1Ready))
-             {
-                DisplayInfo();
-                Wait(0.005);
-             }
-
+            Move(0, FieldDistances::backOffDiff, complexAutoDelay, "Backoff totes");
 
             m_autoPID.Reset();
             break;
@@ -378,9 +288,9 @@ void ClearDisplay()
 
             SmartDashboard::PutString("DB/String 0", "Moving Back");
 
-
+            //MIGHT NOT WORK!!!!
             m_autoPID.SetGoal(0,-4.0);
-            while(IsAutonomous() && IsEnabled() && !m_autoPID.BeforeGoal(0,-4))
+            while(IsAutonomous() && IsEnabled() && !m_autoPID.BeforeGoal())
             {
                 DisplayInfo();
                 Wait(0.005);
@@ -409,7 +319,7 @@ void ClearDisplay()
 
 			SmartDashboard::PutString("DB/String 0", "Moving Forward");
 
-			m_autoPID.SetGoal(0,FieldDistances::intoAutoDiff);
+			m_autoPID.SetGoal(0,FieldDistances::shortAutoDiff);
 			while(IsAutonomous() && IsEnabled() && !m_autoPID.isPastGoal)
 			{
 				DisplayInfo();
@@ -434,7 +344,7 @@ void ClearDisplay()
 
 
 			m_autoPID.SetGoal(0,-4.0);
-			while(IsAutonomous() && IsEnabled() && !m_autoPID.BeforeGoal(0,-4))
+			while(IsAutonomous() && IsEnabled() && !(m_autoPID.BeforeGoal()))
 			{
 				DisplayInfo();
 				Wait(0.005);
@@ -445,6 +355,8 @@ void ClearDisplay()
 
 			m_autoPID.Reset();
 			break;
+        case disabled:
+            break;
         }
         m_elevator->ElevatorEnd();
 
@@ -471,7 +383,7 @@ void ClearDisplay()
 
             m_dragger.operateDragger(&m_gamepad, &m_draggerLowerLimit, &m_draggerMotor);
 
-            DisplayInfo();
+            //DisplayInfo();
 
             Wait(0.005); // wait 5ms to avoid hogging CPU cycles
         }
@@ -516,12 +428,14 @@ void ClearDisplay()
         }
         count = 0;
 
-        std::ostringstream gyroBuilder, eb, eb2, elevatorBuilder, elevatorEncoderBuilder, elevatorBuilder3;
+        std::ostringstream gyroBuilder, eb, eb2, elevatorBuilder, elevatorEncoderBuilder, elevatorBuilder3, IRsensors;
 
         //Prints out the values for gyro:
         gyroBuilder << "Gyro angle: ";
         gyroBuilder << m_gyro.GetAngle();
         SmartDashboard::PutString("DB/String 2", gyroBuilder.str());
+
+        //
 
         //Print Encoder values:
         eb << "LR: "<< m_leftRearDriveEncoder.Get();
@@ -548,7 +462,7 @@ void ClearDisplay()
                 //m_DIO16.Get() <<
                 //m_DIO17.Get() <<
                 m_DIO11.Get() <<
-				m_DIO18.Get() <<
+				//m_DIO18.Get() <<
 				m_DIO19.Get() <<
 				m_DIO20.Get() <<
                 m_DIO21.Get() <<
@@ -568,6 +482,33 @@ void ClearDisplay()
         SmartDashboard::PutString("DB/String 7", elevatorEncoderBuilder2.str());
 
 
+    }
+
+    void Move (float x, float y, float waitTime, std::string debugMessage){
+    	SmartDashboard::PutString("DB/String 0", debugMessage);
+    	if (x == 0 || y == 0){
+			m_autoPID.SetGoal(x, y);
+
+			while(IsAutonomous() && IsEnabled() && !m_autoPID.NearGoal())
+			{
+				DisplayInfo();
+				Wait(0.005);
+			}
+    	}
+    	//debugMessage->str(" ");
+    	Wait(waitTime);
+    }
+
+    void Lift (float height, float waitTime, std::string debugMessage){
+    	SmartDashboard::PutString("DB/String 0", debugMessage);
+		m_elevator->setElevatorGoalPosition(height);
+		while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(height))
+		{
+			m_elevator->updateProfile();
+			DisplayInfo();
+			Wait(0.005);
+		}
+		Wait(waitTime);
     }
 
 };

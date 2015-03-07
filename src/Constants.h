@@ -46,13 +46,14 @@ struct PortAssign
     static const uint32_t DIO11Channel = 11; //Does not exist
     static const uint32_t ElevatorUpperLimitChannel = 12;
     static const uint32_t DraggerActivatedLimitChannel = 13;
+    static const uint32_t DraggerUpperLimitChannel = 18;
 
     //MXP Breakout board doesn't expose ports: 14-17
     static const uint32_t DIO14Channel = 14;
     static const uint32_t DIO15Channel = 15;
     static const uint32_t DIO16Channel = 16;
     static const uint32_t DIO17Channel = 17;
-    static const uint32_t DIO18Channel = 18;
+   // static const uint32_t DIO18Channel = 18;
     static const uint32_t DIO19Channel = 19;
     static const uint32_t DIO20Channel = 20;
     static const uint32_t DIO21Channel = 21;
@@ -63,6 +64,11 @@ struct PortAssign
 
     // analog
     static const int32_t GyroChannel = 0;
+    static const uint32_t IRLeftInnerChannel = 1;//tba
+    static const uint32_t IRLeftOuterChannel = 2;//tba
+    static const uint32_t IRRightInnerChannel = 3;//tba
+    static const uint32_t IRRightOuterChannel = 4;//tba
+
 
     //Joystick Ports:
     static const uint32_t JoystickChannel = 0;
@@ -71,11 +77,18 @@ struct PortAssign
 
 struct FieldDistances
 {
+
+	static const int shortAutoDiff = 100;
     //Distance between the crates we have to pick up during auto
-    static const int autoCrateDiff = 12; // 57 This number comes from the manual but may be a little off
+    static const int autoCrateDiff = 81; // 81 This number comes from the manual but may be a little off
     //Distance from start to the auto zone
-    static const int intoAutoDiff = 128;//128; //This number comes from the manual but may be a little off
-    static const int MayhemIntoAutoDiff = 100;
+    static const int intoAutoDiff = 0;//128; //This number comes from the manual but may be a little off
+    //Distance to move before lifting over container
+    static const int shiftDiff = 3;
+    //Distance to back away from totes after dropping them.
+    static const int backOffDiff = -5;
+    //Distance to Push totes forward before pickup
+    static const int pushDiff = 7;
 };
 
 

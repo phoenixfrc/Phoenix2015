@@ -9,7 +9,10 @@
 
 
 DriveStabilize::DriveStabilize(Gyro * gyro, EncoderTracker * tracker, Team2342Joystick * stick,
-                               float goalAngle, float turnSpeed, float correction, float xLock, float yLock){
+                               float goalAngle, float turnSpeed, float correction):
+                               m_xLockPID(0.25, 0.0, 0.0, this, this),//0.25 is from the P control loop in Robot.cpp
+                               m_yLockPID(0.6, 0.0, 0.0, this, this)//0.6 is from the P control loop in Robot.cpp
+{
     m_gyro = gyro;
     m_stick = stick;
     m_tracker = tracker;
@@ -18,8 +21,10 @@ DriveStabilize::DriveStabilize(Gyro * gyro, EncoderTracker * tracker, Team2342Jo
     m_turnSpeed = turnSpeed;
     m_correction = correction;
 
-    m_xLock = xLock;
-    m_yLock = yLock;
+    m_xLock = 0;
+    m_yLock = 0;
+
+    m_lockedAxis = xAxis;
 }
 
 void DriveStabilize::UpdateGoalAngle(){
@@ -39,11 +44,69 @@ void DriveStabilize::SetGoalAngle(float GoalAngle)
 }
 
 float DriveStabilize::LockX(){
-    return - m_tracker->GetX()*m_xLock;
+    return m_xLock;
 }
 
 float DriveStabilize::LockY(){
-    return m_tracker->GetY()*m_yLock;//Probably should be negative, but maybe not? (test)
+    return m_yLock;
+}
+
+void DriveStabilize::StopPID(){
+    if (m_xLockPID.IsEnabled()){
+       m_xLockPID.Disable();
+   }
+   if (m_yLockPID.IsEnabled()){
+       m_yLockPID.Disable();
+   }
+}
+
+void DriveStabilize::StartPID(){
+   StopPID();
+   switch (m_lockedAxis){
+       case xAxis:
+           if (!m_xLockPID.IsEnabled()){
+               m_xLockPID.Enable();
+           }
+           break;
+       case yAxis:
+           if (!m_xLockPID.IsEnabled()){
+               m_xLockPID.Enable();
+           }
+           break;
+       case none:
+           break;
+   }
+}
+
+void DriveStabilize::SetLockAxis(LockAxis axis){
+    m_lockedAxis = axis;
+}
+
+void DriveStabilize::PIDWrite(float output){
+    switch (m_lockedAxis){
+        case xAxis:
+            m_xLock += output;
+            break;
+        case yAxis:
+            m_yLock += output;
+            break;
+        case none:
+            break;
+    }
+}
+
+double DriveStabilize::PIDGet(){
+    switch (m_lockedAxis){
+        case xAxis:
+            return m_tracker->GetX();
+            break;
+        case yAxis:
+            return m_tracker->GetY();
+            break;
+        case none:
+            return 0.0;//This is a little dangerous, but it should be okay.
+    }
+
 }
 
 
