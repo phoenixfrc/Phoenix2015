@@ -12,10 +12,17 @@
 #include "EncoderTracker.h"
 
 
-class DriveStabilize {
+enum LockAxis {
+    xAxis,
+    yAxis,
+    none
+};
+
+
+class DriveStabilize : public PIDOutput, public PIDSource {
 public:
     DriveStabilize(Gyro * gyro, EncoderTracker * tracker, Team2342Joystick * stick,
-                   float goalAngle, float turnSpeed, float correction = 1.0, float xLock = 0.25, float yLock = 0.25);
+                   float goalAngle, float turnSpeed, float correction = 1.0);
 
     void UpdateGoalAngle();
 
@@ -27,18 +34,33 @@ public:
 
     float LockY();
 
+    void StopPID();
+
+    void StartPID();
+
+    void SetLockAxis(LockAxis axis);
+
+    virtual void PIDWrite(float output);
+
+    virtual double PIDGet();
+
     ~DriveStabilize();
 private:
     Gyro * m_gyro;
     Team2342Joystick * m_stick;
     EncoderTracker * m_tracker;
 
+    PIDController m_xLockPID;
+    PIDController m_yLockPID;
+
+    LockAxis m_lockedAxis;
+
     float m_goalAngle;
     float m_turnSpeed;
     float m_correction;
 
-    float m_xLock;
-    float m_yLock;
+    double m_xLock;
+    double m_yLock;
 };
 
 

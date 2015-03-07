@@ -64,6 +64,11 @@ struct PortAssign
 
     // analog
     static const int32_t GyroChannel = 0;
+    static const uint32_t IRLeftInnerChannel = 1;//tba
+    static const uint32_t IRLeftOuterChannel = 2;//tba
+    static const uint32_t IRRightInnerChannel = 3;//tba
+    static const uint32_t IRRightOuterChannel = 4;//tba
+
 
     //Joystick Ports:
     static const uint32_t JoystickChannel = 0;
@@ -73,9 +78,15 @@ struct PortAssign
 struct FieldDistances
 {
     //Distance between the crates we have to pick up during auto
-    static const int autoCrateDiff = 12; // 57 This number comes from the manual but may be a little off
+    static const int autoCrateDiff = 81; // 81 This number comes from the manual but may be a little off
     //Distance from start to the auto zone
-    static const int intoAutoDiff = 128;//128; //This number comes from the manual but may be a little off
+    static const int intoAutoDiff = 0;//128; //This number comes from the manual but may be a little off
+    //Distance to move before lifting over container
+    static const int shiftDiff = 3;
+    //Distance to back away from totes after dropping them.
+    static const int backOffDiff = -5;
+    //Distance to Push totes forward before pickup
+    static const int pushDiff = 7;
 };
 
 

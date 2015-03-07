@@ -27,8 +27,9 @@ public:
 
     bool ReachedGoal();
 
+    bool BeforeGoal();
     bool PastGoal();
-    bool BeforeGoal(double xGoalDistance, double yGoalDistance);
+    bool NearGoal();
 
     void TestEnable();
 
