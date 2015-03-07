@@ -27,7 +27,7 @@ void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick,  Tal
     driveTrain->MecanumDrive_Cartesian(stick->GetX(), stick->GetY(), stick->GetZWithDeadZone(0.1));
 
     //Move elevator:
-    float thumbstick = -gamePad->GetY()/4;
+    float thumbstick = -gamePad->GetY(Joystick::kLeftHand)/4;
     thumbstick = fabs(thumbstick) < 0.0125 ? 0 : thumbstick;
 
     //inverted motor speeds because main robot has oposite wiring from test robot
@@ -35,7 +35,7 @@ void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick,  Tal
     motor2->Set(-thumbstick);
 
     //Move dragger using other thumb stick
-    float leftThumbstick = gamePad->GetY(Joystick::kLeftHand)/4;// slows down motor
+    float leftThumbstick = gamePad->GetY(Joystick::kRightHand)/4;// slows down motor
     draggerMotor->Set(leftThumbstick);
 
     //Toggle Brake:
