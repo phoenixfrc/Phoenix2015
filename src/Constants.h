@@ -87,6 +87,10 @@ struct FieldDistances
     static const int backOffDiff = -5;
     //Distance to Push totes forward before pickup
     static const int pushDiff = 7;
+    //Distance to move left, after lifting upwards and right, before beginning elevator motion
+    static const int rightElevatorDistance = 49;
+    //Distance to move back initially, to avoid hitting totes
+    static const int moveBack = -4;
 };
 
 

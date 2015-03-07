@@ -175,7 +175,7 @@ void ClearDisplay()
         int MovePickup2Height = 60;
 
         const float simpleAutoDelay = 0;
-        const float complexAutoDelay = 0.25;
+        const float complexAutoDelay = 0;
 
         //m_robotDrive.SetSafetyEnabled(false); this may be needed
         //This is the mode it's going to use
@@ -193,35 +193,46 @@ void ClearDisplay()
 
             //Move(0, FieldDistances::pushDiff, complexAutoDelay, "Move Forward 1");
 
-            Lift(kElevatorHook1Lifted, complexAutoDelay, "Lift Tote 1");
+            //Lift(kElevatorHook1Lifted, complexAutoDelay, "Lift Tote 1");
 
-            Move(FieldDistances::shiftDiff, 0, complexAutoDelay, "Move Right 1");
+            //Move(FieldDistances::shiftDiff, 0, complexAutoDelay, "Move Right 1");
 
-            Lift(kElevatorHook3Lifted, complexAutoDelay, "Lift Over 1");
+            //Lift(kElevatorHook3Lifted, complexAutoDelay, "Lift Over 1");
 
-            Move (0,FieldDistances::backOffDiff, complexAutoDelay,"Move Back 1");
+            //Move((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, complexAutoDelay, "Move Left 1");
 
-            Move((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, complexAutoDelay, "Move Left 1");
+            //Lift(kElevatorHook2Ready, complexAutoDelay, "Lower Tote 1");
 
-            Lift(kElevatorHook2Ready, complexAutoDelay, "Lower Tote 1");
+            //Lift(kElevatorHook2Lifted, complexAutoDelay, "Lift Tote 2");
 
-            Move(0, FieldDistances::pushDiff, complexAutoDelay, "Move Forward 2");
+            //Move(FieldDistances::shiftDiff, 0, complexAutoDelay, "Move Right 2");
 
-            Lift(kElevatorHook2Lifted, complexAutoDelay, "Lift Tote 2");
+            //Lift(kElevatorHook4Lifted, complexAutoDelay, "Lift Over 1");
 
-            Move(FieldDistances::shiftDiff, 0, complexAutoDelay, "Move Right 2");
+            //Move((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, complexAutoDelay, "Move Left 2");
 
-            Lift(kElevatorHook4Lifted, complexAutoDelay, "Lift Over 1");
+            //Move(0, FieldDistances::intoAutoDiff, complexAutoDelay, "Into Autozone");
 
-            Move (0,FieldDistances::backOffDiff, complexAutoDelay,"Move Back 2");
+            //Lift(kSoftLowerLimit, complexAutoDelay, "Put down all");
 
-            Move((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, complexAutoDelay, "Move Left 2");
-
-            Move(0, FieldDistances::intoAutoDiff, complexAutoDelay, "Into Autozone");
-
-            Lift(kSoftLowerLimit, complexAutoDelay, "Put down all");
-
-            Move(0, FieldDistances::backOffDiff, complexAutoDelay, "Backoff totes");
+            MoveAndLift(FieldDistances::shiftDiff, 0, kElevatorHook3Lifted,
+                    complexAutoDelay, "Lift 1 Right");
+            Move(0, FieldDistances::moveBack, complexAutoDelay, "Move Back");
+            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, kElevatorHook2Ready, 49,
+                    complexAutoDelay, "1 Left and Down");
+            Move(0, -FieldDistances::moveBack,
+                    complexAutoDelay, "Move forwards");
+            MoveAndLift(FieldDistances::shiftDiff, 0, kElevatorHook2Lifted,
+                    complexAutoDelay, "Lift 2 Right");
+            Move(0, FieldDistances::moveBack, complexAutoDelay, "Move Back");
+            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, kElevatorHook4Lifted, 49,
+                    complexAutoDelay, "1,2 Left and Down");
+            Move(0, -FieldDistances::moveBack,
+                    complexAutoDelay, "Move forwards");
+            Move(0, FieldDistances::intoAutoDiff,
+                    complexAutoDelay, "Into Autozone");
+            Lift(kSoftLowerLimit,
+                    complexAutoDelay, "Put down all");
 
             m_autoPID.Reset();
             break;
@@ -403,21 +414,25 @@ void ClearDisplay()
     }
 
     void Move (float x, float y, float waitTime, std::string debugMessage){
+        if (!(IsAutonomous() && IsEnabled()))
+                            {return;}
     	SmartDashboard::PutString("DB/String 0", debugMessage);
     	if (x == 0 || y == 0){
-			m_autoPID.SetGoal(x, y);
+		m_autoPID.SetGoal(x, y);
 
-			while(IsAutonomous() && IsEnabled() && !m_autoPID.NearGoal())
-			{
-				DisplayInfo();
-				Wait(0.005);
-			}
+		while(IsAutonomous() && IsEnabled() && !m_autoPID.NearGoal())
+		{
+			DisplayInfo();
+			Wait(0.005);
+		}
     	}
     	//debugMessage->str(" ");
     	Wait(waitTime);
     }
 
     void Lift (float height, float waitTime, std::string debugMessage){
+        if (!(IsAutonomous() && IsEnabled()))
+                            {return;}
     	SmartDashboard::PutString("DB/String 0", debugMessage);
 		m_elevator->setElevatorGoalPosition(height);
 		while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(height))
@@ -427,6 +442,41 @@ void ClearDisplay()
 			Wait(0.005);
 		}
 		Wait(waitTime);
+    }
+
+    void MoveAndLift (float x, float y, float height, float waitTime, std::string debugMessage){
+        if (!(IsAutonomous() && IsEnabled()))
+            {return;}
+        SmartDashboard::PutString("DB/String 0", debugMessage);
+        if (x == 0 || y == 0){
+                        m_autoPID.SetGoal(x, y);
+        }
+        m_elevator->setElevatorGoalPosition(height);
+        while(IsAutonomous() && IsEnabled() && (!m_autoPID.NearGoal() || !m_elevator->elevatorIsAt(height)))
+                        {
+                                m_elevator->updateProfile();
+                                DisplayInfo();
+                                Wait(0.005);
+                        }
+                        Wait(waitTime);
+    }
+    void MoveAndLiftWithDelay (float x, float y, float height, float ElevatorDropDelay, float waitTime, std::string debugMessage){
+        if (!(IsAutonomous() && IsEnabled()))
+                    {return;}
+        SmartDashboard::PutString("DB/String 0", debugMessage);
+        if (x == 0 || y == 0){
+                        m_autoPID.SetGoal(x, y);
+        }
+        if (m_tracker.GetX() >= ElevatorDropDelay){
+            m_elevator->setElevatorGoalPosition(height);
+        }
+        while(IsAutonomous() && IsEnabled() && (!m_autoPID.NearGoal() || !m_elevator->elevatorIsAt(height)))
+                        {
+                                m_elevator->updateProfile();
+                                DisplayInfo();
+                                Wait(0.005);
+                        }
+                        Wait(waitTime);
     }
 
 };
