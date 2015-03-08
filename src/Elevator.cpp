@@ -62,6 +62,11 @@ bool Elevator::elevatorIsAt(float position)
     return((currentPosition < (position + 1.0)) && (currentPosition > (position - 1.0)));
 }
 
+float Elevator::elevatorPosition()
+{
+    return (m_encoder->Get() / TicksPerInch);
+}
+
 void Elevator::find_home()
 {
     double speed = 0.0;
