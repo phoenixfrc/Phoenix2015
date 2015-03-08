@@ -65,10 +65,6 @@ class Robot: public SampleRobot
 
 
     Gyro m_gyro;
-    AnalogInput m_IRLeftInner;
-    AnalogInput m_IRRightInner;
-    AnalogInput m_IRLeftOuter;
-    AnalogInput m_IRRightOuter;
 
 
     Team2342Joystick m_stick;                 // only joystick
@@ -128,11 +124,6 @@ public:
         m_IRRightOuter(PortAssign::IRRightOuterChannel),
 
         m_gyro(PortAssign::GyroChannel),
-
-		m_IRLeftInner(PortAssign::IRLeftInnerChannel),
-		m_IRRightInner(PortAssign::IRRightInnerChannel),
-		m_IRLeftOuter(PortAssign::IRLeftOuterChannel),
-		m_IRRightOuter(PortAssign::IRRightOuterChannel),
 
         m_stick(PortAssign::JoystickChannel),
         m_gamepad(PortAssign::GamepadChannel),

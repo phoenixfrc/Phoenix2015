@@ -8,7 +8,7 @@
 #include <Math.h>
 
 IRAdjust::IRAdjust(AnalogInput* IRLeftInner, AnalogInput* IRLeftOuter, AnalogInput* IRRightInner, AnalogInput* IRRightOuter, RobotDrive* drive):
-    m_ThresholdForward(0),//tbd
+    m_ThresholdForward(768),//tbd
     m_IRLeftInner(IRLeftInner),
     m_IRLeftOuter(IRLeftOuter),
     m_IRRightInner(IRRightInner),
@@ -38,7 +38,7 @@ bool IRAdjust::IsOnTote(){
     SmartDashboard::PutString("DB/String 9", builder.str());
     SmartDashboard::PutString("DB/String 7", builder2.str());
 
-    bool ready = (turn < 500) && (near < m_ThresholdForward);
+    bool ready = (turn < 640) && (near > m_ThresholdForward);
 
     SmartDashboard::PutString("DB/String 8", ready ? "Ready" : "Not Ready");
 
