@@ -2,6 +2,7 @@
 #include "WPILib.h"
 #include <sstream>
 #include <math.h>
+#include "Constants.h"
 
 PIDInterface::PIDInterface(RobotDrive * robotDrive, EncoderTracker * tracker, Gyro * gyro, DriveStabilize * driveStabilize):
 xPID(0.12, 0.0, 0.0, this, this), //PID values will need to be tuned for both of these
@@ -135,10 +136,10 @@ bool PIDInterface::NearGoal() {
 	switch(m_currentAxis)
 		{
 		case forward:
-			return fabs(m_yGoalDistance-yPos) < 3.0;
+			return fabs(m_yGoalDistance-yPos) < Tolerances::moveTolerance;
 			break;
 		case right:
-			return fabs(m_xGoalDistance-xPos) < 3.0;
+			return fabs(m_xGoalDistance-xPos) < Tolerances::moveTolerance;
 			break;
 		case stop:
 			return false;
