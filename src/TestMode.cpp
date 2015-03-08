@@ -34,9 +34,6 @@ void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick,  Tal
     motor1->Set(-thumbstick);
     motor2->Set(-thumbstick);
 
-    //Move dragger using other thumb stick
-    float leftThumbstick = gamePad->GetY(Joystick::kRightHand)/4;// slows down motor
-    draggerMotor->Set(leftThumbstick);
 
     //Toggle Brake:
     bool buttonState = gamePad->GetRawButton(5);
