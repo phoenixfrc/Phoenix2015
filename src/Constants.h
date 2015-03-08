@@ -80,7 +80,7 @@ struct FieldDistances
     //Distance between the crates we have to pick up during auto
     static const int autoCrateDiff = 81; // 81 This number comes from the manual but may be a little off
     //Distance from start to the auto zone
-    static const int intoAutoDiff = 24;//128; //This number comes from the manual but may be a little off
+    static const int intoAutoDiff = 48;//128; //This number comes from the manual but may be a little off
     //Distance to move before lifting over container
     static const int shiftDiff = 3;
     //Distance to back away from totes after dropping them.

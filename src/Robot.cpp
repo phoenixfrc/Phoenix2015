@@ -117,13 +117,12 @@ public:
         m_DIO24(PortAssign::DIO24Channel),
         m_DIO25(PortAssign::DIO25Channel),
 
-        m_IRLeftInner(PortAssign::IRLeftInnerChannel),
-        m_IRLeftOuter(PortAssign::IRLeftOuterChannel),
-        m_IRRightInner(PortAssign::IRRightInnerChannel),
-        m_IRRightOuter(PortAssign::IRRightOuterChannel),
-
         m_gyro(PortAssign::GyroChannel),
 
+        m_IRLeftInner(PortAssign::IRLeftInnerChannel),
+        m_IRRightInner(PortAssign::IRRightInnerChannel),
+        m_IRLeftOuter(PortAssign::IRLeftOuterChannel),
+        m_IRRightOuter(PortAssign::IRRightOuterChannel),
 
         m_stick(PortAssign::JoystickChannel),
         m_gamepad(PortAssign::GamepadChannel),
@@ -189,10 +188,7 @@ public:
             m_elevator->operateElevator();
         }
 
-        int MovePickup2Height = 60;
-
         const float simpleAutoDelay = 0.0;
-        const float complexAutoDelay = 0.0;
 
         //m_robotDrive.SetSafetyEnabled(false); this may be needed
         //This is the mode it's going to use
@@ -205,23 +201,27 @@ public:
         switch(autoMode)
         {
         case complex:
-            MoveAndLift(FieldDistances::shiftDiff, 0, 1, kElevatorHook3Lifted,
-                    complexAutoDelay, "Lift 1 Right");
-            Move(0, FieldDistances::moveBack, 1, complexAutoDelay, "Move Back");
+//            LiftAndMoveWithDelay(FieldDistances::shiftDiff, 0, 1, kElevatorHook3Lifted, kElevatorHook1Lifted,
+//                    "Lift 1 Right");
+//            Move(0, FieldDistances::moveBack, 1, "Move Back");
+            LiftAndMoveWithDelay(0, FieldDistances::moveBack, 1, kElevatorHook3Lifted, kElevatorHook1Lifted,
+                                "Lift 1 Back");
             MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, 1, kElevatorHook2Ready, -49,
-                    complexAutoDelay, "1 Left and Down");
+                    "1 Left and Down");
             Move(0, -FieldDistances::moveBack, 0.5,
-                    complexAutoDelay, "Move forwards");
-            MoveAndLift(FieldDistances::shiftDiff, 0, 1, kElevatorHook4Lifted,
-                    complexAutoDelay, "Lift 2 Right");
-            Move(0, FieldDistances::moveBack, 1, complexAutoDelay, "Move Back");
+                    "Move forwards");
+//            LiftAndMoveWithDelay(FieldDistances::shiftDiff, 0, 1, kElevatorHook4Lifted, kElevatorHook2Lifted,
+//                    "Lift 2 Right");
+//            Move(0, FieldDistances::moveBack, 1, "Move Back");
+            LiftAndMoveWithDelay(0, FieldDistances::moveBack, 1, kElevatorHook4Lifted, kElevatorHook2Lifted,
+                                "Lift 2 Back");
             MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, 1, kElevatorHook3Ready, -49,
-                    complexAutoDelay, "1,2 Left and Down");
+                    "1,2 Left and Down");
             Move(0, FieldDistances::intoAutoDiff -FieldDistances::moveBack, 1,
-                    complexAutoDelay, "Into Autozone");
+                    "Into Autozone");
             Lift(kSoftLowerLimit,
-                    complexAutoDelay, "Put down all");
-            Move(0, FieldDistances::moveBack, 1, complexAutoDelay, "Move Back"); //Avoids potential of support
+                    "Put down all");
+            Move(0, FieldDistances::moveBack, 1, "Move Back"); //Avoids potential of support
 
             m_autoPID.Reset();
             break;
@@ -412,59 +412,57 @@ public:
 
     }
 
-    void Move (float x, float y, float speedMultiplier, float waitTime, std::string debugMessage){
+    void Move (float x, float y, float speedMultiplier, std::string debugMessage){
         if (!(IsAutonomous() && IsEnabled()))
             {return;}
     	SmartDashboard::PutString("DB/String 0", debugMessage);
-    	if (x == 0 || y == 0){
-		m_autoPID.SetGoal(x, y, speedMultiplier);
-		while(IsAutonomous() && IsEnabled() && !m_autoPID.NearGoal())
-		{
-			DisplayInfo();
-			Wait(0.005);
-		}
-    	}
+
+        m_autoPID.SetGoal(x, y, speedMultiplier);
+        while(IsAutonomous() && IsEnabled() && !m_autoPID.NearGoal())
+        {
+            DisplayInfo();
+            Wait(0.005);
+        }
+
     	//debugMessage->str(" ");
-    	Wait(waitTime);
     }
 
-    void Lift (float height, float waitTime, std::string debugMessage){
-        if (!(IsAutonomous() && IsEnabled()))
-                            {return;}
+    void Lift (float height, std::string debugMessage){
+        if (!(IsAutonomous() && IsEnabled())) {
+            return;
+        }
     	SmartDashboard::PutString("DB/String 0", debugMessage);
-		m_elevator->setElevatorGoalPosition(height);
-		while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(height))
-		{
-			m_elevator->updateProfile();
-			DisplayInfo();
-			Wait(0.005);
-		}
-		Wait(waitTime);
+        m_elevator->setElevatorGoalPosition(height);
+        while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(height))
+        {
+            m_elevator->updateProfile();
+            DisplayInfo();
+            Wait(0.005);
+        }
     }
 
-    void MoveAndLift (float x, float y, float speedMultiplier, float height, float waitTime, std::string debugMessage){
+    void MoveAndLift (float x, float y, float speedMultiplier, float height, std::string debugMessage){
         if (!(IsAutonomous() && IsEnabled()))
             {return;}
         SmartDashboard::PutString("DB/String 0", debugMessage);
         m_elevator->setElevatorGoalPosition(height);
-        if (x == 0 || y == 0){
-                        m_autoPID.SetGoal(x, y, speedMultiplier);
-        }
+
+        m_autoPID.SetGoal(x, y, speedMultiplier);
+
         while(IsAutonomous() && IsEnabled() && (!m_autoPID.NearGoal() || !m_elevator->elevatorIsAt(height)))
         {
-                m_elevator->updateProfile();
-                DisplayInfo();
-                Wait(0.005);
+            m_elevator->updateProfile();
+            DisplayInfo();
+            Wait(0.005);
         }
-        Wait(waitTime);
     }
-    void MoveAndLiftWithDelay (float x, float y, float speedMultiplier, float height, float ElevatorDropDelay, float waitTime, std::string debugMessage){
+    //This function will allow for movement to occur before lifting/lowering begins.
+    void MoveAndLiftWithDelay (float x, float y, float speedMultiplier, float height, float ElevatorDropDelay, std::string debugMessage){
         if (!(IsAutonomous() && IsEnabled()))
                     {return;}
         SmartDashboard::PutString("DB/String 0", debugMessage);
-        if (x == 0 || y == 0){
-                        m_autoPID.SetGoal(x, y, speedMultiplier);
-        }
+
+        m_autoPID.SetGoal(x, y, speedMultiplier);
 
         while(IsAutonomous() && IsEnabled() && (!m_autoPID.NearGoal() || !m_elevator->elevatorIsAt(height)))
         {
@@ -476,7 +474,30 @@ public:
             DisplayInfo();
             Wait(0.005);
         }
-                        Wait(waitTime);
+    }
+
+    //This function will allow for the elevator motion to be started before movement along the
+    //ground begins.  The initial lift of the elevator before horizontal motion occurs is necessary
+    //in order to ensure that the bin will be picked up.  The bin will be lifted slightly, then lifted
+    //much more as horizontal motion begins.
+    void LiftAndMoveWithDelay (float x, float y, float speedMultiplier, float height, float StartMovePosition, std::string debugMessage){
+        if (!(IsAutonomous() && IsEnabled()))
+                    {return;}
+        SmartDashboard::PutString("DB/String 0", debugMessage);
+
+        m_elevator->setElevatorGoalPosition(height);
+        bool moveTriggered = false;
+        while(IsAutonomous() && IsEnabled() && (!m_autoPID.NearGoal() || !m_elevator->elevatorIsAt(height)))
+        {
+            //This cannot be used generally; it only will work for leftward motion.
+            if (!moveTriggered && m_elevator->elevatorPosition() >= StartMovePosition){
+                m_autoPID.SetGoal(x, y, speedMultiplier);
+                moveTriggered = true;
+            }
+            m_elevator->updateProfile();
+            DisplayInfo();
+            Wait(0.005);
+        }
     }
 
 };

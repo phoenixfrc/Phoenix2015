@@ -74,6 +74,7 @@ public:
     void operateElevator(); // for use in teleop
     bool elevatorIsHomed();
     bool elevatorIsAt(float position);
+    float elevatorPosition();
     void updateProfile();
 
 
