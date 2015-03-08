@@ -15,7 +15,6 @@ IRAdjust::IRAdjust(AnalogInput* IRLeftInner, AnalogInput* IRLeftOuter, AnalogInp
     //m_IRRightOuter(IRRightOuter),
     m_drive(drive)
 {
-
 }
 
 
@@ -50,8 +49,9 @@ void IRAdjust::GrabTote(){
 }
 
 double IRAdjust::InchesForward(){
-    int16_t LI = m_IRLeftInner->GetValue();
-    int16_t RI = m_IRRightInner->GetValue();
+
+    int16_t LI = m_IRLeftInner->GetAverageValue();
+    int16_t RI = m_IRRightInner->GetAverageValue();
 
     int16_t x = LI < RI ? LI : RI;
 
