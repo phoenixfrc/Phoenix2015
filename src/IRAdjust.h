@@ -19,15 +19,17 @@ public:
     void GrabTote();
     bool IsOnTote();
 
+    double InchesForward();
+
     ~IRAdjust();
 private:
 
     int16_t m_ThresholdForward;
 
     AnalogInput* m_IRLeftInner;
-    AnalogInput* m_IRLeftOuter;
+    //AnalogInput* m_IRLeftOuter;
     AnalogInput* m_IRRightInner;
-    AnalogInput* m_IRRightOuter;
+    //AnalogInput* m_IRRightOuter;
 
     RobotDrive* m_drive;
 };

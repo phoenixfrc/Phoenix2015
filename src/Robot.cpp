@@ -373,16 +373,22 @@ public:
         }
         count = 0;
 
-        std::ostringstream gyroBuilder, eb, eb2, elevatorBuilder, elevatorEncoderBuilder, elevatorBuilder3, IRsensors, IRSensors2;
+        std::ostringstream gyroBuilder, eb, eb2, elevatorBuilder, elevatorEncoderBuilder, elevatorBuilder3, IRSensors, IRSensors2;
         //Print IR Sensor Values
+
+
 
        // IRsensors << "RI: " << m_IRRightInner.GetAverageValue();
         //IRsensors << "LI: " << m_IRLeftInner.GetAverageValue();
         //SmartDashboard::PutString("DB/String 0", IRsensors.str());
 
-        IRSensors2 << "LO: " << m_IRLeftOuter.GetAverageValue();
-        IRSensors2 << "RO: " << m_IRRightOuter.GetAverageValue();
+        IRSensors << "LI: " << m_IRLeftInner.GetAverageValue();
+        IRSensors << "RI: " << m_IRRightInner.GetAverageValue();
+        SmartDashboard::PutString("DB/String 0", IRSensors.str());
+
+        IRSensors2 << "IR Inches: " << m_IRAdjust.InchesForward();
         SmartDashboard::PutString("DB/String 1", IRSensors2.str());
+
 
         //Prints out the values for gyro:
         gyroBuilder << "Gyro angle: ";

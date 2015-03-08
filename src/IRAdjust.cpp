@@ -10,9 +10,9 @@
 IRAdjust::IRAdjust(AnalogInput* IRLeftInner, AnalogInput* IRLeftOuter, AnalogInput* IRRightInner, AnalogInput* IRRightOuter, RobotDrive* drive):
     m_ThresholdForward(768),//tbd
     m_IRLeftInner(IRLeftInner),
-    m_IRLeftOuter(IRLeftOuter),
+    //m_IRLeftOuter(IRLeftOuter),
     m_IRRightInner(IRRightInner),
-    m_IRRightOuter(IRRightOuter),
+    //m_IRRightOuter(IRRightOuter),
     m_drive(drive)
 {
 
@@ -21,17 +21,17 @@ IRAdjust::IRAdjust(AnalogInput* IRLeftInner, AnalogInput* IRLeftOuter, AnalogInp
 
 bool IRAdjust::IsOnTote(){
     int16_t LI = m_IRLeftInner->GetValue();
-    int16_t LO = m_IRLeftOuter->GetValue();
+    //int16_t LO = m_IRLeftOuter->GetValue();
     int16_t RI = m_IRRightInner->GetValue();
-    int16_t RO = m_IRRightOuter->GetValue();
+    //int16_t RO = m_IRRightOuter->GetValue();
 
     int16_t turn = abs(LI-RI);//Are we turned to far?
 
-    int16_t near = (LI+RI)/2;
+    int16_t near = LI < RI ? LI : RI;//(LI+RI)/2;
 
     std::ostringstream builder, builder2;
 
-    builder2 << LO << ", " << LI << " : " << RI << ", " << RO;
+    builder2 <<  LI << " : " << RI;
 
     builder << "turn: " << turn << "dist: " << near;
 
@@ -47,6 +47,19 @@ bool IRAdjust::IsOnTote(){
 
 void IRAdjust::GrabTote(){
     IsOnTote();
+}
+
+double IRAdjust::InchesForward(){
+    int16_t LI = m_IRLeftInner->GetValue();
+    int16_t RI = m_IRRightInner->GetValue();
+
+    int16_t x = (RI);
+
+    double v = (double) x * 5 / 4096;
+
+    double dist = -4.88*v*v*v + 22.3*v*v - 35.43*v + 23.0;
+
+    return dist;
 }
 
 
