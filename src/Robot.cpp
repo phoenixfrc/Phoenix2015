@@ -118,11 +118,12 @@ public:
         m_DIO25(PortAssign::DIO25Channel),
 
         m_IRLeftInner(PortAssign::IRLeftInnerChannel),
-        m_IRLeftOuter(PortAssign::IRLeftOuterChannel),
+		m_IRLeftOuter(PortAssign::IRLeftOuterChannel),
         m_IRRightInner(PortAssign::IRRightInnerChannel),
-        m_IRRightOuter(PortAssign::IRRightOuterChannel),
+		m_IRRightOuter(PortAssign::IRRightOuterChannel),
 
-        m_gyro(PortAssign::GyroChannel),
+		m_gyro(PortAssign::GyroChannel),
+
 
         m_stick(PortAssign::JoystickChannel),
         m_gamepad(PortAssign::GamepadChannel),
@@ -217,7 +218,7 @@ public:
                                 "Lift 2 Back");
             MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, 1, kElevatorHook3Ready, -49,
                     "1,2 Left and Down");
-            Move(0, FieldDistances::intoAutoDiff -FieldDistances::moveBack, 1,
+            MoveAndLift(0, FieldDistances::intoAutoDiff -FieldDistances::moveBack,  1, kElevatorHook2Lifted,
                     "Into Autozone");
             Lift(kSoftLowerLimit,
                     "Put down all");
