@@ -7,6 +7,7 @@
 #include "Dragger.h"
 #include "EncoderTracker.h"
 #include "PIDInterface.h"
+#include "IRAdjust.h"
 #include <sstream>
 /**
  * This is a demo program showing how to use Mecanum control with the RobotDrive class.
@@ -57,6 +58,11 @@ class Robot: public SampleRobot
     DigitalInput m_DIO24;
     DigitalInput m_DIO25;
 
+    AnalogInput m_IRLeftInner;
+    AnalogInput m_IRLeftOuter;
+    AnalogInput m_IRRightInner;
+    AnalogInput m_IRRightOuter;
+
 
     Gyro m_gyro;
     AnalogInput m_IRLeftInner;
@@ -67,6 +73,8 @@ class Robot: public SampleRobot
 
     Team2342Joystick m_stick;                 // only joystick
     Joystick m_gamepad;       // the gamepad
+
+    IRAdjust m_IRAdjust;
 
     PIDInterface m_autoPID;
     DriveStabilize m_driveStabilize;
@@ -114,6 +122,11 @@ public:
         m_DIO24(PortAssign::DIO24Channel),
         m_DIO25(PortAssign::DIO25Channel),
 
+        m_IRLeftInner(PortAssign::IRLeftInnerChannel),
+        m_IRLeftOuter(PortAssign::IRLeftOuterChannel),
+        m_IRRightInner(PortAssign::IRRightInnerChannel),
+        m_IRRightOuter(PortAssign::IRRightOuterChannel),
+
         m_gyro(PortAssign::GyroChannel),
 
 		m_IRLeftInner(PortAssign::IRLeftInnerChannel),
@@ -123,6 +136,9 @@ public:
 
         m_stick(PortAssign::JoystickChannel),
         m_gamepad(PortAssign::GamepadChannel),
+
+        m_IRAdjust(&m_IRLeftInner, &m_IRLeftOuter, &m_IRRightInner, &m_IRRightOuter, &m_robotDrive),
+
         m_autoPID(&m_robotDrive, &m_tracker, &m_gyro, &m_driveStabilize),
 
         m_driveStabilize(&m_gyro, &m_tracker, &m_stick, 0.0, 0.0, 0.016)
@@ -154,7 +170,7 @@ public:
         //reserved for config
 }
 
-void ClearDisplay()
+    void ClearDisplay()
     {
         SmartDashboard::PutString("DB/String 0", " ");
         SmartDashboard::PutString("DB/String 1", " ");
@@ -326,6 +342,7 @@ void ClearDisplay()
             //reserved for config
             //reserved for config
             //reserved for config
+            m_IRAdjust.GrabTote();
             DisplayInfo();
 
             Wait(0.005);

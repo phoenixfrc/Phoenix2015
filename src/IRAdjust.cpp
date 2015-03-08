@@ -5,14 +5,15 @@
  *      Author: Ray
  */
 #include "IRAdjust.h"
-#include <Math.h>
+#include <math.h>
 
-IRAdjust::IRAdjust(AnalogInput* IRLeftInner, AnalogInput* IRLeftOuter, AnalogInput* IRRightInner, AnalogInput* IRRightOuter):
+IRAdjust::IRAdjust(AnalogInput* IRLeftInner, AnalogInput* IRLeftOuter, AnalogInput* IRRightInner, AnalogInput* IRRightOuter, RobotDrive* drive):
     m_ThresholdForward(0),//tbd
     m_IRLeftInner(IRLeftInner),
     m_IRLeftOuter(IRLeftOuter),
     m_IRRightInner(IRRightInner),
-    m_IRRightOuter(IRRightOuter)
+    m_IRRightOuter(IRRightOuter),
+    m_drive(drive)
 {
 
 }
@@ -24,20 +25,28 @@ bool IRAdjust::IsOnTote(){
     int16_t RI = m_IRRightInner->GetValue();
     int16_t RO = m_IRRightOuter->GetValue();
 
-    bool turned = fabs(LI-RI) > 500;//Are we turned to far?
+    int16_t turn = abs(LI-RI);//Are we turned to far?
 
-    bool isNear = (LI+RI)/2 < m_ThresholdForward;
+    int16_t near = (LI+RI)/2;
 
-    return !turned && isNear;
+    std::ostringstream builder, builder2;
+
+    builder2 << LO << ", " << LI << " : " << RI << ", " << RO;
+
+    builder << "turn: " << turn << "dist: " << near;
+
+    SmartDashboard::PutString("DB/String 9", builder.str());
+    SmartDashboard::PutString("DB/String 7", builder2.str());
+
+    bool ready = (turn < 500) && (near < m_ThresholdForward);
+
+    SmartDashboard::PutString("DB/String 8", ready ? "Ready" : "Not Ready");
+
+    return ready;
 }
 
 void IRAdjust::GrabTote(){
-
-    bool readyToLift = false;
-
-    while (!readyToLift) {
-        readyToLift = IsOnTote();
-    }
+    IsOnTote();
 }
 
 

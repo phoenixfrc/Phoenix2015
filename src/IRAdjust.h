@@ -10,11 +10,11 @@
 #define IRADJUST_H_
 
 #include "WPILib.h"
-#include "constants.h"
+#include <sstream>
 
 class IRAdjust {
 public:
-    IRAdjust(AnalogInput* IRLeftInner, AnalogInput* IRLeftOuter, AnalogInput* IRRightInner, AnalogInput* IRRightOuter);
+    IRAdjust(AnalogInput* IRLeftInner, AnalogInput* IRLeftOuter, AnalogInput* IRRightInner, AnalogInput* IRRightOuter, RobotDrive* drive);
 
     void GrabTote();
     bool IsOnTote();
@@ -28,6 +28,8 @@ private:
     AnalogInput* m_IRLeftOuter;
     AnalogInput* m_IRRightInner;
     AnalogInput* m_IRRightOuter;
+
+    RobotDrive* m_drive;
 };
 
 
