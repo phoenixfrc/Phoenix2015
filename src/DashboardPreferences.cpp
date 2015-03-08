@@ -16,9 +16,9 @@ DashboardPreferences::DashboardPreferences():
 
 void DashboardPreferences::updateButtons(){
 	//m_newName = SmartDashboard::GetBoolean("New Name");
-	m_button1 = SmartDashboard::GetBoolean("DB/Button 1");
-	m_button2 = SmartDashboard::GetBoolean("DB/Button 2");
-	m_button3 = SmartDashboard::GetBoolean("DB/Button 3");
+	m_button1 = SmartDashboard::GetBoolean("Simple");
+	m_button2 = SmartDashboard::GetBoolean("Complex");
+	m_button3 = SmartDashboard::GetBoolean("Short");
 }
 
 DashboardPreferences::~DashboardPreferences(){

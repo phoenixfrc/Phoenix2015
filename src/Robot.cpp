@@ -187,9 +187,15 @@ public:
         m_robotDrive.SetSafetyEnabled(false);
         m_gyro.Reset();
         ClearDisplay();
-        AutoMode autoMode = disabled;
+        AutoMode autoMode;
+        m_dashboard.updateButtons();
 
-        if(m_dashboard.m_button1){
+        if((!m_dashboard.m_button1 && !m_dashboard.m_button2 && !m_dashboard.m_button3) || (m_dashboard.m_button2 && m_dashboard.m_button3)
+					|| (m_dashboard.m_button1 && m_dashboard.m_button3) || (m_dashboard.m_button1 && m_dashboard.m_button2)){
+				autoMode = disabled;
+				SmartDashboard::PutString("DB/String 1", "Inside crazy if block");
+			}
+        else if(m_dashboard.m_button1){
         	autoMode = simple;
         }
         else if(m_dashboard.m_button2){
@@ -198,12 +204,9 @@ public:
         else if(m_dashboard.m_button3){
         	autoMode = simpleShort;
         }
-
-        if((!m_dashboard.m_button1 && !m_dashboard.m_button2 && !m_dashboard.m_button3) || (m_dashboard.m_button2 && m_dashboard.m_button3)){
-        	autoMode = disabled;
-        }
         else{
         	autoMode = disabled;
+        	SmartDashboard::PutString("DB/String 2", "In else");
         }
         m_elevator->ElevatorInit();
         SmartDashboard::PutString("DB/String 0", "Initial Homeing");
@@ -356,6 +359,7 @@ public:
 			m_autoPID.Reset();
 			break;
         case disabled:
+        	SmartDashboard::PutString("DB/String 0", "Autonomous Disabled");
             break;
         }
         m_elevator->ElevatorEnd();
