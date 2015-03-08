@@ -95,6 +95,11 @@ struct FieldDistances
     static const int moveBack = -4;
 };
 
+struct Tolerances
+{
+	static const int moveTolerance = 2;
+};
+
 
 struct ObjectSizes
 {
