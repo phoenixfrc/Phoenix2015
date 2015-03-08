@@ -29,18 +29,18 @@ bool IRAdjust::IsOnTote(){
 
     int16_t near = LI < RI ? LI : RI;//(LI+RI)/2;
 
-    std::ostringstream builder, builder2;
+    static int count = 0;
+    bool ready = (turn < 640) && (near < 1296);
 
-    builder2 <<  LI << " : " << RI;
+    if (count++ >= 100) {
+        std::ostringstream builder;
+        builder << "turn: " << turn << ", dist: " << near;
+        SmartDashboard::PutString("DB/String 9", builder.str());
 
-    builder << "turn: " << turn << "dist: " << near;
-
-    SmartDashboard::PutString("DB/String 9", builder.str());
-    SmartDashboard::PutString("DB/String 7", builder2.str());
-
-    bool ready = (turn < 640) && (near > 1296);
-
-    SmartDashboard::PutString("DB/String 8", ready ? "Ready" : "Not Ready");
+        bool ready = (turn < 640) && (near > 1296);
+    	SmartDashboard::PutString("DB/String 8", ready ? "Ready" : "Not Ready");
+    	count = 0;
+    }
 
     return ready;
 }
@@ -53,7 +53,7 @@ double IRAdjust::InchesForward(){
     int16_t LI = m_IRLeftInner->GetValue();
     int16_t RI = m_IRRightInner->GetValue();
 
-    int16_t x = (RI);
+    int16_t x = LI < RI ? LI : RI;
 
     double v = (double) x * 5 / 4096;
 
