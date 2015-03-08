@@ -27,12 +27,14 @@ yPID(0.16, 0.0, 0.0, this, this)
 	isPastGoal = false;
 	m_xGoalDistance = 0;
 	m_yGoalDistance = 0;
+	m_speedMultiplier = 1;
 }
 
 void PIDInterface::Reset()
 {
 	m_tracker->ResetPosition();
 	isPastGoal = false;
+	m_speedMultiplier = 1;
 
 	if(xPID.IsEnabled())
 	{
@@ -68,6 +70,11 @@ void PIDInterface::SetGoal(double xGoalDistance, double yGoalDistance)
 	SmartDashboard::PutString("DB/String 1", Goal.str());
 }
 
+void PIDInterface::SetGoal(double xGoalDistance, double yGoalDistance, float speedMultiplier)
+{
+	SetGoal(xGoalDistance, yGoalDistance);
+	m_speedMultiplier = speedMultiplier;
+}
 
 //This will return true if either of the PID loops are enabled and have reached their target
 bool PIDInterface::ReachedGoal()
@@ -178,6 +185,8 @@ void PIDInterface::PIDWrite(float output)
     }
 
     std::ostringstream bobTheStringBuilder;
+
+    output *= m_speedMultiplier;
 
 	switch(m_currentAxis)
 	{

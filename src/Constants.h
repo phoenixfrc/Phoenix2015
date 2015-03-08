@@ -64,10 +64,10 @@ struct PortAssign
 
     // analog
     static const int32_t GyroChannel = 0;
-    static const uint32_t IRLeftInnerChannel = 1;//tba
-    static const uint32_t IRLeftOuterChannel = 2;//tba
-    static const uint32_t IRRightInnerChannel = 3;//tba
-    static const uint32_t IRRightOuterChannel = 4;//tba
+    static const uint32_t IRLeftInnerChannel = 3;//tba //current port numbers for test board
+    static const uint32_t IRLeftOuterChannel = 4;//tba
+    static const uint32_t IRRightInnerChannel = 2;//tba
+    static const uint32_t IRRightOuterChannel = 1;//tba
 
 
     //Joystick Ports:
@@ -86,7 +86,11 @@ struct FieldDistances
     //Distance to back away from totes after dropping them.
     static const int backOffDiff = -5;
     //Distance to Push totes forward before pickup
-    static const int pushDiff = 7;
+    static const int pushDiff = 9;
+    //Distance to move left, after lifting upwards and right, before beginning elevator motion
+    static const int rightElevatorDistance = 49;
+    //Distance to move back initially, to avoid hitting totes
+    static const int moveBack = -4;
 };
 
 
