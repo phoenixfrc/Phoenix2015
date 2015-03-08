@@ -198,49 +198,23 @@ void ClearDisplay()
         switch(autoMode)
         {
         case complex:
-
-            //Move(0, FieldDistances::pushDiff, complexAutoDelay, "Move Forward 1");
-
-            //Lift(kElevatorHook1Lifted, complexAutoDelay, "Lift Tote 1");
-
-            //Move(FieldDistances::shiftDiff, 0, complexAutoDelay, "Move Right 1");
-
-            //Lift(kElevatorHook3Lifted, complexAutoDelay, "Lift Over 1");
-
-            //Move((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, complexAutoDelay, "Move Left 1");
-
-            //Lift(kElevatorHook2Ready, complexAutoDelay, "Lower Tote 1");
-
-            //Lift(kElevatorHook2Lifted, complexAutoDelay, "Lift Tote 2");
-
-            //Move(FieldDistances::shiftDiff, 0, complexAutoDelay, "Move Right 2");
-
-            //Lift(kElevatorHook4Lifted, complexAutoDelay, "Lift Over 1");
-
-            //Move((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, complexAutoDelay, "Move Left 2");
-
-            //Move(0, FieldDistances::intoAutoDiff, complexAutoDelay, "Into Autozone");
-
-            //Lift(kSoftLowerLimit, complexAutoDelay, "Put down all");
-
             MoveAndLift(FieldDistances::shiftDiff, 0, 1, kElevatorHook3Lifted,
                     complexAutoDelay, "Lift 1 Right");
             Move(0, FieldDistances::moveBack, 1, complexAutoDelay, "Move Back");
-            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, 1, kElevatorHook2Ready, 49,
+            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, 1, kElevatorHook2Ready, -49,
                     complexAutoDelay, "1 Left and Down");
             Move(0, -FieldDistances::moveBack, 0.5,
                     complexAutoDelay, "Move forwards");
-            MoveAndLift(FieldDistances::shiftDiff, 0, 1, kElevatorHook2Lifted,
+            MoveAndLift(FieldDistances::shiftDiff, 0, 1, kElevatorHook4Lifted,
                     complexAutoDelay, "Lift 2 Right");
             Move(0, FieldDistances::moveBack, 1, complexAutoDelay, "Move Back");
-            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, 1, kElevatorHook4Lifted, 49,
+            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, 1, kElevatorHook3Ready, -49,
                     complexAutoDelay, "1,2 Left and Down");
-            Move(0, -FieldDistances::moveBack, 0.5,
-                    complexAutoDelay, "Move forwards");
-            Move(0, FieldDistances::intoAutoDiff, 1,
+            Move(0, FieldDistances::intoAutoDiff -FieldDistances::moveBack, 1,
                     complexAutoDelay, "Into Autozone");
             Lift(kSoftLowerLimit,
                     complexAutoDelay, "Put down all");
+            Move(0, FieldDistances::moveBack, 1, complexAutoDelay, "Move Back"); //Avoids potential of support
 
             m_autoPID.Reset();
             break;
@@ -327,7 +301,7 @@ void ClearDisplay()
 
             m_dragger.operateDragger(&m_gamepad, &m_draggerLowerLimit, &m_draggerMotor);
 
-            //DisplayInfo();
+            DisplayInfo();
 
             Wait(0.005); // wait 5ms to avoid hogging CPU cycles
         }
@@ -464,17 +438,17 @@ void ClearDisplay()
         if (!(IsAutonomous() && IsEnabled()))
             {return;}
         SmartDashboard::PutString("DB/String 0", debugMessage);
+        m_elevator->setElevatorGoalPosition(height);
         if (x == 0 || y == 0){
                         m_autoPID.SetGoal(x, y, speedMultiplier);
         }
-        m_elevator->setElevatorGoalPosition(height);
         while(IsAutonomous() && IsEnabled() && (!m_autoPID.NearGoal() || !m_elevator->elevatorIsAt(height)))
-                        {
-                                m_elevator->updateProfile();
-                                DisplayInfo();
-                                Wait(0.005);
-                        }
-                        Wait(waitTime);
+        {
+                m_elevator->updateProfile();
+                DisplayInfo();
+                Wait(0.005);
+        }
+        Wait(waitTime);
     }
     void MoveAndLiftWithDelay (float x, float y, float speedMultiplier, float height, float ElevatorDropDelay, float waitTime, std::string debugMessage){
         if (!(IsAutonomous() && IsEnabled()))
@@ -483,15 +457,17 @@ void ClearDisplay()
         if (x == 0 || y == 0){
                         m_autoPID.SetGoal(x, y, speedMultiplier);
         }
-        if (m_tracker.GetX() >= ElevatorDropDelay){
-            m_elevator->setElevatorGoalPosition(height);
-        }
+
         while(IsAutonomous() && IsEnabled() && (!m_autoPID.NearGoal() || !m_elevator->elevatorIsAt(height)))
-                        {
-                                m_elevator->updateProfile();
-                                DisplayInfo();
-                                Wait(0.005);
-                        }
+        {
+            //This cannot be used generally; it only will work for leftward motion.
+            if (m_tracker.GetX() <= ElevatorDropDelay){
+                m_elevator->setElevatorGoalPosition(height);
+            }
+            m_elevator->updateProfile();
+            DisplayInfo();
+            Wait(0.005);
+        }
                         Wait(waitTime);
     }
 
