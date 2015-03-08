@@ -343,7 +343,7 @@ void ClearDisplay()
 
             m_dragger.operateDragger(&m_gamepad, &m_draggerLowerLimit, &m_draggerMotor);
 
-            //DisplayInfo();
+            DisplayInfo();
 
             Wait(0.005); // wait 5ms to avoid hogging CPU cycles
         }
@@ -382,16 +382,16 @@ void ClearDisplay()
         }
         count = 0;
 
-        std::ostringstream gyroBuilder, eb, eb2, elevatorBuilder, elevatorEncoderBuilder, elevatorBuilder3, IRsensors, IRSensors2;
+        std::ostringstream gyroBuilder, eb, eb2, elevatorBuilder, elevatorEncoderBuilder, elevatorBuilder3, IRsensors;
         //Print IR Sensor Values
 
-       // IRsensors << "RI: " << m_IRRightInner.GetAverageValue();
-        //IRsensors << "LI: " << m_IRLeftInner.GetAverageValue();
-        //SmartDashboard::PutString("DB/String 0", IRsensors.str());
+        IRsensors << "RI: " << m_IRRightInner.GetAverageValue();
+        IRsensors << "LI: " << m_IRLeftInner.GetAverageValue();
+        IRsensors << "LO: " << m_IRLeftOuter.GetAverageValue();
+        IRsensors << "RO: " << m_IRRightOuter.GetAverageValue();
+        SmartDashboard::PutString("DB/String 1", IRsensors.str());
 
-        IRSensors2 << "LO: " << m_IRLeftOuter.GetAverageValue();
-        IRSensors2 << "RO: " << m_IRRightOuter.GetAverageValue();
-        SmartDashboard::PutString("DB/String 1", IRSensors2.str());
+
 
         //Prints out the values for gyro:
         gyroBuilder << "Gyro angle: ";

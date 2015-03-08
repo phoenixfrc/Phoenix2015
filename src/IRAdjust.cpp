@@ -27,7 +27,7 @@ bool IRAdjust::IsOnTote(){
 
     int16_t turn = abs(LI-RI);//Are we turned to far?
 
-    int16_t near = (LI+RI)/2;
+    int16_t near = (LI+RI)/2;0
 
     std::ostringstream builder, builder2;
 
