@@ -38,7 +38,7 @@ bool IRAdjust::IsOnTote(){
     SmartDashboard::PutString("DB/String 9", builder.str());
     SmartDashboard::PutString("DB/String 7", builder2.str());
 
-    bool ready = (turn < 640) && (near > m_ThresholdForward);
+    bool ready = (turn < 640) && (near > 1296);
 
     SmartDashboard::PutString("DB/String 8", ready ? "Ready" : "Not Ready");
 
