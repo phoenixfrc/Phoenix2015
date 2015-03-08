@@ -201,16 +201,20 @@ public:
         switch(autoMode)
         {
         case complex:
-            LiftAndMoveWithDelay(FieldDistances::shiftDiff, 0, 1, kElevatorHook3Lifted, kElevatorHook1Lifted,
-                    "Lift 1 Right");
-            Move(0, FieldDistances::moveBack, 1, "Move Back");
+//            LiftAndMoveWithDelay(FieldDistances::shiftDiff, 0, 1, kElevatorHook3Lifted, kElevatorHook1Lifted,
+//                    "Lift 1 Right");
+//            Move(0, FieldDistances::moveBack, 1, "Move Back");
+            LiftAndMoveWithDelay(0, FieldDistances::moveBack, 1, kElevatorHook3Lifted, kElevatorHook1Lifted,
+                                "Lift 1 Back");
             MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, 1, kElevatorHook2Ready, -49,
                     "1 Left and Down");
             Move(0, -FieldDistances::moveBack, 0.5,
                     "Move forwards");
-            LiftAndMoveWithDelay(FieldDistances::shiftDiff, 0, 1, kElevatorHook4Lifted, kElevatorHook2Lifted,
-                    "Lift 2 Right");
-            Move(0, FieldDistances::moveBack, 1, "Move Back");
+//            LiftAndMoveWithDelay(FieldDistances::shiftDiff, 0, 1, kElevatorHook4Lifted, kElevatorHook2Lifted,
+//                    "Lift 2 Right");
+//            Move(0, FieldDistances::moveBack, 1, "Move Back");
+            LiftAndMoveWithDelay(0, FieldDistances::moveBack, 1, kElevatorHook4Lifted, kElevatorHook2Lifted,
+                                "Lift 2 Back");
             MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, 1, kElevatorHook3Ready, -49,
                     "1,2 Left and Down");
             Move(0, FieldDistances::intoAutoDiff -FieldDistances::moveBack, 1,
