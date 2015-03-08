@@ -29,18 +29,22 @@ bool IRAdjust::IsOnTote(){
 
     int16_t near = (LI+RI)/2;
 
-    std::ostringstream builder, builder2;
-
-    builder2 << LO << ", " << LI << " : " << RI << ", " << RO;
-
-    builder << "turn: " << turn << "dist: " << near;
-
-    SmartDashboard::PutString("DB/String 9", builder.str());
-    SmartDashboard::PutString("DB/String 7", builder2.str());
-
+    static int count =0;
     bool ready = (turn < 500) && (near < m_ThresholdForward);
 
-    SmartDashboard::PutString("DB/String 8", ready ? "Ready" : "Not Ready");
+    if (count++ >= 100) {
+
+    	std::ostringstream builder;
+
+
+    	builder << "turn: " << turn << "dist: " << near;
+
+    	SmartDashboard::PutString("DB/String 9", builder.str());
+
+    	SmartDashboard::PutString("DB/String 8", ready ? "Ready" : "Not Ready");
+    	count = 0;
+       }
+
 
     return ready;
 }

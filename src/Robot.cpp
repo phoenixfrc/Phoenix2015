@@ -58,11 +58,12 @@ class Robot: public SampleRobot
     DigitalInput m_DIO24;
     DigitalInput m_DIO25;
 
-    Gyro m_gyro;
-    AnalogInput m_IRLeftInner;
-    AnalogInput m_IRRightInner;
+    AnalogInput m_IRLeftInner; //only two sensors on robot right now
     AnalogInput m_IRLeftOuter;
+    AnalogInput m_IRRightInner;
     AnalogInput m_IRRightOuter;
+
+    Gyro m_gyro;
 
 
     Team2342Joystick m_stick;                 // only joystick
@@ -187,10 +188,7 @@ public:
             m_elevator->operateElevator();
         }
 
-        int MovePickup2Height = 60;
-
         const float simpleAutoDelay = 0.0;
-        const float complexAutoDelay = 0.0;
 
         //m_robotDrive.SetSafetyEnabled(false); this may be needed
         //This is the mode it's going to use
@@ -345,16 +343,16 @@ public:
         }
         count = 0;
 
-        std::ostringstream gyroBuilder, eb, eb2, elevatorBuilder, elevatorEncoderBuilder, elevatorBuilder3, IRsensors, IRSensors2;
+        std::ostringstream gyroBuilder, eb, eb2, elevatorBuilder, elevatorEncoderBuilder, elevatorBuilder3, IRsensors;
         //Print IR Sensor Values
 
-       // IRsensors << "RI: " << m_IRRightInner.GetAverageValue();
-        //IRsensors << "LI: " << m_IRLeftInner.GetAverageValue();
-        //SmartDashboard::PutString("DB/String 0", IRsensors.str());
+        IRsensors << "RI: " << m_IRRightInner.GetAverageValue();
+        IRsensors << "LI: " << m_IRLeftInner.GetAverageValue();
+        //IRsensors << "LO: " << m_IRLeftOuter.GetAverageValue();
+        //IRsensors << "RO: " << m_IRRightOuter.GetAverageValue();
+        SmartDashboard::PutString("DB/String 1", IRsensors.str());
 
-        IRSensors2 << "LO: " << m_IRLeftOuter.GetAverageValue();
-        IRSensors2 << "RO: " << m_IRRightOuter.GetAverageValue();
-        SmartDashboard::PutString("DB/String 1", IRSensors2.str());
+
 
         //Prints out the values for gyro:
         gyroBuilder << "Gyro angle: ";
