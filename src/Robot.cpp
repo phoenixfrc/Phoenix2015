@@ -69,7 +69,6 @@ class Robot: public SampleRobot
 
     Gyro m_gyro;
 
-
     Team2342Joystick m_stick;                 // only joystick
     Joystick m_gamepad;       // the gamepad
 
