@@ -5,7 +5,7 @@
  *      Author: Ray
  */
 #include "IRAdjust.h"
-#include <Math.h>
+#include <math.h>
 
 IRAdjust::IRAdjust(AnalogInput* IRLeftInner, AnalogInput* IRLeftOuter, AnalogInput* IRRightInner, AnalogInput* IRRightOuter, RobotDrive* drive):
     m_ThresholdForward(768),//tbd
