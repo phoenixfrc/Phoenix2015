@@ -103,6 +103,7 @@ double DriveStabilize::PIDGet(){
         case yAxis:
             return m_tracker->GetY();
             break;
+        default:
         case none:
             return 0.0;//This is a little dangerous, but it should be okay.
     }
