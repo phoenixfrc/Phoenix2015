@@ -10,7 +10,6 @@
 #define IRADJUST_H_
 
 #include "WPILib.h"
-#include "constants.h"
 #include <sstream>
 
 class IRAdjust {
