@@ -58,7 +58,7 @@ class Robot: public SampleRobot
     DigitalInput m_DIO24;
     DigitalInput m_DIO25;
 
-    AnalogInput m_IRLeftInner;
+    AnalogInput m_IRLeftInner; //only two sensors on robot right now
     AnalogInput m_IRLeftOuter;
     AnalogInput m_IRRightInner;
     AnalogInput m_IRRightOuter;
@@ -378,8 +378,8 @@ public:
 
         IRsensors << "RI: " << m_IRRightInner.GetAverageValue();
         IRsensors << "LI: " << m_IRLeftInner.GetAverageValue();
-        IRsensors << "LO: " << m_IRLeftOuter.GetAverageValue();
-        IRsensors << "RO: " << m_IRRightOuter.GetAverageValue();
+        //IRsensors << "LO: " << m_IRLeftOuter.GetAverageValue();
+        //IRsensors << "RO: " << m_IRRightOuter.GetAverageValue();
         SmartDashboard::PutString("DB/String 1", IRsensors.str());
 
 
