@@ -189,22 +189,26 @@ public:
         AutoMode autoMode;
         m_dashboard.updateButtons();
 
-        if((!m_dashboard.m_button1 && !m_dashboard.m_button2 && !m_dashboard.m_button3) || (m_dashboard.m_button2 && m_dashboard.m_button3)
-					|| (m_dashboard.m_button1 && m_dashboard.m_button3) || (m_dashboard.m_button1 && m_dashboard.m_button2)){
-				autoMode = disabled;
+        if((!m_dashboard.m_button1 && !m_dashboard.m_button2 && !m_dashboard.m_button3 && !m_dashboard.m_button4) || (m_dashboard.m_button1 && m_dashboard.m_button2)
+					|| (m_dashboard.m_button1 && m_dashboard.m_button3) || (m_dashboard.m_button1 && m_dashboard.m_button4) || (m_dashboard.m_button2 && m_dashboard.m_button3)
+					|| (m_dashboard.m_button2 && m_dashboard.m_button4) || (m_dashboard.m_button3 && m_dashboard.m_button4)){
+				autoMode = complex;
 				SmartDashboard::PutString("DB/String 1", "Inside crazy if block");
 			}
         else if(m_dashboard.m_button1){
-        	autoMode = simple;
-        }
-        else if(m_dashboard.m_button2){
         	autoMode = complex;
         }
+        else if(m_dashboard.m_button2){
+        	autoMode = simple;
+        }
         else if(m_dashboard.m_button3){
+        	autoMode = disabled;
+        }
+        else if(m_dashboard.m_button4){
         	autoMode = simpleShort;
         }
         else{
-        	autoMode = disabled;
+        	autoMode = complex;
         	SmartDashboard::PutString("DB/String 2", "In else");
         }
         m_elevator->ElevatorInit();

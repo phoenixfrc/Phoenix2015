@@ -20,6 +20,7 @@ public:
 	bool m_button1;
 	bool m_button2;
 	bool m_button3;
+	bool m_button4;
 
 	~DashboardPreferences();
 
