@@ -201,14 +201,20 @@ public:
 
         switch(autoMode)
         {
+        //This case assumes that the robot begins in a position directly behind the rightmost tote.
         case complex:
 //            LiftAndMoveWithDelay(FieldDistances::shiftDiff, 0, 1, kElevatorHook3Lifted, kElevatorHook1Lifted,
 //                    "Lift 1 Right");
 //            Move(0, FieldDistances::moveBack, 1, "Move Back");
             LiftAndMoveWithDelay(0, FieldDistances::moveBack, 1, kElevatorHook3Lifted, kElevatorHook1Lifted,
                                 "Lift 1 Back");
+            //The LiftAndMoveWithDelay function is used because the motion of the elevator needs to begin
+            //before sideways motion begins, in order to ensure that the robot will pick up the first
+            //tote.
             MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, 1, kElevatorHook2Ready, -49,
                     "1 Left and Down");
+            //The MoveAndLiftWithDelay function is used here so that downward motion of the tote does not
+            //begin until it is past the bin.  This ensures that it will not hit the bin.
             Move(0, -FieldDistances::moveBack, 0.5,
                     "Move forwards");
 //            LiftAndMoveWithDelay(FieldDistances::shiftDiff, 0, 1, kElevatorHook4Lifted, kElevatorHook2Lifted,
@@ -216,13 +222,20 @@ public:
 //            Move(0, FieldDistances::moveBack, 1, "Move Back");
             LiftAndMoveWithDelay(0, FieldDistances::moveBack, 1, kElevatorHook4Lifted, kElevatorHook2Lifted,
                                 "Lift 2 Back");
+            //The LiftAndMoveWithDelay function is used because the motion of the elevator needs to begin
+            //before sideways motion begins, in order to ensure that the robot will pick up the first
+            //tote.
             MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, 1, kElevatorHook3Ready, -49,
                     "1,2 Left and Down");
+            //The MoveAndLiftWithDelay function is used here so that downward motion of the tote does not
+            //begin until it is past the bin.  This ensures that it will not hit the bin.
             MoveAndLift(0, FieldDistances::intoAutoDiff -FieldDistances::moveBack,  1, kElevatorHook2Lifted,
                     "Into Autozone");
             Lift(kSoftLowerLimit,
                     "Put down all");
-            Move(0, FieldDistances::moveBack, 1, "Move Back"); //Avoids potential of support
+            Move(0, FieldDistances::moveBack, 1, "Move Back");
+            //Backwards motion at the end avoids the possibility of the robot supporting
+            //the stack at the end of the autonomous period.
 
             m_autoPID.Reset();
             break;
@@ -414,6 +427,8 @@ public:
 
     }
 
+    //This function enables movement in the x and y directions, although currently motion may
+    //not occur in both of these directions simultaneously.
     void Move (float x, float y, float speedMultiplier, std::string debugMessage){
         if (!(IsAutonomous() && IsEnabled()))
             {return;}
@@ -429,6 +444,7 @@ public:
     	//debugMessage->str(" ");
     }
 
+    //This function enables the motion of the elevator alone.
     void Lift (float height, std::string debugMessage){
         if (!(IsAutonomous() && IsEnabled())) {
             return;
@@ -443,6 +459,8 @@ public:
         }
     }
 
+    //This function allows for simultaneous moving and lifting, although currently motion may not occur
+    //simultaneously in the x and y directions.
     void MoveAndLift (float x, float y, float speedMultiplier, float height, std::string debugMessage){
         if (!(IsAutonomous() && IsEnabled()))
             {return;}
