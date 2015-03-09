@@ -7,6 +7,7 @@
 #include "Dragger.h"
 #include "EncoderTracker.h"
 #include "PIDInterface.h"
+#include "DashboardPreferences.h"
 #include "IRAdjust.h"
 #include <sstream>
 /**
@@ -16,6 +17,7 @@
 enum AutoMode {
     complex,
     simple,
+	simpleShort,
     disabled
 };
 
@@ -32,6 +34,8 @@ class Robot: public SampleRobot
     TestMode m_tester;
     // tba Brake
     Relay m_brake;
+
+    DashboardPreferences m_dashboard;
 
     Encoder m_leftRearDriveEncoder;
     Encoder m_leftFrontDriveEncoder;
@@ -65,7 +69,6 @@ class Robot: public SampleRobot
 
     Gyro m_gyro;
 
-
     Team2342Joystick m_stick;                 // only joystick
     Joystick m_gamepad;       // the gamepad
 
@@ -90,6 +93,8 @@ public:
 		m_tester(),
 
         m_brake(PortAssign::ElevatorBrakeChannel),
+
+		m_dashboard(),
 
         m_leftRearDriveEncoder(PortAssign::LeftRearDriveEncoderChannelA, PortAssign::LeftRearDriveEncoderChannelB),
         m_leftFrontDriveEncoder(PortAssign::LeftFrontDriveEncoderChannelA, PortAssign::LeftFrontDriveEncoderChannelB),
@@ -180,8 +185,28 @@ public:
 
         m_robotDrive.SetSafetyEnabled(false);
         m_gyro.Reset();
-
         ClearDisplay();
+        AutoMode autoMode;
+        m_dashboard.updateButtons();
+
+        if((!m_dashboard.m_button1 && !m_dashboard.m_button2 && !m_dashboard.m_button3) || (m_dashboard.m_button2 && m_dashboard.m_button3)
+					|| (m_dashboard.m_button1 && m_dashboard.m_button3) || (m_dashboard.m_button1 && m_dashboard.m_button2)){
+				autoMode = disabled;
+				SmartDashboard::PutString("DB/String 1", "Inside crazy if block");
+			}
+        else if(m_dashboard.m_button1){
+        	autoMode = simple;
+        }
+        else if(m_dashboard.m_button2){
+        	autoMode = complex;
+        }
+        else if(m_dashboard.m_button3){
+        	autoMode = simpleShort;
+        }
+        else{
+        	autoMode = disabled;
+        	SmartDashboard::PutString("DB/String 2", "In else");
+        }
         m_elevator->ElevatorInit();
         SmartDashboard::PutString("DB/String 0", "Initial Homeing");
         while(!m_elevator->elevatorIsHomed())
@@ -192,8 +217,6 @@ public:
         const float simpleAutoDelay = 0.0;
 
         //m_robotDrive.SetSafetyEnabled(false); this may be needed
-        //This is the mode it's going to use
-        AutoMode autoMode = complex;
 
         m_autoPID.Reset();
 
@@ -281,7 +304,62 @@ public:
 
             m_autoPID.Reset();
             break;
+        case simpleShort:
+        	SmartDashboard::PutString("DB/String 0", "Starting Autonomous");
+			//This expects robot to be placed between tote and drive station facing into the field
+			//Pick up tote here
+			SmartDashboard::PutString("DB/String 0", "Initial Pick-up");
+
+			m_elevator->setElevatorGoalPosition(kElevatorHook1Lifted);
+			while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook1Lifted))
+			{
+				m_elevator->updateProfile();
+				DisplayInfo();
+				Wait(0.005);
+			}
+
+			Wait(simpleAutoDelay);//debug only
+
+			SmartDashboard::PutString("DB/String 0", "Moving Forward");
+
+			m_autoPID.SetGoal(0,FieldDistances::shortAutoDiff);
+			while(IsAutonomous() && IsEnabled() && !m_autoPID.isPastGoal)
+			{
+				DisplayInfo();
+				Wait(0.005);
+			}
+
+			Wait(simpleAutoDelay);//debug only
+
+			SmartDashboard::PutString("DB/String 0", "Dropping");
+
+			m_elevator->setElevatorGoalPosition(kElevatorHook1Ready - 2);
+			while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(kElevatorHook1Ready - 2))
+			{
+				m_elevator->updateProfile();
+				DisplayInfo();
+				Wait(0.005);
+			}
+
+			Wait(simpleAutoDelay);//debug only
+
+			SmartDashboard::PutString("DB/String 0", "Moving Back");
+
+
+			m_autoPID.SetGoal(0,-4.0);
+			while(IsAutonomous() && IsEnabled() && !(m_autoPID.BeforeGoal()))
+			{
+				DisplayInfo();
+				Wait(0.005);
+			}
+
+			SmartDashboard::PutString("DB/String 0", "Finished");
+
+
+			m_autoPID.Reset();
+			break;
         case disabled:
+        	SmartDashboard::PutString("DB/String 0", "Autonomous Disabled");
             break;
         }
         m_elevator->ElevatorEnd();
@@ -325,10 +403,17 @@ public:
         m_rightFrontDriveEncoder.Reset();
 
         m_elevatorEncoder.Reset();
+        int32_t count = 0;
         //m_elevator->m_elevatorControl->Enable();
 
         while (IsTest() && IsEnabled())
         {
+        	 m_dashboard.updateButtons();
+        	 if(m_dashboard.m_button1){
+        	              SmartDashboard::PutString("DB/String 9", "Dashboard Button Works!");
+        	        }
+        	printf("-------------->%6d button value %c\n", count++,  m_dashboard.m_button1? '1': '0');
+
             m_tester.PerformTesting(&m_gamepad, &m_stick,
                     &m_elevatorMotor1, &m_elevatorMotor2, &m_robotDrive, &m_brake, &m_draggerMotor);
             //reserved for config
@@ -337,7 +422,7 @@ public:
             m_IRAdjust.GrabTote();
             DisplayInfo();
 
-            Wait(0.005);
+            Wait(/*0.005*/0.1);
         }
         m_elevator->m_elevatorControl->Disable();
     }
