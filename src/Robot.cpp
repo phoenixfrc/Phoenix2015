@@ -347,8 +347,8 @@ public:
             //reserved for config
             //reserved for config
             //reserved for config
-            m_IRAdjust.GrabTote();
-            DisplayInfo();
+            m_IRAdjust.GetMove();
+            //DisplayInfo();
 
             Wait(0.005);
         }
@@ -369,7 +369,7 @@ public:
         IRSensors << "RI: " << m_IRRightInner.GetAverageValue();
         SmartDashboard::PutString("DB/String 0", IRSensors.str());
 
-        IRSensors2 << "IR Inches: " << m_IRAdjust.InchesForward();
+        IRSensors2 << "IR Inches: " << m_IRAdjust.GetMove();
         SmartDashboard::PutString("DB/String 1", IRSensors2.str());
 
 
@@ -518,6 +518,10 @@ public:
             DisplayInfo();
             Wait(0.005);
         }
+    }
+
+    void IRPickup (double extraMove, float speedMultiplier, std::string debugMessage) {
+        Move(0.0, m_IRAdjust.GetMove(extraMove), speedMultiplier, debugMessage);
     }
 
 };
