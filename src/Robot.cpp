@@ -188,10 +188,22 @@ public:
         ClearDisplay();
         AutoMode autoMode;
         m_dashboard.updateButtons();
+        int buttonCounter = 0;
 
-        if((!m_dashboard.m_button1 && !m_dashboard.m_button2 && !m_dashboard.m_button3 && !m_dashboard.m_button4) || (m_dashboard.m_button1 && m_dashboard.m_button2)
-					|| (m_dashboard.m_button1 && m_dashboard.m_button3) || (m_dashboard.m_button1 && m_dashboard.m_button4) || (m_dashboard.m_button2 && m_dashboard.m_button3)
-					|| (m_dashboard.m_button2 && m_dashboard.m_button4) || (m_dashboard.m_button3 && m_dashboard.m_button4)){
+        if(m_dashboard.m_button1){
+        	buttonCounter++;
+        }
+        if(m_dashboard.m_button2){
+        	buttonCounter++;
+        }
+        if(m_dashboard.m_button3){
+        	buttonCounter++;
+        }
+        if(m_dashboard.m_button4){
+        	buttonCounter++;
+        }
+
+        if((!m_dashboard.m_button1 && !m_dashboard.m_button2 && !m_dashboard.m_button3 && !m_dashboard.m_button4) || (buttonCounter > 1)){
 				autoMode = complex;
 				SmartDashboard::PutString("DB/String 1", "Inside crazy if block");
 			}
