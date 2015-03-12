@@ -36,6 +36,9 @@ Elevator::Elevator(
     //m_elevatorControl = new PIDController(0.28, 0.038, 0.00, encoder, this);//This worked for new code
     m_elevatorControl = new PIDController(0.21, 0.0095, 0.00, encoder, this);//This worked for old code
     //m_elevatorControl = new PIDController(0.28, 0.0095, 0.00, encoder, this);//For testing use in comp
+    m_currentSetPoint = 0;
+    m_currentVelocity = 0;
+    m_desiredSetPoint = 0;
 }
 
 void Elevator::operateElevator()
