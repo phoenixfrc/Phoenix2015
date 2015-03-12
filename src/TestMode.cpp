@@ -12,10 +12,10 @@
 #include <sstream>
 
 //Set limitSwitch port on init
-TestMode::TestMode(): m_buttonWasPressed(false){}
-
-    std::ostringstream trackerMessageBuilderX;
-    std::ostringstream trackerMessageBuilderY;
+TestMode::TestMode()
+{
+    m_buttonWasPressed = false;
+}
 
 void TestMode::PerformTesting(Joystick * gamePad, Team2342Joystick * stick,  Talon * motor1,
 
