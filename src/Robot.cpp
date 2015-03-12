@@ -206,32 +206,32 @@ public:
 //            LiftAndMoveWithDelay(FieldDistances::shiftDiff, 0, 1, kElevatorHook3Lifted, kElevatorHook1Lifted,
 //                    "Lift 1 Right");
 //            Move(0, FieldDistances::moveBack, 1, "Move Back");
-            LiftAndMoveWithDelay(0, FieldDistances::moveBack, 1, kElevatorHook3Lifted, kElevatorHook1Lifted,
-                                "Lift 1 Back");
             //The LiftAndMoveWithDelay function is used because the motion of the elevator needs to begin
             //before sideways motion begins, in order to ensure that the robot will pick up the first
             //tote.
-            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, 1, kElevatorHook2Ready, -49,
-                    "1 Left and Down");
+            LiftAndMoveWithDelay(0, FieldDistances::moveBack, 1, kElevatorHook3Lifted, kElevatorHook1Lifted,
+                                "Lift 1 Back");
             //The MoveAndLiftWithDelay function is used here so that downward motion of the tote does not
             //begin until it is past the bin.  This ensures that it will not hit the bin.
-            Move(0, -FieldDistances::moveBack, 0.5,
+            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff), 0, 1, kElevatorHook2Ready, -49,
+                    "1 Left and Down");
+            Move(0, (-FieldDistances::moveBack + 8), 0.5, //The +2 is to make sure that we still run into the tote.
                     "Move forwards");
 //            LiftAndMoveWithDelay(FieldDistances::shiftDiff, 0, 1, kElevatorHook4Lifted, kElevatorHook2Lifted,
 //                    "Lift 2 Right");
 //            Move(0, FieldDistances::moveBack, 1, "Move Back");
-            LiftAndMoveWithDelay(0, FieldDistances::moveBack, 1, kElevatorHook4Lifted, kElevatorHook2Lifted,
-                                "Lift 2 Back");
             //The LiftAndMoveWithDelay function is used because the motion of the elevator needs to begin
             //before sideways motion begins, in order to ensure that the robot will pick up the first
             //tote.
-            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, 1, kElevatorHook3Ready, -49,
-                    "1,2 Left and Down");
+            LiftAndMoveWithDelay(0, (FieldDistances::moveBack - 8), 1, kElevatorHook4Lifted, kElevatorHook2Lifted,
+                                "Lift 2 Back"); //The -2 is to account for the previously increased forward movement.
             //The MoveAndLiftWithDelay function is used here so that downward motion of the tote does not
             //begin until it is past the bin.  This ensures that it will not hit the bin.
-            MoveAndLift(0, FieldDistances::intoAutoDiff -FieldDistances::moveBack,  1, kElevatorHook2Lifted,
+            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff), 0, 1, kElevatorHook3Ready, -49,
+                    "1,2 Left and Down");
+            Move(0, FieldDistances::intoAutoDiff -FieldDistances::moveBack,  1,
                     "Into Autozone");
-            Lift(kSoftLowerLimit,
+            Lift(kElevatorHook1Ready,
                     "Put down all");
             Move(0, FieldDistances::moveBack, 1, "Move Back");
             //Backwards motion at the end avoids the possibility of the robot supporting
