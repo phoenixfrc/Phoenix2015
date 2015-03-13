@@ -85,7 +85,7 @@ void DriveStabilize::SetLockAxis(LockAxis axis){
 void DriveStabilize::PIDWrite(float output){
     switch (m_lockedAxis){
         case xAxis:
-            m_xLock += output;
+            m_xLock += output;//should be "="?
             break;
         case yAxis:
             m_yLock += output;

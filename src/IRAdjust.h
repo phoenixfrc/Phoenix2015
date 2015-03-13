@@ -19,7 +19,7 @@ public:
     void GrabTote();
     bool IsOnTote();
 
-    double InchesForward();
+    double GetMove(double extraMove = 0.5);
 
     ~IRAdjust();
 private:

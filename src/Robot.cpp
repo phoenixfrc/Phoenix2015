@@ -238,10 +238,13 @@ public:
 
         //std::ostringstream strBuilder;
 
+        double IRMove = 6.0;
+
         switch(autoMode)
         {
         //This case assumes that the robot begins in a position directly behind the rightmost tote.
         case complex:
+            SnapshotEncoders("Start Values");
 //            LiftAndMoveWithDelay(FieldDistances::shiftDiff, 0, 1, kElevatorHook3Lifted, kElevatorHook1Lifted,
 //                    "Lift 1 Right");
 //            Move(0, FieldDistances::moveBack, 1, "Move Back");
@@ -250,29 +253,38 @@ public:
             //tote.
             LiftAndMoveWithDelay(0, FieldDistances::moveBack, 1, kElevatorHook3Lifted, kElevatorHook1Lifted,
                                 "Lift 1 Back");
+            SnapshotEncoders("Lift 1 Back");
             //The MoveAndLiftWithDelay function is used here so that downward motion of the tote does not
             //begin until it is past the bin.  This ensures that it will not hit the bin.
-            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff), 0, 1, kElevatorHook2Ready, -49,
+            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff), 0, 1, kElevatorHook2Ready, -60,
                     "1 Left and Down");
-            Move(0, (-FieldDistances::moveBack + 8), 0.5, //The +2 is to make sure that we still run into the tote.
+            SnapshotEncoders("1 Left and Down");
+            IRMove = m_IRAdjust.GetMove(0.5);
+            printf("IRMove: %10.6f", IRMove);
+            Move(0, IRMove/*(-FieldDistances::moveBack + 6)*/, 0.4, //The +2 is to make sure that we still run into the tote.
                     "Move forwards");
+            SnapshotEncoders("Move Forwards");
 //            LiftAndMoveWithDelay(FieldDistances::shiftDiff, 0, 1, kElevatorHook4Lifted, kElevatorHook2Lifted,
 //                    "Lift 2 Right");
 //            Move(0, FieldDistances::moveBack, 1, "Move Back");
             //The LiftAndMoveWithDelay function is used because the motion of the elevator needs to begin
             //before sideways motion begins, in order to ensure that the robot will pick up the first
             //tote.
-            LiftAndMoveWithDelay(0, (FieldDistances::moveBack - 8), 1, kElevatorHook4Lifted, kElevatorHook2Lifted,
+            LiftAndMoveWithDelay(0, -IRMove/*(FieldDistances::moveBack - 6)*/, 1, kElevatorHook4Lifted, kElevatorHook2Lifted,
                                 "Lift 2 Back"); //The -2 is to account for the previously increased forward movement.
+            SnapshotEncoders("Lift 2 Back");
             //The MoveAndLiftWithDelay function is used here so that downward motion of the tote does not
             //begin until it is past the bin.  This ensures that it will not hit the bin.
-            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff), 0, 1, kElevatorHook3Ready, -49,
+            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff-6), 0, 1, kElevatorHook3Ready, -60,
                     "1,2 Left and Down");
+            SnapshotEncoders("1,2 Left and Down");
             Move(0, FieldDistances::intoAutoDiff -FieldDistances::moveBack,  1,
                     "Into Autozone");
+            SnapshotEncoders("Into Autozone");
             Lift(kElevatorHook1Ready,
                     "Put down all");
             Move(0, FieldDistances::moveBack, 1, "Move Back");
+            SnapshotEncoders("Move Back");
             //Backwards motion at the end avoids the possibility of the robot supporting
             //the stack at the end of the autonomous period.
 
@@ -399,6 +411,8 @@ public:
      */
     void OperatorControl()
     {
+        m_autoPID.Reset();
+
         ClearDisplay();
 
         m_robotDrive.SetSafetyEnabled(false);
@@ -433,6 +447,7 @@ public:
 
         m_elevatorEncoder.Reset();
         int32_t count = 0;
+        m_gyro.Reset();
         //m_elevator->m_elevatorControl->Enable();
 
         while (IsTest() && IsEnabled())
@@ -448,8 +463,8 @@ public:
             //reserved for config
             //reserved for config
             //reserved for config
-            m_IRAdjust.GrabTote();
-            DisplayInfo();
+            m_IRAdjust.GetMove();
+            //DisplayInfo();
 
             Wait(/*0.005*/0.1);
         }
@@ -470,7 +485,7 @@ public:
         IRSensors << "RI: " << m_IRRightInner.GetAverageValue();
         SmartDashboard::PutString("DB/String 0", IRSensors.str());
 
-        IRSensors2 << "IR Inches: " << m_IRAdjust.InchesForward();
+        IRSensors2 << "IR Inches: " << m_IRAdjust.GetMove();
         SmartDashboard::PutString("DB/String 1", IRSensors2.str());
 
 
@@ -526,6 +541,11 @@ public:
         SmartDashboard::PutString("DB/String 7", elevatorEncoderBuilder2.str());
 
 
+    }
+
+    void SnapshotEncoders (const char* message) {
+        printf("%20s: LR: %6d, LF %6d, RR: %6d, RF %6d, Gyro: %f\n", message, m_leftRearDriveEncoder.Get(), m_leftFrontDriveEncoder.Get(),
+                m_rightRearDriveEncoder.Get(), m_rightFrontDriveEncoder.Get(), m_gyro.GetAngle());
     }
 
     //This function enables movement in the x and y directions, although currently motion may
@@ -619,6 +639,10 @@ public:
             DisplayInfo();
             Wait(0.005);
         }
+    }
+
+    void IRPickup (double extraMove, float speedMultiplier, std::string debugMessage) {
+        Move(0.0, m_IRAdjust.GetMove(extraMove), speedMultiplier, debugMessage);
     }
 
 };
