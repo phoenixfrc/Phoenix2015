@@ -8,7 +8,7 @@
 #include "EncoderTracker.h"
 #include "WPILib.h"
 
-static const float ticksToInchesY = 20.5697//22.601;
+static const float ticksToInchesY = 18;//20.5697 current best estimate for vertical movement (on Recyclone)
 static const float ticksToInchesX = 24.51875;
 
 EncoderTracker::EncoderTracker (Encoder * frontLeft, Encoder * frontRight, Encoder * backLeft, Encoder * backRight){
