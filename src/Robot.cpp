@@ -442,7 +442,7 @@ public:
 
         elevatorEncoderBuilder2 << "Ele. Target: " << m_elevator->getElevatorGoalPosition();
 
-        SmartDashboard::PutString("DB/String 7", elevatorEncoderBuilder2.str());
+        SmartDashboard::PutString("DB/String 9", elevatorEncoderBuilder2.str());
 
 
     }
