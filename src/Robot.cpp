@@ -132,7 +132,7 @@ public:
 
         m_autoPID(&m_robotDrive, &m_tracker, &m_gyro, &m_driveStabilize),
 
-        m_driveStabilize(&m_gyro, &m_tracker, &m_stick, 0.0, 0.0, 0.016)
+        m_driveStabilize(&m_gyro, &m_tracker, &m_stick, 0.0, 0.0, 0.01)
 
 // as they are declared above.
 
@@ -220,8 +220,9 @@ public:
             MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff), 0, 1, kElevatorHook2Ready, -60,
                     "1 Left and Down");
             SnapshotEncoders("1 Left and Down");
-            IRMove = m_IRAdjust.GetMove(0.5);
-            printf("IRMove: %10.6f", IRMove);
+            IRMove = 7.5;//m_IRAdjust.GetMove(2.5);
+            printf("IRMove: %10.6f, IRLeft: %d, IRRight: %d \n", IRMove,
+                    m_IRLeftInner.GetAverageValue(), m_IRRightInner.GetAverageValue());
             Move(0, IRMove/*(-FieldDistances::moveBack + 6)*/, 0.4, //The +2 is to make sure that we still run into the tote.
                     "Move forwards");
             SnapshotEncoders("Move Forwards");
@@ -231,7 +232,7 @@ public:
             //The LiftAndMoveWithDelay function is used because the motion of the elevator needs to begin
             //before sideways motion begins, in order to ensure that the robot will pick up the first
             //tote.
-            LiftAndMoveWithDelay(0, -IRMove/*(FieldDistances::moveBack - 6)*/, 1, kElevatorHook4Lifted, kElevatorHook2Lifted,
+            LiftAndMoveWithDelay(0, -IRMove+0.5/*(FieldDistances::moveBack - 6)*/, 1, kElevatorHook4Lifted, kElevatorHook2Lifted,
                                 "Lift 2 Back"); //The -2 is to account for the previously increased forward movement.
             SnapshotEncoders("Lift 2 Back");
             //The MoveAndLiftWithDelay function is used here so that downward motion of the tote does not
@@ -364,7 +365,7 @@ public:
             //reserved for config
             //reserved for config
             m_IRAdjust.GetMove();
-            //DisplayInfo();
+            DisplayInfo();
 
             Wait(0.005);
         }
