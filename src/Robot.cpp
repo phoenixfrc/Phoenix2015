@@ -217,13 +217,13 @@ public:
             SnapshotEncoders("Lift 1 Back");
             //The MoveAndLiftWithDelay function is used here so that downward motion of the tote does not
             //begin until it is past the bin.  This ensures that it will not hit the bin.
-            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff + 4), 0, 1, kElevatorHook2Ready, -60,
+            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff + 4), 0, 1, kElevatorHook2Ready, -50,
                     "1 Left and Down");
             SnapshotEncoders("1 Left and Down");
             IRMove = 8+Tolerances::moveTolerance;//m_IRAdjust.GetMove(2.5);
             printf("IRMove: %10.6f, IRLeft: %d, IRRight: %d \n", IRMove,
                     m_IRLeftInner.GetAverageValue(), m_IRRightInner.GetAverageValue());
-            MoveAndLiftWithDelay(0, IRMove, 0.2, kElevatorHook2Lifted, -(IRMove - 3),
+            MoveAndLiftWithDelay(0, IRMove, 0.4, kElevatorHook2Lifted, -(IRMove - 3),
                                 "1 Left and Down");
             //Move(0, IRMove/*(-FieldDistances::moveBack + 6)*/, 0.2, //The +2 is to make sure that we still run into the tote.
               //      "Move forwards");
@@ -240,7 +240,7 @@ public:
             SnapshotEncoders("Lift 2 Back");
             //The MoveAndLiftWithDelay function is used here so that downward motion of the tote does not
             //begin until it is past the bin.  This ensures that it will not hit the bin.
-            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff-6), 0, 1, kElevatorHook3Ready, -60,
+            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff-6), 0, 1, kElevatorHook3Ready, -50,
                     "1,2 Left and Down");
             SnapshotEncoders("1,2 Left and Down");
             YMoveAndMoveWithDelay(0, (FieldDistances::intoAutoDiff -FieldDistances::moveBack), 0.7, 0.75, 0.4,
@@ -385,12 +385,12 @@ public:
         //Print IR Sensor Values
 
 
-        IRSensors << "LI: " << m_IRLeftInner.GetAverageValue();
+        /*IRSensors << "LI: " << m_IRLeftInner.GetAverageValue();
         IRSensors << "RI: " << m_IRRightInner.GetAverageValue();
         SmartDashboard::PutString("DB/String 0", IRSensors.str());
 
         IRSensors2 << "IR Inches: " << m_IRAdjust.GetMove();
-        SmartDashboard::PutString("DB/String 1", IRSensors2.str());
+        SmartDashboard::PutString("DB/String 1", IRSensors2.str());*/
 
 
         //Prints out the values for gyro:
@@ -442,7 +442,7 @@ public:
 
         elevatorEncoderBuilder2 << "Ele. Target: " << m_elevator->getElevatorGoalPosition();
 
-        SmartDashboard::PutString("DB/String 7", elevatorEncoderBuilder2.str());
+        SmartDashboard::PutString("DB/String 9", elevatorEncoderBuilder2.str());
 
 
     }
@@ -475,12 +475,12 @@ public:
         SmartDashboard::PutString("DB/String 0", debugMessage);
 
         bool triggered = false;
-        m_autoPID.SetGoal(x, y * (changePercent + .1), speedMultiplier);
+        m_autoPID.SetGoal(x, y * (changePercent + .15), speedMultiplier);
         while(IsAutonomous() && IsEnabled() && !m_autoPID.NearGoal())
         {
             if(!triggered && (fabs(m_autoPID.PIDGet()) > fabs(y * changePercent )))
             {
-                m_autoPID.SetGoal(x, y * (1 - changePercent - .1), speedMultiplierTwo);
+                m_autoPID.SetGoal(x, y * (1 - changePercent - .15), speedMultiplierTwo);
                 triggered = true;
             }
             DisplayInfo();
@@ -530,11 +530,23 @@ public:
 
         m_autoPID.SetGoal(x, y, speedMultiplier);
 
+        bool triggered = false;
+
         while(IsAutonomous() && IsEnabled() && (!m_autoPID.NearGoal() || !m_elevator->elevatorIsAt(height)))
         {
             //This cannot be used generally; it only will work for leftward motion.
-            if (m_tracker.GetX() <= ElevatorDropDelay){
-                m_elevator->setElevatorGoalPosition(height);
+            if (!triggered){
+                if (y == 0){
+                    if (fabs(m_tracker.GetX()) >= fabs(ElevatorDropDelay)){
+                        m_elevator->setElevatorGoalPosition(height);
+                        triggered = true;
+                    }
+                } else {
+                    if (fabs(m_tracker.GetY()) >= fabs(ElevatorDropDelay)){
+                        m_elevator->setElevatorGoalPosition(height);
+                        triggered = true;
+                    }
+                }
             }
             m_elevator->updateProfile();
             DisplayInfo();
