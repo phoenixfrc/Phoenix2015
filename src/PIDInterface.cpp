@@ -8,8 +8,8 @@ PIDInterface::PIDInterface(RobotDrive * robotDrive, EncoderTracker * tracker, Gy
 xPID(0.12, 0.0, 0.0, this, this), //PID values will need to be tuned for both of these
 yPID(0.16, 0.0, 0.0, this, this)
 {
-    xPID.SetOutputRange(-0.5, 0.5);
-    yPID.SetOutputRange(-0.5, 0.5);
+    xPID.SetOutputRange(-0.6, 0.6);
+    yPID.SetOutputRange(-1, 1);
 
 	if(xPID.IsEnabled())
 	{
@@ -192,15 +192,15 @@ void PIDInterface::PIDWrite(float output)
 	switch(m_currentAxis)
 	{
 	case right:
-		m_robotDrive->MecanumDrive_Cartesian(output, m_driveStabilize->LockY(), 0/*m_driveStabilize->GetCorrectionAngle()*/, 0/*m_gyro->GetAngle()*/);
+		m_robotDrive->MecanumDrive_Cartesian(output, 0.075/*m_driveStabilize->LockY()*/, m_driveStabilize->GetCorrectionAngle(), m_gyro->GetAngle());
 
-		bobTheStringBuilder << "LockY: " << m_driveStabilize->LockY();
-		SmartDashboard::PutString("DB/String 9", bobTheStringBuilder.str());
+		//bobTheStringBuilder << "LockY: " << m_driveStabilize->LockY();
+		//SmartDashboard::PutString("DB/String 9", bobTheStringBuilder.str());
 
 
 		break;
 	case forward:
-		output /= -1.2;
+		output /= -1; //-1.2;
 		m_robotDrive->MecanumDrive_Cartesian(0.0, output, m_driveStabilize->GetCorrectionAngle(), m_gyro->GetAngle());
 		break;
 	case stop:

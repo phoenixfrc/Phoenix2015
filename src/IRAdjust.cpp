@@ -71,9 +71,9 @@ double IRAdjust::GetMove(double extraMove){
     double maxDist = 10.0;
 
     if (dRI > maxDist && dLI > maxDist){
-        return 6.0;//for later
+        return maxDist;//for later
     } else if (dRI < minDist || dLI < minDist){
-        return minDist;
+        return 12.0;//minDist;
     } else {
         //dRI = dRI < minDist ? minDist : dRI;//if it's giving a small reading change to the min dist
         //dLI = dLI < minDist ? minDist : dLI;//if it's giving a small reading change to the min dist
@@ -87,6 +87,7 @@ double IRAdjust::GetMove(double extraMove){
 
     moveDist -= minDist;//remove the extra from the min dist (lip on the robot base)
     moveDist += extraMove;//add in the extra movement
+    moveDist += 2.0;
 
     //builder3 << "Move: " << moveDist;
     //SmartDashboard::PutString("DB/String 4", builder3.str());

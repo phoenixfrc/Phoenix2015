@@ -24,7 +24,6 @@ class Elevator  : public PIDOutput
 
     bool m_rbWasPressed;
     bool m_rtWasPressed;
-    float m_speedMultiplier;
     int m_oldEncoder;
     float m_desiredSetPoint;
     float m_currentSetPoint;
@@ -45,7 +44,7 @@ class Elevator  : public PIDOutput
     void find_home();
     void controlElevator();
     void moveElevator();
-    void calculateSpeedMutiplier();
+
     bool elevatorIsDeccelerating();
     float accelCurve();
 
@@ -79,12 +78,6 @@ public:
 
 
 
-    // speed Multipliers
-
-    #define kNormalMultiplier (0.70)
-
-    //Must be less then 1
-    #define kShortLiftMultiplier (0.5)
 
     // for use in setElevatorGoalPosition call
     #define kSoftLowerLimit       (0.0)

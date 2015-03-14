@@ -31,7 +31,6 @@ Elevator::Elevator(
     printf("in elevator constructor...\n");
     m_homeState = lookingForLowerLimit;
     m_oldEncoder = 0;
-    m_speedMultiplier = kNormalMultiplier;
     m_encoder->SetDistancePerPulse(1 / TicksPerInch);
     //m_elevatorControl = new PIDController(0.28, 0.038, 0.00, encoder, this);//This worked for new code
     m_elevatorControl = new PIDController(0.21, 0.0095, 0.00, encoder, this);//This worked for old code
@@ -116,7 +115,7 @@ void Elevator::controlElevator()
     std::ostringstream ElevatorJoystickbuilder;
     std::ostringstream ElevatorJoystickbuilder2;
 
-    float speedMult = m_speedMultiplier;
+
 
     //buttons
     bool xPressed = m_gamePad->GetRawButton(1);
@@ -138,7 +137,7 @@ void Elevator::controlElevator()
     // button computing
     if(rbPressed && !m_rbWasPressed)
     {
-        speedMult = kShortLiftMultiplier;
+
         goalPosition += kButtonLift;
         m_rbWasPressed = true;
     }
@@ -149,7 +148,7 @@ void Elevator::controlElevator()
 
     if(rtPressed && !m_rtWasPressed)
     {
-        speedMult = kShortLiftMultiplier;
+
         goalPosition -= kButtonLift;
         m_rtWasPressed = true;
     }
@@ -163,40 +162,38 @@ void Elevator::controlElevator()
     // TODO limit offset from joystick
     if(!(joystick > -0.05 && joystick < 0.05))
     {
-        speedMult = kNormalMultiplier;
+
         goalPosition += (joystick / 5);
     }
-
     else if(POV == 0 || POV == 45 || POV == 315)
     {
-        speedMult = kNormalMultiplier;
+
         goalPosition += (0.2);
     }
-
     else if(POV == 180 || POV == 225 || POV == 135)
     {
-        speedMult = kNormalMultiplier;
+
         goalPosition -= (0.2);
     }
 
     if(aPressed)
     {
-        speedMult = kNormalMultiplier;
+
         goalPosition = kElevatorHook1Ready;
     }
     if(bPressed)
     {
-        speedMult = kNormalMultiplier;
+
         goalPosition = kElevatorHook2Ready;
     }
     if(yPressed)
     {
-        speedMult = kNormalMultiplier;
+
         goalPosition = kElevatorHook3Ready;
     }
     if(xPressed)
     {
-        speedMult = kNormalMultiplier;
+
         goalPosition = kElevatorHook4Ready;
     }
 
@@ -254,9 +251,9 @@ void Elevator::PIDWrite(float desiredSpeed)
     bool atUpperLimit = m_upperLimit->Get();
     bool atLowerLimit = m_lowerLimit->Get();
 
-    //calculateSpeedMutiplier();
 
-    float actualSpeed = desiredSpeed; //* m_speedMultiplier;
+
+    float actualSpeed = desiredSpeed;
 
   //  std::ostringstream out;
   //  out.precision(2);
@@ -297,22 +294,6 @@ void Elevator::PIDWrite(float desiredSpeed)
 
         m_motor1->Set(-actualSpeed);
         m_motor2->Set(-actualSpeed);
-}
-
-void Elevator::calculateSpeedMutiplier()
-{
-    int deltaEncoder = abs(int(m_oldEncoder - m_encoder->Get()));
-
-    if((deltaEncoder > GoalDeltaEncoder) && m_speedMultiplier > 0.5)
-    {
-        m_speedMultiplier -= 0.01;
-    }
-    else if((deltaEncoder < GoalDeltaEncoder) && (m_speedMultiplier < 0.75))
-    {
-        m_speedMultiplier += 0.01;
-    }
-    m_oldEncoder = m_encoder->Get();
-
 }
 
 bool Elevator::elevatorIsDeccelerating()
