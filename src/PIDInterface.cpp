@@ -2,6 +2,7 @@
 #include "WPILib.h"
 #include <sstream>
 #include <math.h>
+#include "Constants.h"
 
 PIDInterface::PIDInterface(RobotDrive * robotDrive, EncoderTracker * tracker, Gyro * gyro, DriveStabilize * driveStabilize):
 xPID(0.12, 0.0, 0.0, this, this), //PID values will need to be tuned for both of these
@@ -27,12 +28,14 @@ yPID(0.16, 0.0, 0.0, this, this)
 	isPastGoal = false;
 	m_xGoalDistance = 0;
 	m_yGoalDistance = 0;
+	m_speedMultiplier = 1;
 }
 
 void PIDInterface::Reset()
 {
 	m_tracker->ResetPosition();
 	isPastGoal = false;
+	m_speedMultiplier = 1;
 
 	if(xPID.IsEnabled())
 	{
@@ -68,6 +71,11 @@ void PIDInterface::SetGoal(double xGoalDistance, double yGoalDistance)
 	SmartDashboard::PutString("DB/String 1", Goal.str());
 }
 
+void PIDInterface::SetGoal(double xGoalDistance, double yGoalDistance, float speedMultiplier)
+{
+	SetGoal(xGoalDistance, yGoalDistance);
+	m_speedMultiplier = speedMultiplier;
+}
 
 //This will return true if either of the PID loops are enabled and have reached their target
 bool PIDInterface::ReachedGoal()
@@ -128,10 +136,10 @@ bool PIDInterface::NearGoal() {
 	switch(m_currentAxis)
 		{
 		case forward:
-			return fabs(m_yGoalDistance-yPos) < 3.0;
+			return fabs(m_yGoalDistance-yPos) < Tolerances::moveTolerance;
 			break;
 		case right:
-			return fabs(m_xGoalDistance-xPos) < 3.0;
+			return fabs(m_xGoalDistance-xPos) < Tolerances::moveTolerance;
 			break;
 		case stop:
 			return false;
@@ -179,13 +187,15 @@ void PIDInterface::PIDWrite(float output)
 
     std::ostringstream bobTheStringBuilder;
 
+    output *= m_speedMultiplier;
+
 	switch(m_currentAxis)
 	{
 	case right:
-		m_robotDrive->MecanumDrive_Cartesian(output, m_driveStabilize->LockY(), m_driveStabilize->GetCorrectionAngle(), m_gyro->GetAngle());
+		m_robotDrive->MecanumDrive_Cartesian(output, 0.05/*m_driveStabilize->LockY()*/, m_driveStabilize->GetCorrectionAngle(), m_gyro->GetAngle());
 
-		bobTheStringBuilder << "LockY: " << m_driveStabilize->LockY();
-		SmartDashboard::PutString("DB/String 9", bobTheStringBuilder.str());
+		//bobTheStringBuilder << "LockY: " << m_driveStabilize->LockY();
+		//SmartDashboard::PutString("DB/String 9", bobTheStringBuilder.str());
 
 
 		break;

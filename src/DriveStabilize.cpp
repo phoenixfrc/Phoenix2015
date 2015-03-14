@@ -85,10 +85,10 @@ void DriveStabilize::SetLockAxis(LockAxis axis){
 void DriveStabilize::PIDWrite(float output){
     switch (m_lockedAxis){
         case xAxis:
-            m_xLock += output;
+            m_xLock = output;//should be "="?
             break;
         case yAxis:
-            m_yLock += output;
+            m_yLock = output;
             break;
         case none:
             break;
@@ -101,8 +101,9 @@ double DriveStabilize::PIDGet(){
             return m_tracker->GetX();
             break;
         case yAxis:
-            return m_tracker->GetY();
+            return 1.0;//m_tracker->GetY()+8;
             break;
+        default:
         case none:
             return 0.0;//This is a little dangerous, but it should be okay.
     }

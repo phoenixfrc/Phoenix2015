@@ -7,6 +7,7 @@
 #include "Dragger.h"
 #include "EncoderTracker.h"
 #include "PIDInterface.h"
+#include "IRAdjust.h"
 #include <sstream>
 /**
  * This is a demo program showing how to use Mecanum control with the RobotDrive class.
@@ -57,11 +58,18 @@ class Robot: public SampleRobot
     DigitalInput m_DIO24;
     DigitalInput m_DIO25;
 
+    AnalogInput m_IRLeftInner; //only two sensors on robot right now
+    AnalogInput m_IRLeftOuter;
+    AnalogInput m_IRRightInner;
+    AnalogInput m_IRRightOuter;
 
     Gyro m_gyro;
 
+
     Team2342Joystick m_stick;                 // only joystick
     Joystick m_gamepad;       // the gamepad
+
+    IRAdjust m_IRAdjust;
 
     PIDInterface m_autoPID;
     DriveStabilize m_driveStabilize;
@@ -109,13 +117,22 @@ public:
         m_DIO24(PortAssign::DIO24Channel),
         m_DIO25(PortAssign::DIO25Channel),
 
-        m_gyro(PortAssign::GyroChannel),
+        m_IRLeftInner(PortAssign::IRLeftInnerChannel),
+		m_IRLeftOuter(PortAssign::IRLeftOuterChannel),
+        m_IRRightInner(PortAssign::IRRightInnerChannel),
+		m_IRRightOuter(PortAssign::IRRightOuterChannel),
+
+		m_gyro(PortAssign::GyroChannel),
+
 
         m_stick(PortAssign::JoystickChannel),
         m_gamepad(PortAssign::GamepadChannel),
+
+        m_IRAdjust(&m_IRLeftInner, &m_IRLeftOuter, &m_IRRightInner, &m_IRRightOuter, &m_robotDrive),
+
         m_autoPID(&m_robotDrive, &m_tracker, &m_gyro, &m_driveStabilize),
 
-        m_driveStabilize(&m_gyro, &m_tracker, &m_stick, 0.0, 0.0, 0.016)
+        m_driveStabilize(&m_gyro, &m_tracker, &m_stick, 0.0, 0.0, 0.01)
 
 // as they are declared above.
 
@@ -144,7 +161,7 @@ public:
         //reserved for config
 }
 
-void ClearDisplay()
+    void ClearDisplay()
     {
         SmartDashboard::PutString("DB/String 0", " ");
         SmartDashboard::PutString("DB/String 1", " ");
@@ -172,10 +189,7 @@ void ClearDisplay()
             m_elevator->operateElevator();
         }
 
-        int MovePickup2Height = 60;
-
-        const float simpleAutoDelay = 0;
-        const float complexAutoDelay = 0.25;
+        const float simpleAutoDelay = 0.0;
 
         //m_robotDrive.SetSafetyEnabled(false); this may be needed
         //This is the mode it's going to use
@@ -183,45 +197,59 @@ void ClearDisplay()
 
         m_autoPID.Reset();
 
-        Wait(simpleAutoDelay);//debug only
-
         //std::ostringstream strBuilder;
+
+        double IRMove = 6.0;
 
         switch(autoMode)
         {
+        //This case assumes that the robot begins in a position directly behind the rightmost tote.
         case complex:
-
-            //Move(0, FieldDistances::pushDiff, complexAutoDelay, "Move Forward 1");
-
-            Lift(kElevatorHook1Lifted, complexAutoDelay, "Lift Tote 1");
-
-            Move(FieldDistances::shiftDiff, 0, complexAutoDelay, "Move Right 1");
-
-            Lift(kElevatorHook3Lifted, complexAutoDelay, "Lift Over 1");
-
-            Move (0,FieldDistances::backOffDiff, complexAutoDelay,"Move Back 1");
-
-            Move((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, complexAutoDelay, "Move Left 1");
-
-            Lift(kElevatorHook2Ready, complexAutoDelay, "Lower Tote 1");
-
-            Move(0, FieldDistances::pushDiff, complexAutoDelay, "Move Forward 2");
-
-            Lift(kElevatorHook2Lifted, complexAutoDelay, "Lift Tote 2");
-
-            Move(FieldDistances::shiftDiff, 0, complexAutoDelay, "Move Right 2");
-
-            Lift(kElevatorHook4Lifted, complexAutoDelay, "Lift Over 1");
-
-            Move (0,FieldDistances::backOffDiff, complexAutoDelay,"Move Back 2");
-
-            Move((-FieldDistances::autoCrateDiff - FieldDistances::shiftDiff), 0, complexAutoDelay, "Move Left 2");
-
-            Move(0, FieldDistances::intoAutoDiff, complexAutoDelay, "Into Autozone");
-
-            Lift(kSoftLowerLimit, complexAutoDelay, "Put down all");
-
-            Move(0, FieldDistances::backOffDiff, complexAutoDelay, "Backoff totes");
+            SnapshotEncoders("Start Values");
+//            LiftAndMoveWithDelay(FieldDistances::shiftDiff, 0, 1, kElevatorHook3Lifted, kElevatorHook1Lifted,
+//                    "Lift 1 Right");
+//            Move(0, FieldDistances::moveBack, 1, "Move Back");
+            //The LiftAndMoveWithDelay function is used because the motion of the elevator needs to begin
+            //before sideways motion begins, in order to ensure that the robot will pick up the first
+            //tote.
+            LiftAndMoveWithDelay(0, FieldDistances::moveBack, 1, kElevatorHook3Lifted, kElevatorHook1Lifted,
+                                "Lift 1 Back");
+            SnapshotEncoders("Lift 1 Back");
+            //The MoveAndLiftWithDelay function is used here so that downward motion of the tote does not
+            //begin until it is past the bin.  This ensures that it will not hit the bin.
+            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff), 0, 1, kElevatorHook2Ready, -60,
+                    "1 Left and Down");
+            SnapshotEncoders("1 Left and Down");
+            IRMove = 8+Tolerances::moveTolerance;//m_IRAdjust.GetMove(2.5);
+            printf("IRMove: %10.6f, IRLeft: %d, IRRight: %d \n", IRMove,
+                    m_IRLeftInner.GetAverageValue(), m_IRRightInner.GetAverageValue());
+            Move(0, IRMove/*(-FieldDistances::moveBack + 6)*/, 0.4, //The +2 is to make sure that we still run into the tote.
+                    "Move forwards");
+            SnapshotEncoders("Move Forwards");
+//            LiftAndMoveWithDelay(FieldDistances::shiftDiff, 0, 1, kElevatorHook4Lifted, kElevatorHook2Lifted,
+//                    "Lift 2 Right");
+//            Move(0, FieldDistances::moveBack, 1, "Move Back");
+            Lift(kElevatorHook2Lifted, "Lift 2nd tote");
+            //The LiftAndMoveWithDelay function is used because the motion of the elevator needs to begin
+            //before sideways motion begins, in order to ensure that the robot will pick up the first
+            //tote.
+            LiftAndMoveWithDelay(0, -IRMove+0.5/*(FieldDistances::moveBack - 6)*/, 1, kElevatorHook4Lifted, kElevatorHook2Lifted,
+                                "Lift 2 Back"); //The -2 is to account for the previously increased forward movement.
+            SnapshotEncoders("Lift 2 Back");
+            //The MoveAndLiftWithDelay function is used here so that downward motion of the tote does not
+            //begin until it is past the bin.  This ensures that it will not hit the bin.
+            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff-6), 0, 1, kElevatorHook3Ready, -60,
+                    "1,2 Left and Down");
+            SnapshotEncoders("1,2 Left and Down");
+            Move(0, FieldDistances::intoAutoDiff -FieldDistances::moveBack,  1,
+                    "Into Autozone");
+            SnapshotEncoders("Into Autozone");
+            Lift(kElevatorHook1Ready,
+                    "Put down all");
+            Move(0, FieldDistances::moveBack, 1, "Move Back");
+            SnapshotEncoders("Move Back");
+            //Backwards motion at the end avoids the possibility of the robot supporting
+            //the stack at the end of the autonomous period.
 
             m_autoPID.Reset();
             break;
@@ -291,6 +319,8 @@ void ClearDisplay()
      */
     void OperatorControl()
     {
+        m_autoPID.Reset();
+
         ClearDisplay();
 
         m_robotDrive.SetSafetyEnabled(false);
@@ -324,6 +354,8 @@ void ClearDisplay()
         m_rightFrontDriveEncoder.Reset();
 
         m_elevatorEncoder.Reset();
+
+        m_gyro.Reset();
         //m_elevator->m_elevatorControl->Enable();
 
         while (IsTest() && IsEnabled())
@@ -333,6 +365,7 @@ void ClearDisplay()
             //reserved for config
             //reserved for config
             //reserved for config
+            m_IRAdjust.GetMove();
             DisplayInfo();
 
             Wait(0.005);
@@ -346,14 +379,24 @@ void ClearDisplay()
         }
         count = 0;
 
-        std::ostringstream gyroBuilder, eb, eb2, elevatorBuilder, elevatorEncoderBuilder, elevatorBuilder3, IRsensors;
+        std::ostringstream gyroBuilder, eb, eb2, elevatorBuilder, elevatorEncoderBuilder, elevatorBuilder3, IRSensors, IRSensors2;
+        //Print IR Sensor Values
+
+
+        IRSensors << "LI: " << m_IRLeftInner.GetAverageValue();
+        IRSensors << "RI: " << m_IRRightInner.GetAverageValue();
+        SmartDashboard::PutString("DB/String 0", IRSensors.str());
+
+        IRSensors2 << "IR Inches: " << m_IRAdjust.GetMove();
+        SmartDashboard::PutString("DB/String 1", IRSensors2.str());
+
 
         //Prints out the values for gyro:
         gyroBuilder << "Gyro angle: ";
         gyroBuilder << m_gyro.GetAngle();
         SmartDashboard::PutString("DB/String 2", gyroBuilder.str());
 
-        //
+
 
         //Print Encoder values:
         eb << "LR: "<< m_leftRearDriveEncoder.Get();
@@ -402,31 +445,106 @@ void ClearDisplay()
 
     }
 
-    void Move (float x, float y, float waitTime, std::string debugMessage){
-    	SmartDashboard::PutString("DB/String 0", debugMessage);
-    	if (x == 0 || y == 0){
-			m_autoPID.SetGoal(x, y);
-
-			while(IsAutonomous() && IsEnabled() && !m_autoPID.NearGoal())
-			{
-				DisplayInfo();
-				Wait(0.005);
-			}
-    	}
-    	//debugMessage->str(" ");
-    	Wait(waitTime);
+    void SnapshotEncoders (const char* message) {
+        printf("%20s: LR: %6d, LF %6d, RR: %6d, RF %6d, Gyro: %f\n", message, m_leftRearDriveEncoder.Get(), m_leftFrontDriveEncoder.Get(),
+                m_rightRearDriveEncoder.Get(), m_rightFrontDriveEncoder.Get(), m_gyro.GetAngle());
     }
 
-    void Lift (float height, float waitTime, std::string debugMessage){
+    //This function enables movement in the x and y directions, although currently motion may
+    //not occur in both of these directions simultaneously.
+    void Move (float x, float y, float speedMultiplier, std::string debugMessage){
+        if (!(IsAutonomous() && IsEnabled()))
+            {return;}
     	SmartDashboard::PutString("DB/String 0", debugMessage);
-		m_elevator->setElevatorGoalPosition(height);
-		while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(height))
-		{
-			m_elevator->updateProfile();
-			DisplayInfo();
-			Wait(0.005);
-		}
-		Wait(waitTime);
+
+        m_autoPID.SetGoal(x, y, speedMultiplier);
+        while(IsAutonomous() && IsEnabled() && !m_autoPID.NearGoal())
+        {
+            DisplayInfo();
+            Wait(0.005);
+        }
+
+    	//debugMessage->str(" ");
+    }
+
+    //This function enables the motion of the elevator alone.
+    void Lift (float height, std::string debugMessage){
+        if (!(IsAutonomous() && IsEnabled())) {
+            return;
+        }
+    	SmartDashboard::PutString("DB/String 0", debugMessage);
+        m_elevator->setElevatorGoalPosition(height);
+        while(IsAutonomous() && IsEnabled() && !m_elevator->elevatorIsAt(height))
+        {
+            m_elevator->updateProfile();
+            DisplayInfo();
+            Wait(0.005);
+        }
+    }
+
+    //This function allows for simultaneous moving and lifting, although currently motion may not occur
+    //simultaneously in the x and y directions.
+    void MoveAndLift (float x, float y, float speedMultiplier, float height, std::string debugMessage){
+        if (!(IsAutonomous() && IsEnabled()))
+            {return;}
+        SmartDashboard::PutString("DB/String 0", debugMessage);
+        m_elevator->setElevatorGoalPosition(height);
+
+        m_autoPID.SetGoal(x, y, speedMultiplier);
+
+        while(IsAutonomous() && IsEnabled() && (!m_autoPID.NearGoal() || !m_elevator->elevatorIsAt(height)))
+        {
+            m_elevator->updateProfile();
+            DisplayInfo();
+            Wait(0.005);
+        }
+    }
+    //This function will allow for movement to occur before lifting/lowering begins.
+    void MoveAndLiftWithDelay (float x, float y, float speedMultiplier, float height, float ElevatorDropDelay, std::string debugMessage){
+        if (!(IsAutonomous() && IsEnabled()))
+                    {return;}
+        SmartDashboard::PutString("DB/String 0", debugMessage);
+
+        m_autoPID.SetGoal(x, y, speedMultiplier);
+
+        while(IsAutonomous() && IsEnabled() && (!m_autoPID.NearGoal() || !m_elevator->elevatorIsAt(height)))
+        {
+            //This cannot be used generally; it only will work for leftward motion.
+            if (m_tracker.GetX() <= ElevatorDropDelay){
+                m_elevator->setElevatorGoalPosition(height);
+            }
+            m_elevator->updateProfile();
+            DisplayInfo();
+            Wait(0.005);
+        }
+    }
+
+    //This function will allow for the elevator motion to be started before movement along the
+    //ground begins.  The initial lift of the elevator before horizontal motion occurs is necessary
+    //in order to ensure that the bin will be picked up.  The bin will be lifted slightly, then lifted
+    //much more as horizontal motion begins.
+    void LiftAndMoveWithDelay (float x, float y, float speedMultiplier, float height, float StartMovePosition, std::string debugMessage){
+        if (!(IsAutonomous() && IsEnabled()))
+                    {return;}
+        SmartDashboard::PutString("DB/String 0", debugMessage);
+
+        m_elevator->setElevatorGoalPosition(height);
+        bool moveTriggered = false;
+        while(IsAutonomous() && IsEnabled() && (!m_autoPID.NearGoal() || !m_elevator->elevatorIsAt(height)))
+        {
+            //This cannot be used generally; it only will work for leftward motion.
+            if (!moveTriggered && m_elevator->elevatorPosition() >= StartMovePosition){
+                m_autoPID.SetGoal(x, y, speedMultiplier);
+                moveTriggered = true;
+            }
+            m_elevator->updateProfile();
+            DisplayInfo();
+            Wait(0.005);
+        }
+    }
+
+    void IRPickup (double extraMove, float speedMultiplier, std::string debugMessage) {
+        Move(0.0, m_IRAdjust.GetMove(extraMove), speedMultiplier, debugMessage);
     }
 
 };
