@@ -9,7 +9,7 @@ xPID(0.12, 0.0, 0.0, this, this), //PID values will need to be tuned for both of
 yPID(0.16, 0.0, 0.0, this, this)
 {
     xPID.SetOutputRange(-0.6, 0.6);
-    yPID.SetOutputRange(-0.7, 0.7);
+    yPID.SetOutputRange(-1, 1);
 
 	if(xPID.IsEnabled())
 	{
@@ -192,7 +192,7 @@ void PIDInterface::PIDWrite(float output)
 	switch(m_currentAxis)
 	{
 	case right:
-		m_robotDrive->MecanumDrive_Cartesian(output, 0.05/*m_driveStabilize->LockY()*/, m_driveStabilize->GetCorrectionAngle(), m_gyro->GetAngle());
+		m_robotDrive->MecanumDrive_Cartesian(output, 0.075/*m_driveStabilize->LockY()*/, m_driveStabilize->GetCorrectionAngle(), m_gyro->GetAngle());
 
 		//bobTheStringBuilder << "LockY: " << m_driveStabilize->LockY();
 		//SmartDashboard::PutString("DB/String 9", bobTheStringBuilder.str());

@@ -132,7 +132,7 @@ public:
 
         m_autoPID(&m_robotDrive, &m_tracker, &m_gyro, &m_driveStabilize),
 
-        m_driveStabilize(&m_gyro, &m_tracker, &m_stick, 0.0, 0.0, 0.01)
+        m_driveStabilize(&m_gyro, &m_tracker, &m_stick, 0.0, 0.0, 0.02)
 
 // as they are declared above.
 
@@ -212,28 +212,30 @@ public:
             //The LiftAndMoveWithDelay function is used because the motion of the elevator needs to begin
             //before sideways motion begins, in order to ensure that the robot will pick up the first
             //tote.
-            LiftAndMoveWithDelay(0, FieldDistances::moveBack, 1, kElevatorHook3Lifted, kElevatorHook1Lifted,
+            LiftAndMoveWithDelay(0, FieldDistances::moveBack, 0.7, kElevatorHook3Lifted, kElevatorHook1Lifted,
                                 "Lift 1 Back");
             SnapshotEncoders("Lift 1 Back");
             //The MoveAndLiftWithDelay function is used here so that downward motion of the tote does not
             //begin until it is past the bin.  This ensures that it will not hit the bin.
-            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff), 0, 1, kElevatorHook2Ready, -60,
+            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff + 4), 0, 1, kElevatorHook2Ready, -60,
                     "1 Left and Down");
             SnapshotEncoders("1 Left and Down");
             IRMove = 8+Tolerances::moveTolerance;//m_IRAdjust.GetMove(2.5);
             printf("IRMove: %10.6f, IRLeft: %d, IRRight: %d \n", IRMove,
                     m_IRLeftInner.GetAverageValue(), m_IRRightInner.GetAverageValue());
-            Move(0, IRMove/*(-FieldDistances::moveBack + 6)*/, 0.3, //The +2 is to make sure that we still run into the tote.
-                    "Move forwards");
-            SnapshotEncoders("Move Forwards");
+            MoveAndLiftWithDelay(0, IRMove, 0.2, kElevatorHook2Lifted, -(IRMove - 3),
+                                "1 Left and Down");
+            //Move(0, IRMove/*(-FieldDistances::moveBack + 6)*/, 0.2, //The +2 is to make sure that we still run into the tote.
+              //      "Move forwards");
+            //SnapshotEncoders("Move Forwards");
 //            LiftAndMoveWithDelay(FieldDistances::shiftDiff, 0, 1, kElevatorHook4Lifted, kElevatorHook2Lifted,
 //                    "Lift 2 Right");
 //            Move(0, FieldDistances::moveBack, 1, "Move Back");
-            Lift(kElevatorHook2Lifted, "Lift 2nd tote");
+            //Lift(kElevatorHook2Lifted, "Lift 2nd tote");
             //The LiftAndMoveWithDelay function is used because the motion of the elevator needs to begin
             //before sideways motion begins, in order to ensure that the robot will pick up the first
             //tote.
-            LiftAndMoveWithDelay(0, -IRMove+0.5/*(FieldDistances::moveBack - 6)*/, 1, kElevatorHook4Lifted, kElevatorHook2Lifted,
+            LiftAndMoveWithDelay(0, -IRMove/*(FieldDistances::moveBack - 6)*/, 0.7, kElevatorHook4Lifted, kElevatorHook2Lifted,
                                 "Lift 2 Back"); //The -2 is to account for the previously increased forward movement.
             SnapshotEncoders("Lift 2 Back");
             //The MoveAndLiftWithDelay function is used here so that downward motion of the tote does not
@@ -241,9 +243,9 @@ public:
             MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff-6), 0, 1, kElevatorHook3Ready, -60,
                     "1,2 Left and Down");
             SnapshotEncoders("1,2 Left and Down");
-            Move(0, FieldDistances::intoAutoDiff -FieldDistances::moveBack,  1,
-                    "Into Autozone");
-            SnapshotEncoders("Into Autozone");
+            YMoveAndMoveWithDelay(0, (FieldDistances::intoAutoDiff -FieldDistances::moveBack), 0.7, 0.75, 0.4,
+                    "To AutoZone");
+            SnapshotEncoders("To AutoZone");
             Lift(kElevatorHook1Ready,
                     "Put down all");
             Move(0, FieldDistances::moveBack, 1, "Move Back");
@@ -465,6 +467,27 @@ public:
         }
 
     	//debugMessage->str(" ");
+    }
+
+    void YMoveAndMoveWithDelay (float x, float y, float speedMultiplier, float changePercent, float speedMultiplierTwo, std::string debugMessage){
+        if (!(IsAutonomous() && IsEnabled()))
+            {return;}
+        SmartDashboard::PutString("DB/String 0", debugMessage);
+
+        bool triggered = false;
+        m_autoPID.SetGoal(x, y * (changePercent + .1), speedMultiplier);
+        while(IsAutonomous() && IsEnabled() && !m_autoPID.NearGoal())
+        {
+            if(!triggered && (fabs(m_autoPID.PIDGet()) > fabs(y * changePercent )))
+            {
+                m_autoPID.SetGoal(x, y * (1 - changePercent - .1), speedMultiplierTwo);
+                triggered = true;
+            }
+            DisplayInfo();
+            Wait(0.005);
+        }
+
+        //debugMessage->str(" ");
     }
 
     //This function enables the motion of the elevator alone.
