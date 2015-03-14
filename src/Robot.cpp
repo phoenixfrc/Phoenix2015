@@ -217,10 +217,10 @@ public:
             SnapshotEncoders("Lift 1 Back");
             //The MoveAndLiftWithDelay function is used here so that downward motion of the tote does not
             //begin until it is past the bin.  This ensures that it will not hit the bin.
-            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff + 4), 0, 1, kElevatorHook2Ready, -50,
+            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff + 4), 0, 1, kElevatorHook2Ready, -45,
                     "1 Left and Down");
             SnapshotEncoders("1 Left and Down");
-            IRMove = 8+Tolerances::moveTolerance;//m_IRAdjust.GetMove(2.5);
+            IRMove = 6+Tolerances::moveTolerance;//m_IRAdjust.GetMove(2.5);
             printf("IRMove: %10.6f, IRLeft: %d, IRRight: %d \n", IRMove,
                     m_IRLeftInner.GetAverageValue(), m_IRRightInner.GetAverageValue());
             MoveAndLiftWithDelay(0, IRMove, 0.4, kElevatorHook2Lifted, -(IRMove - 3),
@@ -246,7 +246,7 @@ public:
             YMoveAndMoveWithDelay(0, (FieldDistances::intoAutoDiff -FieldDistances::moveBack), 0.7, 0.75, 0.4,
                     "To AutoZone");
             SnapshotEncoders("To AutoZone");
-            Lift(kElevatorHook1Ready,
+            Lift(kElevatorHook2Ready,
                     "Put down all");
             Move(0, FieldDistances::moveBack, 1, "Move Back");
             SnapshotEncoders("Move Back");
