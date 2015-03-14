@@ -178,6 +178,24 @@ public:
         SmartDashboard::PutString("DB/String 7", " ");
         SmartDashboard::PutString("DB/String 8", " ");
         SmartDashboard::PutString("DB/String 9", " ");
+        SmartDashboard::PutString("DB/String 10", " ");
+        SmartDashboard::PutString("DB/String 11", " ");
+        SmartDashboard::PutString("DB/String 12", " ");
+        SmartDashboard::PutString("DB/String 13", " ");
+        SmartDashboard::PutString("DB/String 14", " ");
+        SmartDashboard::PutString("DB/String 15", " ");
+        SmartDashboard::PutString("DB/String 16", " ");
+        SmartDashboard::PutString("DB/String 17", " ");
+        SmartDashboard::PutString("DB/String 18", " ");
+        SmartDashboard::PutString("DB/String 19", " ");
+        SmartDashboard::PutString("DB/String 20", " ");
+        SmartDashboard::PutString("DB/String 21", " ");
+        SmartDashboard::PutString("DB/String 22", " ");
+        SmartDashboard::PutString("DB/String 23", " ");
+        SmartDashboard::PutString("DB/String 24", " ");
+        SmartDashboard::PutString("DB/String 25", " ");
+        SmartDashboard::PutString("DB/String 26", " ");
+        SmartDashboard::PutString("DB/String 27", " ");
     }
     void Autonomous()
     {
@@ -205,7 +223,6 @@ public:
 
         if(buttonCounter != 1){
 				autoMode = complex;
-				SmartDashboard::PutString("DB/String 1", "Inside crazy if block");
 			}
         else if(m_dashboard.m_button1){
         	autoMode = complex;
@@ -221,7 +238,7 @@ public:
         }
         else{
         	autoMode = complex;
-        	SmartDashboard::PutString("DB/String 2", "In else");
+        	SmartDashboard::PutString("DB/String 9", "In else");
         }
         m_elevator->ElevatorInit();
         SmartDashboard::PutString("DB/String 0", "Initial Homeing");
@@ -453,10 +470,10 @@ public:
         while (IsTest() && IsEnabled())
         {
         	 m_dashboard.updateButtons();
-        	 if(m_dashboard.m_button1){
-        	              SmartDashboard::PutString("DB/String 9", "Dashboard Button Works!");
-        	        }
-        	printf("-------------->%6d button value %c\n", count++,  m_dashboard.m_button1? '1': '0');
+        	// if(m_dashboard.m_button1){
+        	  //            SmartDashboard::PutString("DB/String 9", "Dashboard Button Works!");
+        	    //    }
+        	//printf("-------------->%6d button value %c\n", count++,  m_dashboard.m_button1? '1': '0');
 
             m_tester.PerformTesting(&m_gamepad, &m_stick,
                     &m_elevatorMotor1, &m_elevatorMotor2, &m_robotDrive, &m_brake, &m_draggerMotor);
@@ -465,7 +482,6 @@ public:
             //reserved for config
             m_IRAdjust.GetMove();
             //DisplayInfo();
-
             Wait(/*0.005*/0.1);
         }
         m_elevator->m_elevatorControl->Disable();
