@@ -8,8 +8,8 @@ PIDInterface::PIDInterface(RobotDrive * robotDrive, EncoderTracker * tracker, Gy
 xPID(0.12, 0.0, 0.0, this, this), //PID values will need to be tuned for both of these
 yPID(0.16, 0.0, 0.0, this, this)
 {
-    xPID.SetOutputRange(-0.5, 0.5);
-    yPID.SetOutputRange(-0.5, 0.5);
+    xPID.SetOutputRange(-0.6, 0.6);
+    yPID.SetOutputRange(-0.7, 0.7);
 
 	if(xPID.IsEnabled())
 	{
@@ -200,7 +200,7 @@ void PIDInterface::PIDWrite(float output)
 
 		break;
 	case forward:
-		output /= -1.2;
+		output /= -1; //-1.2;
 		m_robotDrive->MecanumDrive_Cartesian(0.0, output, m_driveStabilize->GetCorrectionAngle(), m_gyro->GetAngle());
 		break;
 	case stop:
