@@ -220,7 +220,7 @@ public:
             MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff), 0, 1, kElevatorHook2Ready, -60,
                     "1 Left and Down");
             SnapshotEncoders("1 Left and Down");
-            IRMove = 7.5+Tolerances::moveTolerance;//m_IRAdjust.GetMove(2.5);
+            IRMove = 8+Tolerances::moveTolerance;//m_IRAdjust.GetMove(2.5);
             printf("IRMove: %10.6f, IRLeft: %d, IRRight: %d \n", IRMove,
                     m_IRLeftInner.GetAverageValue(), m_IRRightInner.GetAverageValue());
             Move(0, IRMove/*(-FieldDistances::moveBack + 6)*/, 0.4, //The +2 is to make sure that we still run into the tote.
@@ -229,6 +229,7 @@ public:
 //            LiftAndMoveWithDelay(FieldDistances::shiftDiff, 0, 1, kElevatorHook4Lifted, kElevatorHook2Lifted,
 //                    "Lift 2 Right");
 //            Move(0, FieldDistances::moveBack, 1, "Move Back");
+            Lift(kElevatorHook2Lifted, "Lift 2nd tote");
             //The LiftAndMoveWithDelay function is used because the motion of the elevator needs to begin
             //before sideways motion begins, in order to ensure that the robot will pick up the first
             //tote.
