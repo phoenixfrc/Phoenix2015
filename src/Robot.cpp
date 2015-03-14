@@ -203,7 +203,7 @@ public:
         	buttonCounter++;
         }
 
-        if((!m_dashboard.m_button1 && !m_dashboard.m_button2 && !m_dashboard.m_button3 && !m_dashboard.m_button4) || (buttonCounter > 1)){
+        if(buttonCounter != 1){
 				autoMode = complex;
 				SmartDashboard::PutString("DB/String 1", "Inside crazy if block");
 			}
