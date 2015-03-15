@@ -124,6 +124,9 @@ void Elevator::controlElevator()
     bool yPressed = m_gamePad->GetRawButton(4);
     bool rbPressed = (m_gamePad->GetRawButton(6) || m_joystick->GetRawButton(1));
     bool rtPressed = (m_gamePad->GetRawButton(8) || m_joystick->GetRawButton(2));
+
+    bool lbPressed = m_gamePad->GetRawButton(7);
+
     int POV = m_joystick->GetPOV();
 
 
@@ -155,6 +158,17 @@ void Elevator::controlElevator()
     else if(!rtPressed && m_rtWasPressed)
     {
         m_rtWasPressed = false;
+    }
+
+    if(lbPressed && !m_lbWasPressed)
+    {
+
+        goalPosition = kElevatorHook1Lifted;
+        m_lbWasPressed = true;
+    }
+    else if(!lbPressed && m_lbWasPressed)
+    {
+        m_lbWasPressed = false;
     }
 
 

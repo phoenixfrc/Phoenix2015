@@ -24,6 +24,7 @@ class Elevator  : public PIDOutput
 
     bool m_rbWasPressed;
     bool m_rtWasPressed;
+    bool m_lbWasPressed;
     int m_oldEncoder;
     float m_desiredSetPoint;
     float m_currentSetPoint;

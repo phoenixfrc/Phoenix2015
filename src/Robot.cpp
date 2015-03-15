@@ -270,17 +270,17 @@ public:
             //before sideways motion begins, in order to ensure that the robot will pick up the first
             //tote.
             LiftAndMoveWithDelay(0, FieldDistances::moveBack, 0.7, kElevatorHook3Lifted, kElevatorHook1Lifted,
-                                "Lift 1 Back");
+                                "Lift 1 Back", 1000);
             SnapshotEncoders("Lift 1 Back");
             //The MoveAndLiftWithDelay function is used here so that downward motion of the tote does not
             //begin until it is past the bin.  This ensures that it will not hit the bin.
-            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff + 2), 0, 1, kElevatorHook2Ready, -45,
+            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff + 2), 0, 1, kElevatorHook2Ready, -40,
                     "1 Left and Down");
             SnapshotEncoders("1 Left and Down");
             IRMove = 6+Tolerances::moveTolerance;//m_IRAdjust.GetMove(2.5);
             printf("IRMove: %10.6f, IRLeft: %d, IRRight: %d \n", IRMove,
                     m_IRLeftInner.GetAverageValue(), m_IRRightInner.GetAverageValue());
-            MoveAndLiftWithDelay(0, IRMove, 0.4, kElevatorHook2Lifted, -(IRMove - 3),//this three should be bigger.
+            MoveAndLiftWithDelay(0, IRMove, 0.3, kElevatorHook2Lifted, -(IRMove - 4),//this three should be bigger.
                                 "1 Left and Down");
             //Move(0, IRMove/*(-FieldDistances::moveBack + 6)*/, 0.2, //The +2 is to make sure that we still run into the tote.
               //      "Move forwards");
@@ -293,7 +293,7 @@ public:
             //before sideways motion begins, in order to ensure that the robot will pick up the first
             //tote.
             LiftAndMoveWithDelay(0, -IRMove/*(FieldDistances::moveBack - 6)*/, 0.7, kElevatorHook4Lifted, kElevatorHook2Lifted,
-                                "Lift 2 Back"); //The -2 is to account for the previously increased forward movement.
+                                "Lift 2 Back", 1000); //The -2 is to account for the previously increased forward movement.
             SnapshotEncoders("Lift 2 Back");
             //The MoveAndLiftWithDelay function is used here so that downward motion of the tote does not
             //begin until it is past the bin.  This ensures that it will not hit the bin.
@@ -676,12 +676,13 @@ public:
     //ground begins.  The initial lift of the elevator before horizontal motion occurs is necessary
     //in order to ensure that the bin will be picked up.  The bin will be lifted slightly, then lifted
     //much more as horizontal motion begins.
-    void LiftAndMoveWithDelay (float x, float y, float speedMultiplier, float height, float StartMovePosition, std::string debugMessage){
+    void LiftAndMoveWithDelay (float x, float y, float speedMultiplier, float height, float StartMovePosition, std::string debugMessage, int timeMax){
         if (!(IsAutonomous() && IsEnabled()))
                     {return;}
         SmartDashboard::PutString("DB/String 0", debugMessage);
 
         m_elevator->setElevatorGoalPosition(height);
+        int counter = 0;
         bool moveTriggered = false;
         while(IsAutonomous() && IsEnabled() && (!m_autoPID.NearGoal() || !m_elevator->elevatorIsAt(height)))
         {
@@ -693,6 +694,9 @@ public:
             m_elevator->updateProfile();
             DisplayInfo();
             Wait(0.005);
+            counter+=5;
+            if (counter > timeMax)
+                break;
         }
     }
 
