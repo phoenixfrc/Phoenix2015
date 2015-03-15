@@ -277,10 +277,10 @@ public:
             MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff + 2), 0, 1, kElevatorHook2Ready, -40,
                     "1 Left and Down");
             SnapshotEncoders("1 Left and Down");
-            IRMove = 6+Tolerances::moveTolerance;//m_IRAdjust.GetMove(2.5);
+            IRMove = 5+Tolerances::moveTolerance;//m_IRAdjust.GetMove(2.5);
             printf("IRMove: %10.6f, IRLeft: %d, IRRight: %d \n", IRMove,
                     m_IRLeftInner.GetAverageValue(), m_IRRightInner.GetAverageValue());
-            MoveAndLiftWithDelay(0, IRMove, 0.3, kElevatorHook2Lifted, -(IRMove - 4),//this three should be bigger.
+            MoveAndLiftWithDelay(0, IRMove, 0.25, kElevatorHook2Lifted, -(IRMove - 5.5),//this three should be bigger.
                                 "1 Left and Down");
             //Move(0, IRMove/*(-FieldDistances::moveBack + 6)*/, 0.2, //The +2 is to make sure that we still run into the tote.
               //      "Move forwards");
