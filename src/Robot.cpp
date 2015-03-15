@@ -161,6 +161,7 @@ public:
         m_rightFrontDriveEncoder.SetReverseDirection(true);
         m_elevatorEncoder.SetReverseDirection(true);
         SmartDashboard::init();
+        m_gyro.InitGyro();
         //reserved for config
         //reserved for config
         //reserved for config
@@ -273,13 +274,13 @@ public:
             SnapshotEncoders("Lift 1 Back");
             //The MoveAndLiftWithDelay function is used here so that downward motion of the tote does not
             //begin until it is past the bin.  This ensures that it will not hit the bin.
-            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff + 4), 0, 1, kElevatorHook2Ready, -45,
+            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff + 2), 0, 1, kElevatorHook2Ready, -45,
                     "1 Left and Down");
             SnapshotEncoders("1 Left and Down");
             IRMove = 6+Tolerances::moveTolerance;//m_IRAdjust.GetMove(2.5);
             printf("IRMove: %10.6f, IRLeft: %d, IRRight: %d \n", IRMove,
                     m_IRLeftInner.GetAverageValue(), m_IRRightInner.GetAverageValue());
-            MoveAndLiftWithDelay(0, IRMove, 0.4, kElevatorHook2Lifted, -(IRMove - 3),
+            MoveAndLiftWithDelay(0, IRMove, 0.4, kElevatorHook2Lifted, -(IRMove - 3),//this three should be bigger.
                                 "1 Left and Down");
             //Move(0, IRMove/*(-FieldDistances::moveBack + 6)*/, 0.2, //The +2 is to make sure that we still run into the tote.
               //      "Move forwards");
@@ -299,7 +300,7 @@ public:
             MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff-6), 0, 1, kElevatorHook3Ready, -50,
                     "1,2 Left and Down");
             SnapshotEncoders("1,2 Left and Down");
-            YMoveAndMoveWithDelay(0, (FieldDistances::intoAutoDiff -FieldDistances::moveBack), 0.7, 0.75, 0.4,
+            YMoveAndMoveWithDelay(0, (FieldDistances::complexIntoAutoDiff -FieldDistances::moveBack), 0.7, 0.75, 0.4,
                     "To AutoZone");
             SnapshotEncoders("To AutoZone");
             Lift(kElevatorHook2Ready,
@@ -330,7 +331,7 @@ public:
 
             SmartDashboard::PutString("DB/String 0", "Moving Forward");
 
-            m_autoPID.SetGoal(0,FieldDistances::intoAutoDiff);
+            m_autoPID.SetGoal(0,FieldDistances::complexIntoAutoDiff);
             while(IsAutonomous() && IsEnabled() && !m_autoPID.isPastGoal)
             {
                 DisplayInfo();
