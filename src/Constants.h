@@ -80,7 +80,7 @@ struct FieldDistances
 
 	static const int shortAutoDiff = 100;
     //Distance between the crates we have to pick up during auto
-    static const int autoCrateDiff = 81; // This number comes from the manual but may be a little off
+    static const int autoCrateDiff = 81+16; // This number comes from the manual but may be a little off
     //Added 8 in order to correct for decreased distance during testing (thus far unexplained)
     //Distance from start to the auto zone
     static const int simpleIntoAutoDiff = 128;//from the manual
