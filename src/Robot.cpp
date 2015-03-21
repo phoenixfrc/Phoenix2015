@@ -334,7 +334,7 @@ public:
 
             SmartDashboard::PutString("DB/String 0", "Moving Forward");
 
-            m_autoPID.SetGoal(0,FieldDistances::complexIntoAutoDiff);
+            m_autoPID.SetGoal(0,FieldDistances::simpleIntoAutoDiff);
             while(IsAutonomous() && IsEnabled() && !m_autoPID.isPastGoal)
             {
                 DisplayInfo();
@@ -371,6 +371,9 @@ public:
             m_autoPID.Reset();
             break;
         case simpleShort:
+        	Move(0, FieldDistances::shortIntoAutoDiff, 1, "Move Forward");
+
+#if 0
         	SmartDashboard::PutString("DB/String 0", "Starting Autonomous");
 			//This expects robot to be placed between tote and drive station facing into the field
 			//Pick up tote here
@@ -421,7 +424,7 @@ public:
 
 			SmartDashboard::PutString("DB/String 0", "Finished");
 
-
+#endif
 			m_autoPID.Reset();
 			break;
         case disabled:

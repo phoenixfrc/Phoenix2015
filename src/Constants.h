@@ -85,6 +85,7 @@ struct FieldDistances
     //Distance from start to the auto zone
     static const int simpleIntoAutoDiff = 128;//from the manual
     static const int complexIntoAutoDiff = 140 + 40;//This number comes from the manual but may be a little off
+    static const int shortIntoAutoDiff = 64;
     //Distance to move before lifting over container
     static const int shiftDiff = 3;
     //Distance to back away from totes after dropping them.
