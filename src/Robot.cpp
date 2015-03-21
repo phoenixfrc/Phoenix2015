@@ -297,10 +297,10 @@ public:
             SnapshotEncoders("Lift 2 Back");
             //The MoveAndLiftWithDelay function is used here so that downward motion of the tote does not
             //begin until it is past the bin.  This ensures that it will not hit the bin.
-            MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff-5), 0, 1, kElevatorHook3Ready, -50,
-                    "1,2 Left and Down");
+            //MoveAndLiftWithDelay((-FieldDistances::autoCrateDiff-5), 0, 1, kElevatorHook3Ready, -50,
+            //       "1,2 Left and Down");
 
-            //Move((-FieldDistances::autoCrateDiff));
+            Move((-FieldDistances::autoCrateDiff-5), 0, 1, "Left 2");
 
             SnapshotEncoders("1,2 Left and Down");
             YMoveAndMoveWithDelay(0, (FieldDistances::complexIntoAutoDiff -FieldDistances::moveBack), 0.7, 0.75, 0.4,
