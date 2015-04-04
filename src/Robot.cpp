@@ -304,12 +304,13 @@ public:
 
             SnapshotEncoders("1,2 Left and Down");
             YLiftAndMoveAndLiftAndMoveWithDelay(0, (FieldDistances::complexIntoAutoDiff -FieldDistances::moveBack),
-                    kElevatorHook2Lifted+5.0, 0.7, 0.75,kElevatorHook2Lifted+5.0, 0.4,
+                    kElevatorHook2Lifted+10.0, 0.7, 0.75,kElevatorHook2Lifted+10.0, 0.4,
                     "To AutoZone");
             SnapshotEncoders("To AutoZone");
-            Lift(kElevatorHook2Ready,
-                    "Put down all");
-            Move(0, FieldDistances::moveBack, 1, "Move Back");
+            MoveAndLift(0, FieldDistances::moveBack-6.0, 1, kElevatorHook2Ready, "Drop and Move Back");
+            //Lift(kElevatorHook2Ready,
+            //        "Put down all");
+            //Move(0, FieldDistances::moveBack, 1, "Move Back");
             SnapshotEncoders("Move Back");
             //Backwards motion at the end avoids the possibility of the robot supporting
             //the stack at the end of the autonomous period.
