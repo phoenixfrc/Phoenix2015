@@ -292,7 +292,7 @@ public:
             //The LiftAndMoveWithDelay function is used because the motion of the elevator needs to begin
             //before sideways motion begins, in order to ensure that the robot will pick up the first
             //tote.
-            LiftAndMoveWithDelay(0, -IRMove/*(FieldDistances::moveBack - 6)*/, 0.7, kElevatorHook4Lifted, kElevatorHook2Lifted,
+            LiftAndMoveWithDelay(0, -IRMove/*(FieldDistances::moveBack - 6)*/, 0.7, kElevatorHook4Ready, kElevatorHook2Lifted,
                                 "Lift 2 Back", 1000); //The -2 is to account for the previously increased forward movement.
             SnapshotEncoders("Lift 2 Back");
             //The MoveAndLiftWithDelay function is used here so that downward motion of the tote does not
@@ -303,7 +303,8 @@ public:
             Move((-FieldDistances::autoCrateDiff-5), 0, 1, "Left 2");
 
             SnapshotEncoders("1,2 Left and Down");
-            YMoveAndMoveWithDelay(0, (FieldDistances::complexIntoAutoDiff -FieldDistances::moveBack), 0.7, 0.75, 0.4,
+            YLiftAndMoveAndLiftAndMoveWithDelay(0, (FieldDistances::complexIntoAutoDiff -FieldDistances::moveBack),
+                    kElevatorHook2Lifted+5.0, 0.7, 0.75,kElevatorHook2Lifted+5.0, 0.4,
                     "To AutoZone");
             SnapshotEncoders("To AutoZone");
             Lift(kElevatorHook2Ready,
@@ -594,18 +595,20 @@ public:
     	//debugMessage->str(" ");
     }
 
-    void YMoveAndMoveWithDelay (float x, float y, float speedMultiplier, float changePercent, float speedMultiplierTwo, std::string debugMessage){
+    void YLiftAndMoveAndLiftAndMoveWithDelay (float x, float y, float firstHeight, float speedMultiplier, float changePercent, float secondHeight, float speedMultiplierTwo, std::string debugMessage){
         if (!(IsAutonomous() && IsEnabled()))
             {return;}
         SmartDashboard::PutString("DB/String 0", debugMessage);
 
         bool triggered = false;
         m_autoPID.SetGoal(x, y * (changePercent + .15), speedMultiplier);
+        m_elevator->setElevatorGoalPosition(firstHeight);
         while(IsAutonomous() && IsEnabled() && !m_autoPID.NearGoal())
         {
             if(!triggered && (fabs(m_autoPID.PIDGet()) > fabs(y * changePercent )))
             {
                 m_autoPID.SetGoal(x, y * (1 - changePercent - .15), speedMultiplierTwo);
+                m_elevator->setElevatorGoalPosition(secondHeight);
                 triggered = true;
             }
             m_elevator->updateProfile();
