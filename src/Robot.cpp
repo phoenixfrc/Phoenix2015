@@ -586,6 +586,7 @@ public:
         m_autoPID.SetGoal(x, y, speedMultiplier);
         while(IsAutonomous() && IsEnabled() && !m_autoPID.NearGoal())
         {
+            m_elevator->updateProfile();
             DisplayInfo();
             Wait(0.005);
         }
@@ -607,6 +608,7 @@ public:
                 m_autoPID.SetGoal(x, y * (1 - changePercent - .15), speedMultiplierTwo);
                 triggered = true;
             }
+            m_elevator->updateProfile();
             DisplayInfo();
             Wait(0.005);
         }
@@ -702,7 +704,10 @@ public:
             Wait(0.005);
             counter+=5;
             if (counter > timeMax)
+            {
+                printf("TIMEOUT of liftAndMoveWithDelay");
                 break;
+            }
         }
     }
 

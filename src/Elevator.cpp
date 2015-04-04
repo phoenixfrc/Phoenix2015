@@ -371,8 +371,8 @@ float Elevator::accelCurve()
     m_currentVelocity += (acceleration / 200); //inches per second
     m_currentSetPoint += (m_currentVelocity / 200); // called 200 times per second
 
-    //printf("Count:%d, Decel:%c, Dpos:%8.3f Cpos:%12.9f Vel:%8.3f Acc:%8.3f\n",
-      //      count, isDeccel?'t':'f', m_desiredSetPoint, m_currentSetPoint, m_currentVelocity, acceleration);
+    printf("Count:%d, Decel:%c, Dpos:%8.3f Cpos:%12.9f Vel:%8.3f Acc:%8.3f\n",
+           count, isDeccel?'t':'f', m_desiredSetPoint, m_currentSetPoint, m_currentVelocity, acceleration);
     fflush(stdout);
     count++;
     return m_currentSetPoint;
